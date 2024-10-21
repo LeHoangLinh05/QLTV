@@ -107,4 +107,42 @@ clearTable();
 setBookDetailsToTable();}
 }
 
+public boolean updateBook() {
+boolean isUpdated = false;
+bookId = Integer.parseInt(txt_bookId.getText());
+bookName = txt_bookName.getText();
+author = txt_authorName.getText();
+quantity = Integer.parseInt(txt_quantity.getText());
+
+try
+{
+Connection con = DBConnection.getConnection();
+String sql = "update book_details set book_name=?, author = ?, quantity? where book_id = ?";
+PreparedStatement pst = con.prepareStatement (sql);
+pst.setString (1, bookName);
+pst.setString(2, author);
+pst.setInt(3, quantity);
+pst.setInt(4, bookId);
+int rowCount = pst.executeUpdate();
+if (rowCount > 0) {
+ isUpdated = true;
+}
+else{
+isUpdated = false;}
+} 
+catch (Exception e) {
+e.printStackTrace();
+}
+return isUpdated;}
+
+private void rSMaterialButtonCircle3ActionPerformed (java.awt.event.ActionEvent evt) {
+if (updateBook () == true) {
+JOptionPane.showMessageDialog(this, "Book Updated");
+clearTable();
+setBookDetailsToTable();
+}else{
+JOptionPane.showMessageDialog(this, "Book Updation Failed");
+}
+}
+
 
