@@ -1,4 +1,4 @@
-package com.example.qltv;
+package com;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,12 +13,12 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class LoginAdminController implements Initializable {
-    @FXML
-    private Button btn_login;
-
+public class SignUpController implements Initializable {
     @FXML
     private Button btn_signup;
+
+    @FXML
+    private Button btn_login;
 
     @FXML
     private TextField txt_username;
@@ -27,40 +27,43 @@ public class LoginAdminController implements Initializable {
     private TextField txt_password;
 
     @FXML
-    private Label wrongLogin;
+    private TextField txt_fname;
 
     @FXML
-    private Button btn_login_user;
-
+    private TextField txt_lname;
+    @FXML
+    private Label FillIn;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         txt_username.setFocusTraversable(false);
         txt_password.setFocusTraversable(false);
 
-        btn_login.setOnAction(new EventHandler<ActionEvent>() {
+        btn_signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (txt_username.getText().trim().isEmpty() || (txt_password.getText().trim().isEmpty())) {
-                    wrongLogin.setText("Please fill in all information");
-                } else if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())){
-                    wrongLogin.setText("Wrong username or password");
+                if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())
+                        && (!txt_fname.getText().trim().isEmpty()) && (!txt_lname.getText().trim().isEmpty())){
+                    FillIn.setText("Username already taken");
                     try {
-                        DB.logInAdmin(event, txt_username.getText(), txt_password.getText());
+                        DB.signUpUser(event, txt_username.getText(), txt_password.getText(), txt_fname.getText(), txt_lname.getText());
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                }else if (txt_username.getText().trim().isEmpty() || (txt_password.getText().trim().isEmpty())
+                        || (txt_fname.getText().trim().isEmpty()) || (txt_lname.getText().trim().isEmpty())){
+                    FillIn.setText("Please fill in all information");
                 }
             }
         });
 
-        btn_login_user.setOnAction(new EventHandler<ActionEvent>() {
+        btn_login.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "Login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(event, "login.fxml", "Quản lý thư viện", null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -68,5 +71,4 @@ public class LoginAdminController implements Initializable {
         });
     }
 }
-
 
