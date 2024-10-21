@@ -81,4 +81,28 @@ public class DB {
                 }
             }
     }
+
+    public static void logInAdmin(ActionEvent event, String username, String password) throws SQLException, IOException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+        preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
+        preparedStatement.setString(1,username);
+        resultSet = preparedStatement.executeQuery();
+
+        if (!resultSet.isBeforeFirst()){
+            System.out.println("User not found in the database!");
+        }else {
+            while (resultSet.next()){
+                String retrievedPassword = resultSet.getString("password");
+                String retrievedFname = resultSet.getString("fName");
+                String retrievedLname = resultSet.getString("lName");
+                if (retrievedPassword.equals(password)){
+                    changeScene(event, "loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
+                }
+            }
+        }
+    }
 }

@@ -29,9 +29,9 @@
                   <String fx:value="text-field-prompt" />
                   <String fx:value="text-field" />
                </styleClass></PasswordField>
-            <Separator layoutX="23.0" layoutY="255.0" prefHeight="4.0" prefWidth="258.0" />
-            <Label layoutX="142.0" layoutY="246.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
-            <Button fx:id="btn_signup" layoutX="23.0" layoutY="273.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Sign up" />
+            <Separator layoutX="24.0" layoutY="242.0" prefHeight="4.0" prefWidth="258.0" />
+            <Label layoutX="142.0" layoutY="232.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
+            <Button fx:id="btn_signup" layoutX="23.0" layoutY="259.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Sign up" AnchorPane.rightAnchor="17.0" />
             <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" stylesheets="@Style.css">
                <styleClass>
                   <String fx:value="text-field" />
@@ -42,6 +42,9 @@
                <font>
                   <Font size="11.0" />
                </font></Label>
+            <Separator layoutX="23.0" layoutY="310.0" prefHeight="4.0" prefWidth="258.0" />
+            <Label layoutX="142.0" layoutY="303.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
+            <Button fx:id="btn_login_admin" layoutX="23.0" layoutY="328.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Login with Admin" AnchorPane.rightAnchor="17.0" />
             </children></AnchorPane>
     </children>
 </HBox>
