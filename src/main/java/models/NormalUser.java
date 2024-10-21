@@ -1,44 +1,45 @@
-package Library;
+package models;
 
 import javax.swing.JFrame;
 
-public class Admin extend User{
+public class NormalUser extends User {
 
-    public Admin(String name) {
+    public NormalUser(String name) {
         super(name);
         this.operations = new IOOperation[] {
                 new ViewBooks(),
-                new AddBook(),
-                new DeleteBook(),
                 new Search(),
-                new DeleteAllData(),
-                new ViewOrders(),
+                new PlaceOrder(),
+                new BorrowBook(),
+                new CalculateFine(),
+                new ReturnBook(),
                 new Exit()
         };
     }
 
-    public Admin(String name, String email, String phonenumber) {
+    public NormalUser(String name, String email, String phonenumber) {
         super(name, email, phonenumber);
         this.operations = new IOOperation[] {
                 new ViewBooks(),
-                new AddBook(),
-                new DeleteBook(),
                 new Search(),
-                new DeleteAllData(),
-                new ViewOrders(),
+                new PlaceOrder(),
+                new BorrowBook(),
+                new CalculateFine(),
+                new ReturnBook(),
                 new Exit()
         };
     }
 
     @Override
     public void menu(Database database, User user) {
+
         String[] data = new String[7];
         data[0] = "View Books";
-        data[1] = "Add Book";
-        data[2] = "Delete Book";
-        data[3] = "Search";
-        data[4] = "Delete all data";
-        data[5] = "View Orders";
+        data[1] = "Search";
+        data[2] = "Place Order";
+        data[3] = "Borrow Book";
+        data[4] = "Calculate Fine";
+        data[5] = "Return Book";
         data[6] = "Exit";
 
         JFrame frame = this.frame(data, database, user);
@@ -46,7 +47,6 @@ public class Admin extend User{
     }
 
     public String toString() {
-        return name+"<N/>"+email+"<N/>"+phonenumber+"<N/>"+"Admin";
+        return name+"<N/>"+email+"<N/>"+phonenumber+"<N/>"+"Normal";
     }
-
 }

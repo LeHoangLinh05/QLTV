@@ -1,4 +1,4 @@
-package Library;
+package models;
 
 public class Book {
 
