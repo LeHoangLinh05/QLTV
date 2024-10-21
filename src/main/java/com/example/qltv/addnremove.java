@@ -60,13 +60,13 @@ isAdded = false;
 }
 } catch (Exception e) {
 e.printStackTrace ();
-} 
+}
 return isAdded;
 }
 
 
-public void clearTable () 
-{ DefaultTableModel model = (DefaultTableModel) tbl_bookDetails.getModel(); 
+public void clearTable ()
+{ DefaultTableModel model = (DefaultTableModel) tbl_bookDetails.getModel();
 model.setRowCount(0);
 }
 
@@ -74,7 +74,7 @@ private void rSMaterialButtonCircle2ActionPerformed (java.awt.event.ActionEvent 
 
 if (addBook() == true) {
 JOptionPane.showMessageDialog(this, "Book Added");
-clearTable(); 
+clearTable();
 setBookDetailsToTable();
 }else{
 JOptionPane.showMessageDialog(this, "Book Addition Failed");}
