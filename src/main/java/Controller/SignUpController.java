@@ -1,5 +1,6 @@
-package com;
+package Controller;
 
+import models.DB;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -63,7 +64,7 @@ public class SignUpController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(event, "/view/login.fxml", "Quản lý thư viện", null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

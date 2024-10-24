@@ -12,39 +12,39 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.LoginController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
     <children>
         <AnchorPane prefHeight="400.0" prefWidth="305.0" style="-fx-background-color: #00FFCC;">
             <children>
                 <ImageView fitHeight="163.0" fitWidth="155.0" layoutX="80.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="66.60000000000002" AnchorPane.topAnchor="131.0">
                     <image>
-                        <Image url="@icon.png" />
+                        <Image url="@../images/icon.png" />
                     </image></ImageView>
             </children>
         </AnchorPane>
         <AnchorPane prefHeight="400.0" prefWidth="301.0" style="-fx-background-color: #FFF;">
             <children>
-                <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" stylesheets="@Style.css">
+                <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" stylesheets="@../css/style.css">
                <styleClass>
                   <String fx:value="text-field-prompt" />
                   <String fx:value="text-field" />
                </styleClass></PasswordField>
             <Separator layoutX="24.0" layoutY="242.0" prefHeight="4.0" prefWidth="258.0" />
             <Label layoutX="142.0" layoutY="232.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
-            <Button fx:id="btn_signup" layoutX="23.0" layoutY="259.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Sign up" AnchorPane.rightAnchor="17.0" />
-            <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" stylesheets="@Style.css">
+            <Button fx:id="btn_signup" layoutX="23.0" layoutY="259.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@../css/style.css" text="Sign up" AnchorPane.rightAnchor="17.0" />
+            <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" stylesheets="@../css/style.css">
                <styleClass>
                   <String fx:value="text-field" />
                   <String fx:value="text-field-prompt" />
                </styleClass></TextField>
-            <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Login" />
+            <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@../css/style.css" text="Login" />
             <Label fx:id="wrongLogin" layoutX="24.0" layoutY="155.0" prefHeight="18.0" prefWidth="258.0">
                <font>
                   <Font size="11.0" />
                </font></Label>
             <Separator layoutX="23.0" layoutY="310.0" prefHeight="4.0" prefWidth="258.0" />
             <Label layoutX="142.0" layoutY="303.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
-            <Button fx:id="btn_login_admin" layoutX="23.0" layoutY="328.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@Style.css" text="Login with Admin" AnchorPane.rightAnchor="17.0" />
+            <Button fx:id="btn_login_admin" layoutX="23.0" layoutY="328.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@../css/style.css" text="Login with Admin" AnchorPane.rightAnchor="17.0" />
             </children></AnchorPane>
     </children>
 </HBox>

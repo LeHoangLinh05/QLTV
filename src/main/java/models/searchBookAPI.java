@@ -1,4 +1,4 @@
-package org.example;
+package models;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.*;
 import java.net.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.Book;
 
 public class searchBookAPI {
 

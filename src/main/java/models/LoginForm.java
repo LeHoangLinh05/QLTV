@@ -1,4 +1,4 @@
-package com;
+package models;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +12,11 @@ import java.io.IOException;
 public class LoginForm extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("/view/Login.fxml"));
         Parent root = fxmlLoader.load();
         stage.setTitle("Quản lý thư viện");
         try{
-            stage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         }catch (Exception e){
             e.printStackTrace();
         }

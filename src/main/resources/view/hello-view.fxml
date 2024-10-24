@@ -18,24 +18,24 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1120.0" styleClass="main_root" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.BigCardController">
+<AnchorPane fx:id="main_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1120.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BigCardController">
     <children>
-        <AnchorPane fx:id="main_pane" prefHeight="700.0" prefWidth="920.0" styleClass="main_anchorpane" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
-            <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="910.0" styleClass="dashboard_anchorpane" stylesheets="@style.css" visible="false" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+        <AnchorPane fx:id="main_pane" prefHeight="700.0" prefWidth="920.0" styleClass="main_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS">
+            <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="910.0" styleClass="dashboard_anchorpane" stylesheets="@../css/style.css" visible="false" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
                 <children>
-                    <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@style.css" text="Dashboard">
+                    <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@../css/style.css" text="Dashboard">
                         <font>
                             <Font name="EuclidCircularA-SemiBold" size="30.0" />
                         </font>
                     </Label>
-                    <Pane fx:id="pane_1" layoutX="44.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_1" stylesheets="@style.css">
+                    <Pane fx:id="pane_1" layoutX="44.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_1" stylesheets="@../css/style.css">
                         <children>
-                            <Label layoutX="23.0" layoutY="65.0" styleClass="label_1" stylesheets="@style.css" text="50">
+                            <Label layoutX="23.0" layoutY="65.0" styleClass="label_1" stylesheets="@../css/style.css" text="50">
                                 <font>
                                     <Font name="EuclidCircularA-SemiBold" size="30.0" />
                                 </font>
                             </Label>
-                            <Label layoutX="23.0" layoutY="103.0" styleClass="label_2" stylesheets="@style.css" text="Total Users">
+                            <Label layoutX="23.0" layoutY="103.0" styleClass="label_2" stylesheets="@../css/style.css" text="Total Users">
                                 <font>
                                     <Font name="EuclidCircularA-Medium" size="14.0" />
                                 </font>
@@ -43,19 +43,19 @@
                             <Circle fill="#0085fd" layoutX="141.0" layoutY="28.0" radius="18.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                             <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="129.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../../images/users_icon.png" />
+                                    <Image url="@../images/users_icon.png" />
                                 </image>
                             </ImageView>
                         </children>
                     </Pane>
-                    <Pane fx:id="pane_2" layoutX="231.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_2" stylesheets="@style.css">
+                    <Pane fx:id="pane_2" layoutX="231.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_2" stylesheets="@../css/style.css">
                         <children>
-                            <Label layoutX="20.0" layoutY="65.0" styleClass="label_1" stylesheets="@style.css" text="100">
+                            <Label layoutX="20.0" layoutY="65.0" styleClass="label_1" stylesheets="@../css/style.css" text="100">
                                 <font>
                                     <Font name="EuclidCircularA-SemiBold" size="30.0" />
                                 </font>
                             </Label>
-                            <Label layoutX="20.0" layoutY="103.0" styleClass="label_2" stylesheets="@style.css" text="Total Books">
+                            <Label layoutX="20.0" layoutY="103.0" styleClass="label_2" stylesheets="@../css/style.css" text="Total Books">
                                 <font>
                                     <Font name="EuclidCircularA-Medium" size="14.0" />
                                 </font>
@@ -63,19 +63,19 @@
                             <Circle fill="#f4a7f2" layoutX="139.0" layoutY="26.0" radius="18.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                             <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="127.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../../images/totalbook_icon.png" />
+                                    <Image url="@../images/totalbook_icon.png" />
                                 </image>
                             </ImageView>
                         </children>
                     </Pane>
-                    <Pane fx:id="pane_3" layoutX="420.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_3" stylesheets="@style.css">
+                    <Pane fx:id="pane_3" layoutX="420.0" layoutY="111.0" prefHeight="135.0" prefWidth="168.0" styleClass="pane_3" stylesheets="@../css/style.css">
                         <children>
-                            <Label layoutX="23.0" layoutY="65.0" styleClass="label_1" stylesheets="@style.css" text="10">
+                            <Label layoutX="23.0" layoutY="65.0" styleClass="label_1" stylesheets="@../css/style.css" text="10">
                                 <font>
                                     <Font name="EuclidCircularA-SemiBold" size="30.0" />
                                 </font>
                             </Label>
-                            <Label layoutX="23.0" layoutY="103.0" styleClass="label_2" stylesheets="@style.css" text="Borrowed Books">
+                            <Label layoutX="23.0" layoutY="103.0" styleClass="label_2" stylesheets="@../css/style.css" text="Borrowed Books">
                                 <font>
                                     <Font name="EuclidCircularA-Medium" size="14.0" />
                                 </font>
@@ -83,14 +83,14 @@
                             <Circle fill="#fef6c9" layoutX="140.0" layoutY="26.0" radius="18.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                             <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="128.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../../images/borrowed_icon.png" />
+                                    <Image url="@../images/borrowed_icon.png" />
                                 </image>
                             </ImageView>
                         </children>
                     </Pane>
-                    <Pane fx:id="pane_4" layoutX="42.0" layoutY="289.0" prefHeight="374.0" prefWidth="546.0" styleClass="pane_4" stylesheets="@style.css">
+                    <Pane fx:id="pane_4" layoutX="42.0" layoutY="289.0" prefHeight="374.0" prefWidth="546.0" styleClass="pane_4" stylesheets="@../css/style.css">
                         <children>
-                            <BarChart id="barChart" fx:id="barChart" layoutY="14.0" prefHeight="354.0" prefWidth="546.0" stylesheets="@style.css">
+                            <BarChart id="barChart" fx:id="barChart" layoutY="14.0" prefHeight="354.0" prefWidth="546.0" stylesheets="@../css/style.css">
                                 <xAxis>
                                     <CategoryAxis side="BOTTOM" />
                                 </xAxis>
@@ -100,36 +100,36 @@
                             </BarChart>
                         </children>
                     </Pane>
-                    <AnchorPane fx:id="profile_anchorpane" layoutX="638.0" layoutY="61.0" prefHeight="601.0" prefWidth="229.0" styleClass="profile_anchorpane" stylesheets="@style.css">
+                    <AnchorPane fx:id="profile_anchorpane" layoutX="638.0" layoutY="61.0" prefHeight="601.0" prefWidth="229.0" styleClass="profile_anchorpane" stylesheets="@../css/style.css">
                         <children>
                             <Circle fx:id="avatar_circle" fill="#f2f2f403" layoutX="115.0" layoutY="96.0" radius="46.0" stroke="BLACK" strokeType="INSIDE" styleClass="avatar_circle" />
-                            <Label fx:id="username_label" layoutX="66.0" layoutY="157.0" styleClass="username_label" stylesheets="@style.css" text="Username">
+                            <Label fx:id="username_label" layoutX="66.0" layoutY="157.0" styleClass="username_label" stylesheets="@../css/style.css" text="Username">
                                 <font>
                                     <Font name="EuclidCircularA-SemiBold" size="20.0" />
                                 </font>
                             </Label>
-                            <Label fx:id="acctype_label" layoutX="68.0" layoutY="186.0" styleClass="acctype_label" stylesheets="@style.css" text="Account Type" textFill="#f2f2f4">
+                            <Label fx:id="acctype_label" layoutX="68.0" layoutY="186.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Account Type" textFill="#f2f2f4">
                                 <font>
                                     <Font name="EuclidCircularA-Medium" size="14.0" />
                                 </font>
                             </Label>
-                            <Label fx:id="ustatistics_label" layoutX="14.0" layoutY="291.0" styleClass="ustatistics_label" stylesheets="@style.css" text="Something cool">
+                            <Label fx:id="ustatistics_label" layoutX="14.0" layoutY="291.0" styleClass="ustatistics_label" stylesheets="@../css/style.css" text="Something cool">
                                 <font>
                                     <Font name="EuclidCircularA-SemiBold" size="14.0" />
                                 </font>
                             </Label>
-                            <Pane fx:id="upane_1" layoutX="22.0" layoutY="323.0" prefHeight="120.0" prefWidth="186.0" styleClass="upane_1" stylesheets="@style.css">
+                            <Pane fx:id="upane_1" layoutX="22.0" layoutY="323.0" prefHeight="120.0" prefWidth="186.0" styleClass="upane_1" stylesheets="@../css/style.css">
                                 <children>
-                                    <Label fx:id="quote_label1" layoutX="14.0" layoutY="9.0" prefHeight="102.0" prefWidth="158.0" styleClass="quote_label" stylesheets="@style.css" text="&quot;A book is a garden, an orchard, a storehouse, a party, a company by the way, a counselor, a multitude of counselors.&quot; – Charles Baudelaire" textOverrun="CLIP" wrapText="true">
+                                    <Label fx:id="quote_label1" layoutX="14.0" layoutY="9.0" prefHeight="102.0" prefWidth="158.0" styleClass="quote_label" stylesheets="@../css/style.css" text="&quot;A book is a garden, an orchard, a storehouse, a party, a company by the way, a counselor, a multitude of counselors.&quot; – Charles Baudelaire" textOverrun="CLIP" wrapText="true">
                                         <font>
                                             <Font name="EuclidCircularA-Medium" size="13.0" />
                                         </font>
                                     </Label>
                                 </children>
                             </Pane>
-                            <Pane fx:id="upane_2" layoutX="22.0" layoutY="457.0" prefHeight="120.0" prefWidth="186.0" styleClass="upane_2" stylesheets="@style.css">
+                            <Pane fx:id="upane_2" layoutX="22.0" layoutY="457.0" prefHeight="120.0" prefWidth="186.0" styleClass="upane_2" stylesheets="@../css/style.css">
                                 <children>
-                                    <Label fx:id="quote_label2" layoutX="14.0" layoutY="14.0" prefHeight="92.0" prefWidth="158.0" styleClass="quote_label" stylesheets="@style.css" text="&quot;Books are a uniquely portable magic.&quot; – Stephen King, On Writing: A Memoir of the Craft" textOverrun="CLIP" wrapText="true">
+                                    <Label fx:id="quote_label2" layoutX="14.0" layoutY="14.0" prefHeight="92.0" prefWidth="158.0" styleClass="quote_label" stylesheets="@../css/style.css" text="&quot;Books are a uniquely portable magic.&quot; – Stephen King, On Writing: A Memoir of the Craft" textOverrun="CLIP" wrapText="true">
                                         <font>
                                             <Font name="EuclidCircularA-Medium" size="13.0" />
                                         </font>
@@ -140,28 +140,28 @@
                     </AnchorPane>
                 </children>
             </AnchorPane>
-         <AnchorPane fx:id="addnew_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="addnew_anchorpane" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <AnchorPane fx:id="addnew_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="addnew_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-               <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@style.css" text="Add Book">
+               <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@../css/style.css" text="Add Book">
                   <font>
                      <Font name="EuclidCircularA-SemiBold" size="30.0" />
                   </font>
                </Label>
-               <AnchorPane fx:id="search_pane" layoutX="362.0" layoutY="35.0" prefHeight="42.0" prefWidth="473.0" styleClass="search_pane" stylesheets="@style.css" AnchorPane.leftAnchor="340.00000000000006">
+               <AnchorPane fx:id="search_pane" layoutX="362.0" layoutY="35.0" prefHeight="42.0" prefWidth="473.0" styleClass="search_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="340.00000000000006">
                   <children>
                      <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="14.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@../../images/search_icon.png" />
+                           <Image url="@../images/search_icon.png" />
                         </image>
                      </ImageView>
-                     <TextField fx:id="search_text" layoutX="40.0" layoutY="6.0" prefHeight="30.0" prefWidth="450.0" promptText="Search" styleClass="search_text" stylesheets="@style.css">
+                     <TextField fx:id="search_text" layoutX="40.0" layoutY="6.0" prefHeight="30.0" prefWidth="450.0" promptText="Search" styleClass="search_text" stylesheets="@../css/style.css">
                         <font>
                            <Font name="EuclidCircularA-SemiBold" size="14.0" />
                         </font>
                      </TextField>
                   </children>
                </AnchorPane>
-               <ScrollPane fx:id="api_scrollpane" hbarPolicy="NEVER" layoutX="35.0" layoutY="111.0" prefHeight="558.0" prefWidth="840.0" styleClass="api_scrollpane" stylesheets="@style.css" vbarPolicy="NEVER" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="110.0">
+               <ScrollPane fx:id="api_scrollpane" hbarPolicy="NEVER" layoutX="35.0" layoutY="111.0" prefHeight="558.0" prefWidth="840.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" vbarPolicy="NEVER" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="110.0">
                   <content>
                      <GridPane fx:id="result_gridpane" prefHeight="6.0" prefWidth="0.0">
                        <rowConstraints>
@@ -170,51 +170,51 @@
                      </GridPane>
                   </content>
                </ScrollPane>
-               <AnchorPane fx:id="bookdetail_anchorpane" prefHeight="700.0" prefWidth="250.0" styleClass="bookdetail_anchorpane" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1050.0" AnchorPane.topAnchor="0.0">
+               <AnchorPane fx:id="bookdetail_anchorpane" prefHeight="700.0" prefWidth="250.0" styleClass="bookdetail_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1050.0" AnchorPane.topAnchor="0.0">
                   <children>
                      <ImageView fx:id="cover_img" fitHeight="225.0" fitWidth="150.0" layoutX="62.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="61.60000000000002" />
-                     <Label fx:id="title_label" alignment="CENTER" layoutX="36.0" layoutY="283.0" prefHeight="50.0" prefWidth="210.0" styleClass="username_label" stylesheets="@style.css" text="Title" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="36.799999999999955">
+                     <Label fx:id="title_label" alignment="CENTER" layoutX="36.0" layoutY="283.0" prefHeight="50.0" prefWidth="210.0" styleClass="username_label" stylesheets="@../css/style.css" text="Title" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="36.799999999999955">
                         <font>
                            <Font name="EuclidCircularA-SemiBold" size="18.0" />
                         </font>
                      </Label>
-                     <Label fx:id="author_label" alignment="CENTER" layoutX="39.0" layoutY="350.0" prefHeight="18.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@style.css" text="Author" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="40.19999999999996">
+                     <Label fx:id="author_label" alignment="CENTER" layoutX="39.0" layoutY="350.0" prefHeight="18.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Author" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="40.19999999999996">
                         <font>
                            <Font name="EuclidCircularA-SemiBold" size="15.0" />
                         </font>
                      </Label>
-                     <Label fx:id="description_label" alignment="TOP_CENTER" layoutX="56.8" layoutY="492.0" prefHeight="135.0" prefWidth="170.0" styleClass="acctype_label" stylesheets="@style.css" text="Label" textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="55.0">
+                     <Label fx:id="description_label" alignment="TOP_CENTER" layoutX="56.8" layoutY="492.0" prefHeight="135.0" prefWidth="170.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Label" textAlignment="JUSTIFY" wrapText="true" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="55.0">
                         <font>
                            <Font name="EuclidCircularA-Medium" size="13.0" />
                         </font>
                      </Label>
-                     <Label fx:id="categories_label" alignment="CENTER" layoutX="42.0" layoutY="397.0" prefHeight="15.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@style.css" text="Categories" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="42.799999999999955">
+                     <Label fx:id="categories_label" alignment="CENTER" layoutX="42.0" layoutY="397.0" prefHeight="15.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Categories" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="42.0" AnchorPane.rightAnchor="42.799999999999955">
                         <font>
                            <Font name="EuclidCircularA-Medium" size="13.0" />
                         </font>
                      </Label>
-                     <Label fx:id="publisheddate_label" alignment="CENTER" layoutX="47.0" layoutY="444.0" prefHeight="15.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@style.css" text="Published Date" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="47.39999999999998">
+                     <Label fx:id="publisheddate_label" alignment="CENTER" layoutX="47.0" layoutY="444.0" prefHeight="15.0" prefWidth="200.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Published Date" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="47.39999999999998">
                         <font>
                            <Font name="EuclidCircularA-Medium" size="13.0" />
                         </font>
                      </Label>
-                     <Button fx:id="back_button" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" styleClass="back_button" stylesheets="@style.css" text="Back">
+                     <Button fx:id="back_button" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" styleClass="back_button" stylesheets="@../css/style.css" text="Back">
                         <font>
                            <Font size="13.0" />
                         </font>
                         <graphic>
                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                               <image>
-                                 <Image url="@../../images/back_icon.png" />
+                                 <Image url="@../images/back_icon.png" />
                               </image>
                            </ImageView>
                         </graphic>
                      </Button>
-                     <Button fx:id="add_button" layoutX="59.0" layoutY="637.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="158.0" styleClass="add_button" stylesheets="@style.css" text="Add to library" AnchorPane.bottomAnchor="20.0">
+                     <Button fx:id="add_button" layoutX="59.0" layoutY="637.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="158.0" styleClass="add_button" stylesheets="@../css/style.css" text="Add to library" AnchorPane.bottomAnchor="20.0">
                         <graphic>
                            <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                               <image>
-                                 <Image url="@../../images/add_icon.png" />
+                                 <Image url="@../images/add_icon.png" />
                               </image>
                            </ImageView>
                         </graphic>
@@ -227,16 +227,16 @@
             </children>
          </AnchorPane>
         </AnchorPane>
-          <AnchorPane fx:id="menu_anchorpane" prefHeight="700.0" prefWidth="200.0" styleClass="menu_anchorpane" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="NEVER">
+          <AnchorPane fx:id="menu_anchorpane" prefHeight="700.0" prefWidth="200.0" styleClass="menu_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="NEVER">
               <children>
-                  <Button fx:id="dashboard_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="103.0" mnemonicParsing="false" onAction="#menuControl" prefHeight="40.0" prefWidth="192.0" styleClass="dashboard_button" stylesheets="@style.css" text="Dashboard" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="103.0">
+                  <Button fx:id="dashboard_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="103.0" mnemonicParsing="false" onAction="#menuControl" prefHeight="40.0" prefWidth="192.0" styleClass="dashboard_button" stylesheets="@../css/style.css" text="Dashboard" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="103.0">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="13.0" />
                       </font>
                <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/dashboard_icon.png" />
+                                <Image url="@../images/dashboard_icon.png" />
                             </image>
                      <viewport>
                         <Rectangle2D />
@@ -244,14 +244,14 @@
                         </ImageView>
                </graphic>
                   </Button>
-                  <Button fx:id="library_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="177.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="192.0" styleClass="library_button" stylesheets="@style.css" text="Library" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="163.0">
+                  <Button fx:id="library_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="177.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="192.0" styleClass="library_button" stylesheets="@../css/style.css" text="Library" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="163.0">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="13.0" />
                       </font>
                <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/library_icon.png" />
+                                <Image url="@../images/library_icon.png" />
                             </image>
                      <viewport>
                         <Rectangle2D />
@@ -259,14 +259,14 @@
                         </ImageView>
                </graphic>
                   </Button>
-                  <Button fx:id="addbook_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="245.0" mnemonicParsing="false" onAction="#menuControl" prefHeight="40.0" prefWidth="192.0" styleClass="addnew_button" stylesheets="@style.css" text="Add Book" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="223.0">
+                  <Button fx:id="addbook_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="245.0" mnemonicParsing="false" onAction="#menuControl" prefHeight="40.0" prefWidth="192.0" styleClass="addnew_button" stylesheets="@../css/style.css" text="Add Book" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="223.0">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="13.0" />
                       </font>
                <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/addbook_icon.png" />
+                                <Image url="@../images/addbook_icon.png" />
                             </image>
                      <viewport>
                         <Rectangle2D />
@@ -274,14 +274,14 @@
                         </ImageView>
                </graphic>
                   </Button>
-                  <Button fx:id="logout_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="646.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="logout_button" stylesheets="@style.css" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                  <Button fx:id="logout_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="646.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="logout_button" stylesheets="@../css/style.css" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="13.0" />
                       </font>
                <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../../images/logout_icon.png" />
+                                <Image url="@../images/logout_icon.png" />
                             </image>
                      <viewport>
                         <Rectangle2D />
@@ -289,12 +289,12 @@
                         </ImageView>
                </graphic>
                   </Button>
-                  <Label fx:id="name_label" layoutX="29.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label1" stylesheets="@style.css" text="Book" textFill="#feda69">
+                  <Label fx:id="name_label" layoutX="29.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label1" stylesheets="@../css/style.css" text="Book" textFill="#feda69">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="30.0" />
                       </font>
                   </Label>
-                  <Label fx:id="name_label1" layoutX="103.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label2" stylesheets="@style.css" text="Nest" textFill="#feda69">
+                  <Label fx:id="name_label1" layoutX="103.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label2" stylesheets="@../css/style.css" text="Nest" textFill="#feda69">
                       <font>
                           <Font name="EuclidCircularA-SemiBold" size="30.0" />
                       </font>

@@ -1,4 +1,4 @@
-package com;
+package Controller;
 
 
 
@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import models.DB;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +28,7 @@ public class Logged implements Initializable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    DB.changeScene(actionEvent, "login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(actionEvent, "/view/login.fxml", "Quản lý thư viện", null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

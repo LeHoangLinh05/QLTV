@@ -49,14 +49,14 @@ public class Order {
     }
 
     public String toString() {
-        return "Book name: "+book.getName()+"\n"+
+        return "Book name: "+book.getTitle()+"\n"+
                 "Username: "+user.getName()+"\n"+
                 "Price: "+String.valueOf(price)+"\n"+
                 "Qty: "+String.valueOf(qty);
     }
 
     public String toString2() {
-        return book.getName()+"<N/>"+user.getName()+"<N/>"+String.valueOf(price)+"<N/>"+
+        return book.getTitle()+"<N/>"+user.getName()+"<N/>"+String.valueOf(price)+"<N/>"+
                 String.valueOf(qty);
     }
 }

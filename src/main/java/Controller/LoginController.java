@@ -1,5 +1,7 @@
-package com;
+package Controller;
 
+
+import models.DB;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,7 +15,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class LoginAdminController implements Initializable {
+public class LoginController implements Initializable {
     @FXML
     private Button btn_login;
 
@@ -25,12 +27,12 @@ public class LoginAdminController implements Initializable {
 
     @FXML
     private TextField txt_password;
-
+    
     @FXML
     private Label wrongLogin;
 
     @FXML
-    private Button btn_login_user;
+    private Button btn_login_admin;
 
 
     @Override
@@ -46,7 +48,7 @@ public class LoginAdminController implements Initializable {
                 } else if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())){
                     wrongLogin.setText("Wrong username or password");
                     try {
-                        DB.logInAdmin(event, txt_username.getText(), txt_password.getText());
+                        DB.logInUser(event, txt_username.getText(), txt_password.getText());
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     } catch (IOException e) {
@@ -56,11 +58,22 @@ public class LoginAdminController implements Initializable {
             }
         });
 
-        btn_login_user.setOnAction(new EventHandler<ActionEvent>() {
+
+        btn_signup.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "Login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(event, "/view/SignUp.fxml", "Quản lý thư viện", null, null, null);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        btn_login_admin.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    DB.changeScene(event, "/view/LoginAdmin.fxml", "Quản lý thư viện", null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -68,5 +81,3 @@ public class LoginAdminController implements Initializable {
         });
     }
 }
-
-

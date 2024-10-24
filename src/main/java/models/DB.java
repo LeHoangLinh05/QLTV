@@ -1,6 +1,7 @@
-package com;
+package models;
 
 
+import Controller.Logged;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -52,7 +53,7 @@ public class DB {
                 psinsert.setString(4, lastName);
                 psinsert.executeUpdate();
 
-                changeScene(event, "loggedin.fxml", "Quản lý thư viện", username, firstName, lastName);
+                changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, firstName, lastName);
             }
 
     }
@@ -75,7 +76,7 @@ public class DB {
                     String retrievedFname = resultSet.getString("fName");
                     String retrievedLname = resultSet.getString("lName");
                     if (retrievedPassword.equals(password)){
-                        changeScene(event, "loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
+                        changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
                     }
                 }
             }
@@ -99,7 +100,7 @@ public class DB {
                 String retrievedFname = resultSet.getString("fName");
                 String retrievedLname = resultSet.getString("lName");
                 if (retrievedPassword.equals(password)){
-                    changeScene(event, "loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
+                    changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
                 }
             }
         }
