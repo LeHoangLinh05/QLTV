@@ -1,46 +1,46 @@
-package models;
+package org.example;
+
+import java.util.*;
 
 public class Book {
-
-    private String name;
+    private String title;
     private String author;
+    private String ISBN;
+    private String publishedDate;
     private String publisher;
-    private String adress;
-    private String status;
-    private int qty;
-    private double price;
-    private int brwcopies;
+    private long pageCount;
+    private String categories;
+    private String description;
+    private String thumbnailLink;
 
-    public Book() {};
+    public Book() {}
 
-    public Book(String name, String author, String publisher,
-                String adress, int qty, double price, int brwcopies) {
-        this.name = name;
+    public Book(String title, String ISBN, String author, String publishedDate, String publisher, long pageCount, String categories, String description, String thumbnailLink) {
+        this.title = title;
+        this.ISBN = ISBN;
         this.author = author;
+        this.publishedDate = publishedDate;
         this.publisher = publisher;
-        this.adress = adress;
-        this.qty = qty;
-        this.price = price;
-        this.brwcopies = brwcopies;
+        this.pageCount = pageCount;
+        this.categories = categories;
+        this.description = description;
+        this.thumbnailLink = thumbnailLink;
     }
 
-    public String toString() {
-        String text = "Book Name: " + name+"\n"+
-                "Book Author: " + author+"\n"+
-                "Book Publisher: " + publisher+"\n"+
-                "Book Collection Adress: " + adress+"\n"+
-                "Qty: " + String.valueOf(qty)+"\n"+
-                "Price: " + String.valueOf(price)+"\n"+
-                "Borrowing Copies: " + String.valueOf(brwcopies);
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public String getName() {
-        return name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
     }
 
     public String getAuthor() {
@@ -51,6 +51,14 @@ public class Book {
         this.author = author;
     }
 
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public String getPublisher() {
         return publisher;
     }
@@ -59,50 +67,36 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public String getAdress() {
-        return adress;
+    public long getPageCount() {
+        return pageCount;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setPageCount(long pageCount) {
+        this.pageCount = pageCount;
     }
 
-    public String getStatus() {
-        return status;
+    public String getCategories() {
+        return categories;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
-    public int getQty() {
-        return qty;
+    public String getDescription() {
+        return description;
     }
 
-    public void setQty(int qty) {
-        this.qty = qty;
+    public void getDescription(String description) {
+        this.description = description;
     }
 
-    public double getPrice() {
-        return price;
+    public String getThumbnailLink() {
+        return thumbnailLink;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getBrwcopies() {
-        return brwcopies;
-    }
-
-    public void setBrwcopies(int brwcopies) {
-        this.brwcopies = brwcopies;
-    }
-
-    public String toString2() {
-        String text = name+"<N/>"+author+"<N/>"+publisher+"<N/>"+adress+"<N/>"+String.valueOf(qty)+
-                "<N/>"+String.valueOf(price)+"<N/>"+String.valueOf(brwcopies);
-        return text;
+    public void setThumbnailLink(String thumbnailLink) {
+        this.thumbnailLink = thumbnailLink;
     }
 
 }
