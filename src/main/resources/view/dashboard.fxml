@@ -93,12 +93,12 @@
       <AnchorPane fx:id="profile_anchorpane" layoutX="638.0" layoutY="61.0" prefHeight="601.0" prefWidth="229.0" styleClass="dashboard_stat_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="638.0">
          <children>
             <Circle fx:id="avatar_circle" fill="#f2f2f403" layoutX="115.0" layoutY="96.0" radius="46.0" stroke="BLACK" strokeType="INSIDE" styleClass="avatar_circle" />
-            <Label fx:id="username_label" layoutX="66.0" layoutY="157.0" styleClass="body_label" stylesheets="@../css/style.css" text="Username">
+            <Label fx:id="label_adminName" layoutX="66.0" layoutY="157.0" styleClass="body_label" stylesheets="@../css/style.css" text="Username">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="20.0" />
                </font>
             </Label>
-            <Label fx:id="acctype_label" layoutX="68.0" layoutY="186.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Account Type" textFill="#f2f2f4">
+            <Label fx:id="label_accType" layoutX="68.0" layoutY="186.0" styleClass="acctype_label" stylesheets="@../css/style.css" text="Account Type" textFill="#f2f2f4">
                <font>
                   <Font name="EuclidCircularA-Medium" size="14.0" />
                </font>

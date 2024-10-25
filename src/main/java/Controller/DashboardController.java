@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -39,6 +40,11 @@ public class DashboardController implements Initializable {
     @FXML
     private BarChart<String, ?> barChart;
 
+    @FXML
+    private Label label_adminName;
+
+    @FXML
+    private Label label_accType;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,8 +55,13 @@ public class DashboardController implements Initializable {
     }
 
     public void setUserAvatar() {
-        Image im = new Image("E:\\BookAPI\\src\\main\\resources\\images\\avatar_img.png", false);
+        Image im = new Image(getClass().getResource("/images/avatar_img.png").toExternalForm(), false);
         avatar_circle.setFill(new ImagePattern(im));
+    }
+
+    public void setAdminInfo(String firstName, String lastName){
+        label_adminName.setText( firstName + " " + lastName );
+        label_accType.setText("      Admin");
     }
 
     public void barChart() {

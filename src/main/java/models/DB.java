@@ -1,6 +1,8 @@
 package models;
 
 
+import Controller.AdminPanelController;
+import Controller.DashboardController;
 import Controller.Logged;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +22,8 @@ public class DB {
         if ((userName != null) && (firstName != null)){
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();
-                Logged loggedInController = fxmlLoader.getController();
-                loggedInController.setUserInfoForWelcome(firstName, lastName);
+                AdminPanelController loggedInController = fxmlLoader.getController();
+                loggedInController.displayDashboard(firstName, lastName);
         }else {
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();
@@ -53,7 +55,7 @@ public class DB {
                 psinsert.setString(4, lastName);
                 psinsert.executeUpdate();
 
-                changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, firstName, lastName);
+                changeScene(event, "/view/loggedin.fxml", "Library Management System", username, firstName, lastName);
             }
 
     }
@@ -76,7 +78,7 @@ public class DB {
                     String retrievedFname = resultSet.getString("fName");
                     String retrievedLname = resultSet.getString("lName");
                     if (retrievedPassword.equals(password)){
-                        changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
+                        changeScene(event, "/view/loggedin.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                     }
                 }
             }
@@ -100,7 +102,7 @@ public class DB {
                 String retrievedFname = resultSet.getString("fName");
                 String retrievedLname = resultSet.getString("lName");
                 if (retrievedPassword.equals(password)){
-                    changeScene(event, "/view/loggedin.fxml", "Quản lý thư viện", username, retrievedFname, retrievedLname);
+                    changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                 }
             }
         }
