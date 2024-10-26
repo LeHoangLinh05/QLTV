@@ -1,23 +1,27 @@
 package models;
 
-public abstract class User {
-    protected String name;
-    protected String email;
-    protected String phonenumber;
-    protected String role;
+public class User {
+    private String userId;
+    private String name;
+    private String email;
+    private String phoneNumber;
 
-    public User(String name) {
-        this.name = name;
-    }
+    public User() {}
 
-    public User(String name, String email, String phonenumber) {
+    public User(String userId, String name, String email, String phoneNumber) {
+        this.userId = userId;
         this.name = name;
         this.email = email;
-        this.phonenumber = phonenumber;
+        this.phoneNumber = phoneNumber;
     }
 
-    // Abstract method to be implemented by subclasses (NormalUser and Admin)
-    public abstract void menu(DB database, User user);
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getName() {
         return name;
@@ -35,24 +39,11 @@ public abstract class User {
         this.email = email;
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    protected void setRole(String role) {
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return name + "<N/>" + email + "<N/>" + phonenumber + "<N/>" + role;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
