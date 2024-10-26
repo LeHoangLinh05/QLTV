@@ -23,13 +23,13 @@ public class AdminPanelController implements Initializable {
     private Button library_button;
 
     @FXML
-    private Button addbook_button;
-
-    @FXML
     private Button profile_button;
 
     @FXML
     private Button logout_button;
+
+    @FXML
+    private Button bookmanagement_button;
 
     @FXML
     private AnchorPane main_root;
@@ -44,10 +44,8 @@ public class AdminPanelController implements Initializable {
     private AnchorPane dashboard_anchorpane;
 
     @FXML
-    private AnchorPane addnew_anchorpane;
+    private AnchorPane bookmanagement_anchorpane;
 
-    @FXML
-    private Button btn_logout;
 
     private String firstName;
     private String lastName;
@@ -55,8 +53,8 @@ public class AdminPanelController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dashboard_anchorpane.setVisible(true);
-        addnew_anchorpane.setVisible(false);
-        btn_logout.setOnAction(new EventHandler<ActionEvent>() {
+        bookmanagement_anchorpane.setVisible(false);
+        logout_button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
@@ -71,21 +69,21 @@ public class AdminPanelController implements Initializable {
         this.firstName = firstName;
         this.lastName = lastName;
         showDashboard(firstName,lastName);
-        showAddNew();
+        showBookManagement();
 
     }
 
     public void menuControl(javafx.event.ActionEvent actionEvent) throws IOException {
         if (actionEvent.getSource() == dashboard_button) {
             showDashboard(firstName, lastName);
-        } else if (actionEvent.getSource() == addbook_button) {
-            showAddNew();
+        } else if (actionEvent.getSource() == bookmanagement_anchorpane) {
+            showBookManagement();
         }
     }
 
     private void showDashboard(String firstName, String lastName) throws IOException {
         dashboard_anchorpane.setVisible(true);
-        addnew_anchorpane.setVisible(false);
+        bookmanagement_anchorpane.setVisible(false);
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
@@ -94,9 +92,9 @@ public class AdminPanelController implements Initializable {
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
-    private void showAddNew() {
+    private void showBookManagement() {
         dashboard_anchorpane.setVisible(false);
-        addnew_anchorpane.setVisible(true);
+        bookmanagement_anchorpane.setVisible(true);
     }
 
 }
