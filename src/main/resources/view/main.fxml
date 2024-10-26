@@ -27,7 +27,7 @@
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@/images/dashboard_icon.png" />
+                                <Image url="@../images/dashboard_icon.png" />
                             </image>
                             <viewport>
                                 <Rectangle2D />
@@ -42,7 +42,7 @@
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@/images/library_icon.png" />
+                                <Image url="@../images/library_icon.png" />
                             </image>
                             <viewport>
                                 <Rectangle2D />
@@ -57,7 +57,7 @@
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@/images/addbook_icon.png" />
+                                <Image url="@../images/addbook_icon.png" />
                             </image>
                             <viewport>
                                 <Rectangle2D />
@@ -65,14 +65,14 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="logout_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="646.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                <Button fx:id="btn_logout" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="646.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Log Out" textFill="WHITE" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
                     <font>
                         <Font name="EuclidCircularA-SemiBold" size="13.0" />
                     </font>
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@/images/logout_icon.png" />
+                                <Image url="@../images/logout_icon.png" />
                             </image>
                             <viewport>
                                 <Rectangle2D />
@@ -87,7 +87,7 @@
                <graphic>
                   <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@/images/profile_icon.png" />
+                        <Image url="@../images/profile_icon.png" />
                      </image>
                      <viewport>
                         <Rectangle2D />

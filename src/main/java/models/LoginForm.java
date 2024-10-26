@@ -14,7 +14,7 @@ public class LoginForm extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("/view/Login.fxml"));
         Parent root = fxmlLoader.load();
-        stage.setTitle("Quản lý thư viện");
+        stage.setTitle("Library Management System");
         try{
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
         }catch (Exception e){

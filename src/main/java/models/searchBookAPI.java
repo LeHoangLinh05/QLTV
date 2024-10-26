@@ -59,7 +59,7 @@ public class searchBookAPI {
                     JsonNode thumbnailNode = bookNode.get("imageLinks").get("thumbnail");
                     thumbnailLink = thumbnailNode.asText();
                 } else {
-                    thumbnailLink = "E:\\BookAPI\\src\\main\\resources\\images\\no_cover_thumb.png";
+                    thumbnailLink = "/images/no_cover_thumb.png";
                 }
 
                 Book result = new Book(title, isbn, authors, publishedDate, publisher, pageCount, categories, description, thumbnailLink);

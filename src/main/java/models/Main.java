@@ -1,10 +1,24 @@
 package models;
 
 import java.util.Date;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
+import java.io.IOException;
+
+public class Main extends Application {
+    @Override
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/main.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1120, 700);
+        stage.setTitle("Library Management System");
+        stage.setScene(scene);
+        stage.show();
+    }
     public static void main(String[] args) {
-
+        launch();
         Library library = new Library("City Library", "123 Main St");
 
         Book book1 = new Book("The Great Gatsby", "978-0743273565", "F. Scott Fitzgerald", "1925", "Scribner", 180, "Fiction", "A novel about the American dream.", "https://link.to/thumbnail");

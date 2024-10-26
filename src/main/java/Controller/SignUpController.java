@@ -64,7 +64,7 @@ public class SignUpController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "/view/login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
