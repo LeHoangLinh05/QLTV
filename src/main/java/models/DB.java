@@ -30,7 +30,11 @@ public class DB {
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle(title);
-        stage.setScene(new Scene(root, 600, 400));
+        if (fxmlFile.equals("/view/main.fxml")) {
+            stage.setScene(new Scene(root, 1120, 700));
+        } else {
+            stage.setScene(new Scene(root, 600, 400));
+        }
         stage.show();
     }
 

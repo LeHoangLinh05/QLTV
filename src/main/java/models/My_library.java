@@ -9,15 +9,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoginForm extends Application {
+public class My_library extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("/view/Login.fxml"));
         Parent root = fxmlLoader.load();
         stage.setTitle("Library Management System");
-        try{
+        try {
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/icon.png")));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         stage.setScene(new Scene(root));

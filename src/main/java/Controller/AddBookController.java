@@ -98,7 +98,7 @@ public class AddBookController implements Initializable {
             try{
                 for(Book book : searchBookAPI.searchResult) {
                     FXMLLoader fxmlLoader = new FXMLLoader();
-                    fxmlLoader.setLocation(getClass().getResource("bigCard.fxml"));
+                    fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
                     HBox bigCard_box = fxmlLoader.load();
                     BigCardController cardController = fxmlLoader.getController();
                     cardController.setData(book);
