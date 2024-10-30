@@ -76,7 +76,7 @@ public class AdminPanelController implements Initializable {
     public void menuControl(javafx.event.ActionEvent actionEvent) throws IOException {
         if (actionEvent.getSource() == dashboard_button) {
             showDashboard(firstName, lastName);
-        } else if (actionEvent.getSource() == bookmanagement_anchorpane) {
+        } else if (actionEvent.getSource() == library_button) {
             showBookManagement();
         }
     }
@@ -94,7 +94,7 @@ public class AdminPanelController implements Initializable {
 
     private void showBookManagement() {
         dashboard_anchorpane.setVisible(false);
-        bookmanagement_anchorpane.setVisible(true);
+        dashboard_anchorpane.setVisible(true);
     }
 
 }

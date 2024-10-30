@@ -44,7 +44,7 @@ public class DB {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
 
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -69,7 +69,7 @@ public class DB {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
             preparedStatement.setString(1,username);
             resultSet = preparedStatement.executeQuery();
@@ -93,7 +93,7 @@ public class DB {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
         preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
         preparedStatement.setString(1,username);
         resultSet = preparedStatement.executeQuery();
@@ -109,6 +109,26 @@ public class DB {
                     changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                 }
             }
+        }
+    }
+    public static ResultSet getUserData(String username) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path FROM userdetail WHERE username = ?");
+        statement.setString(1, username);
+        return statement.executeQuery();
+    }
+
+    // New method to update profile data for a specific user
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath) throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ? WHERE username = ?")) {
+
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.setString(3, dateOfBirth);
+            statement.setString(4, avatarPath);
+            statement.setString(5, username);
+            statement.executeUpdate();
         }
     }
 }
