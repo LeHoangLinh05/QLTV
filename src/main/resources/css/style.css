@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Euclid Circular A Semibold';
-    src: url("EuclidCircularA-SemiBold.ttf");
+    src: url("EuclidCircularA-Medium.ttf");
 }
 
 @font-face {
@@ -48,7 +48,6 @@
     -fx-border-width: 2px 2px 2px 2px;
     -fx-border-radius: 50px;
     -fx-background-radius: 50px;
-    -fx-text-fill:#000000;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
     -fx-text-fill: #989ca7
@@ -269,21 +268,23 @@
     -fx-background-color:#e9e4fa;
 }
 
-.button {
+.login_button {
     -fx-background-color : #FFF;
     -fx-border-color: #355ECE;
     -fx-text-fill:  #0C3988;
 }
-.button:hover {
+
+.login_button:hover {
     -fx-background-color : #355ECE ;
     -fx-text-fill:  #FFF;
 }
-.button:pressed {
+
+.login_button:pressed {
     -fx-background-color : #0C39FF ;
     -fx-text-fill: #FFF;
 }
 
-.button2 {
+/*.button2 {
     -fx-background-color :  #0C39FF;
     -fx-border-color: #FFF;
     -fx-text-fill:  #FFF;
@@ -295,9 +296,9 @@
 .button2:pressed {
     -fx-background-color : #0C3400 ;
     -fx-text-fill: #FFF;
-}
+}*/
 
-.text-field {
+.login_text {
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #ccc;
@@ -305,15 +306,15 @@
     -fx-font-size: 13px;
 }
 
-.text-field:focused {
+.login_text:focused {
     -fx-border-color: #0C3988;
 }
 
-.text-field:focused .text-field-prompt {
+.login_text:focused .text-field-prompt {
     -fx-text-fill: transparent;
 }
 
-.text-field .text-field-prompt {
+.login_text .text-field-prompt {
     -fx-text-fill: #aaa;
     -fx-font-size: 14px;
 }
