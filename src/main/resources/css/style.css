@@ -1,13 +1,12 @@
 @font-face {
-    font-family: 'Euclid Circular A Semibold';
-    src: url("EuclidCircularA-Medium.ttf");
+   font-family: 'Euclid Circular A Semibold';
+   src: url("font/EuclidCircularA-SemiBold.ttf");
 }
 
 @font-face {
-    font-family: 'Euclid Circular A Medium';
-    src: url("EuclidCircularA-SemiBold.ttf");
+   font-family: 'Euclid Circular A Medium';
+   src: url("font/EuclidCircularA-Medium.ttf");
 }
-
 
 .main_root {
     -fx-background-color: #e9e4fa;
@@ -37,6 +36,12 @@
     -fx-font-weight: bold;
 }
 
+.library_anchorpane {
+    -fx-background-color: transparent;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+}
+
 .mainaddbook_anchorpane {
     -fx-background-color: transparent;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -46,11 +51,11 @@
 .menu_button {
     -fx-background-color:#ffffff;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 50px;
-    -fx-background-radius: 50px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
-    -fx-text-fill: #989ca7
+    -fx-text-fill: #989ca7;
 }
 
 .menu_button:hover{
@@ -59,11 +64,37 @@
     -fx-font-weight: bold;
 }
 
+.save_button {
+    -fx-background-color:#6A6BE6;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+.save_button:hover{
+    -fx-background-color:#9091f2;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+}
+
+.menu_button_pressed{
+    -fx-background-color:#e9e4fa;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+    -fx-text-fill: #6a6be6;
+}
+
 .dashboard_stat_pane {
     -fx-background-color:#ffffff;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-style: solid;
     -fx-border-color: #ffffff;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -158,8 +189,8 @@
 
 .upane_1 {
     -fx-background-color:#9091f2;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-style: solid;
     -fx-border-color: #ffffff;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -168,8 +199,8 @@
 
 .upane_2 {
     -fx-background-color:#30303d;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-style: solid;
     -fx-border-color: #ffffff;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -185,8 +216,8 @@
 .search_pane {
     -fx-background-color:#ffffff;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-style: solid;
     -fx-border-color: #ffffff;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -196,6 +227,14 @@
 
 .search_text {
     -fx-background-color:transparent;
+    -fx-font-family: 'Euclid Circular A Medium';
+    -fx-font-weight: normal;
+}
+
+.regular_text {
+    -fx-background-color:transparent;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
 }
 
 .api_scrollpane {
@@ -210,8 +249,19 @@
 .bigCard {
     -fx-background-color:#ffffff;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-style: solid;
+    -fx-border-color: #ffffff;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+}
+
+.smallCard {
+    -fx-background-color:#ffffff;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-style: solid;
     -fx-border-color: #ffffff;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -227,8 +277,8 @@
 .back_button {
     -fx-background-color:#30303d;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 50px;
-    -fx-background-radius: 50px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-text-fill:#000000;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
@@ -244,8 +294,8 @@
 .add_button {
     -fx-background-color:#30303d;
     -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 50px;
-    -fx-background-radius: 50px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-text-fill:#000000;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
@@ -317,6 +367,33 @@
 .login_text .text-field-prompt {
     -fx-text-fill: #aaa;
     -fx-font-size: 14px;
+}
+
+.book_management_section_choice_pane {
+   -fx-background-color:#ffffff;
+   -fx-border-width: 2px 2px 2px 2px;
+   -fx-border-radius: 10px;
+   -fx-background-radius: 10px;
+   -fx-border-style: solid;
+   -fx-border-color: #ffffff;
+   -fx-font-family: 'Euclid Circular A Semibold';
+   -fx-font-weight: bold;
+   -fx-effect: dropshadow(gaussian, #c9c9c1, 10, 0.0, 0, 0);
+}
+
+.background_anchorpane {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Màu đen với độ trong suốt 50% */
+}
+
+.book_detail_pane {
+   -fx-background-color:#ffffff;
+   -fx-border-width: 2px 2px 2px 2px;
+   -fx-border-radius: 10px;
+   -fx-background-radius: 10px;
+   -fx-border-style: solid;
+   -fx-border-color: #ffffff;
+   -fx-font-family: 'Euclid Circular A Semibold';
+   -fx-font-weight: bold;
 }
 
 

@@ -12,6 +12,7 @@ public class Book {
     private String categories;
     private String description;
     private String thumbnailLink;
+    private int quantity;
 
     public Book() {}
 
@@ -25,6 +26,7 @@ public class Book {
         this.categories = categories;
         this.description = description;
         this.thumbnailLink = thumbnailLink;
+        this.quantity = 10;
     }
 
     public String getTitle() {
@@ -87,7 +89,7 @@ public class Book {
         return description;
     }
 
-    public void getDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -98,5 +100,9 @@ public class Book {
     public void setThumbnailLink(String thumbnailLink) {
         this.thumbnailLink = thumbnailLink;
     }
+
+    public int getQuantity() { return quantity; }
+
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
 }

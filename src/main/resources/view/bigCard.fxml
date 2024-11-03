@@ -16,12 +16,12 @@
       </ImageView>
       <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="191.0" stylesheets="@../css/style.css">
          <children>
-            <Label fx:id="title_label" prefHeight="66.0" prefWidth="182.0" text="Java Foundations: &#10;Introduction to Program Design &amp; Data Structures">
+            <Label fx:id="title_label" prefHeight="66.0" prefWidth="182.0" styleClass="label_1" stylesheets="@../css/style.css" text="Java Foundations: &#10;Introduction to Program Design &amp; Data Structures" wrapText="true">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="18.0" />
                </font>
             </Label>
-            <Label fx:id="author_label" prefHeight="22.0" prefWidth="188.0" text="Andre Aciman">
+            <Label fx:id="author_label" prefHeight="22.0" prefWidth="188.0" styleClass="label_2" stylesheets="@../css/style.css" text="Andre Aciman">
                <font>
                   <Font name="EuclidCircularA-Medium" size="13.0" />
                </font>
