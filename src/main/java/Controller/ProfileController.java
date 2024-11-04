@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import models.DB;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +41,13 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Set the ImageView clip to a circular shape
+        Circle clip = new Circle(80); // Adjust radius as needed
+        clip.setCenterX(95); // Center X coordinate
+        clip.setCenterY(80); // Center Y coordinate
+        avatarImageView.setClip(clip);
+        this.username = username;
+        loadProfileData();
         // Initialize button actions
         set_avatar.setOnAction(this::handleChangeAvatar);
         save_changes.setOnAction(this::handleSaveChanges);

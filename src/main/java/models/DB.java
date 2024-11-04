@@ -111,4 +111,24 @@ public class DB {
             }
         }
     }
+    public static ResultSet getUserData(String username) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path FROM userdetail WHERE username = ?");
+        statement.setString(1, username);
+        return statement.executeQuery();
+    }
+
+    // New method to update profile data for a specific user
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath) throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ? WHERE username = ?")) {
+
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.setString(3, dateOfBirth);
+            statement.setString(4, avatarPath);
+            statement.setString(5, username);
+            statement.executeUpdate();
+        }
+    }
 }

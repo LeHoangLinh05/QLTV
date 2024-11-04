@@ -36,6 +36,10 @@
     -fx-font-weight: bold;
 }
 
+.profile_anchorpane {
+    -fx-background-color: transparent;
+}
+
 .library_anchorpane {
     -fx-background-color: transparent;
     -fx-font-family: 'Euclid Circular A Semibold';
