@@ -55,9 +55,28 @@ public class ProfileController implements Initializable {
 
     // Method to load the user's profile data from the database
     private void loadProfileData() {
+//        try {
+//            ResultSet resultSet = DB.getUserData(username);
+//            if (resultSet.next()) {
+//                first_name.setText(resultSet.getString("fName"));
+//                last_name.setText(resultSet.getString("lName"));
+//                date_of_birth.setText(resultSet.getString("date_of_birth"));
+//                avatarPath = resultSet.getString("avatar_path");
+//
+//                if (avatarPath != null && !avatarPath.isEmpty()) {
+//                    File avatarFile = new File(avatarPath);
+//                    if (avatarFile.exists()) {
+//                        avatarImageView.setImage(new Image(new FileInputStream(avatarFile)));
+//                    }
+//                }
+//            }
+//        } catch (SQLException | FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         try {
             ResultSet resultSet = DB.getUserData(username);
             if (resultSet.next()) {
+                System.out.println("Data loaded for username: " + username);  // Debugging
                 first_name.setText(resultSet.getString("fName"));
                 last_name.setText(resultSet.getString("lName"));
                 date_of_birth.setText(resultSet.getString("date_of_birth"));
@@ -69,6 +88,8 @@ public class ProfileController implements Initializable {
                         avatarImageView.setImage(new Image(new FileInputStream(avatarFile)));
                     }
                 }
+            } else {
+                System.out.println("No data found for username: " + username);  // Debugging
             }
         } catch (SQLException | FileNotFoundException e) {
             e.printStackTrace();

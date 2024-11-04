@@ -41,7 +41,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="first_name" layoutX="287.0" layoutY="372.0" promptText="name" styleClass="login_text" stylesheets="@../css/style.css" text="qewr">
+      <TextField fx:id="first_name" layoutX="287.0" layoutY="372.0" promptText="name" styleClass="login_text" stylesheets="@../css/style.css">
          <font>
             <Font size="20.0" />
          </font></TextField>

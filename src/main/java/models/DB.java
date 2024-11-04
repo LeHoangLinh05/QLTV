@@ -23,7 +23,7 @@ public class DB {
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();
                 AdminPanelController loggedInController = fxmlLoader.getController();
-                loggedInController.displayDashboard(firstName, lastName);
+                loggedInController.displayDashboard(firstName, lastName, userName);
         }else {
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();

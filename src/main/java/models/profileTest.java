@@ -15,7 +15,7 @@ public class profileTest extends Application {
             Parent root = loader.load();
 
             // Set up the scene with the loaded FXML file
-            Scene scene = new Scene(root, 910.4, 700); // Adjust the dimensions as needed
+            Scene scene = new Scene(root, 920, 700); // Adjust the dimensions as needed
             primaryStage.setTitle("Library Management System"); // Set the title of the window
             primaryStage.setScene(scene); // Set the scene for the primary stage
             primaryStage.show(); // Display the stage

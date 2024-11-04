@@ -111,10 +111,10 @@ public class AdminPanelController implements Initializable {
         }
     };
 
-    public void displayDashboard(String firstName, String lastName) throws IOException {
+    public void displayDashboard(String firstName, String lastName, String username) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
-
+        this.username = username;
         showBookManagement();
         showLibrary();
         showProfile();
