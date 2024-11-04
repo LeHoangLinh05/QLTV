@@ -96,7 +96,13 @@ public class AdminPanelController implements Initializable {
             Button button = buttons.get(i);
             ImageView icon = icons.get(i);
 
-            button.setOnAction(actionEvent -> menuControl(actionEvent, icon));
+            button.setOnAction(actionEvent -> {
+                try {
+                    menuControl(actionEvent, icon);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     };
 
@@ -104,11 +110,11 @@ public class AdminPanelController implements Initializable {
         this.firstName = firstName;
         this.lastName = lastName;
         showDashboard(firstName,lastName);
-        //showBookManagement();
+        showBookManagement();
 
     }
 
-    public void menuControl(ActionEvent actionEvent, ImageView icon) {
+    public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
         if (selectedButton == dashboard_button) {
@@ -124,16 +130,16 @@ public class AdminPanelController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
-    private void showDashboard(String firstName, String lastName) {
+    private void showDashboard(String firstName, String lastName) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
-       // FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
-        //AnchorPane dashboardPane = dashboardLoader.load();
-        //DashboardController dashboardController = dashboardLoader.getController();
-        //dashboardController.setAdminInfo(firstName, lastName);
-        //dashboard_anchorpane.getChildren().clear();
-        //dashboard_anchorpane.getChildren().add(dashboardPane);
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+        AnchorPane dashboardPane = dashboardLoader.load();
+        DashboardController dashboardController = dashboardLoader.getController();
+        dashboardController.setAdminInfo(firstName, lastName);
+        dashboard_anchorpane.getChildren().clear();
+        dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
     private void showBookManagement() {
