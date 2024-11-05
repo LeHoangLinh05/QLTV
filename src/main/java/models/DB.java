@@ -38,12 +38,12 @@ public class DB {
         stage.show();
     }
 
-    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName) throws SQLException, IOException {
+    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role) throws SQLException, IOException {
         Connection connection = null;
         PreparedStatement psinsert = null;
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
-
+        try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
@@ -59,9 +59,20 @@ public class DB {
                 psinsert.setString(4, lastName);
                 psinsert.executeUpdate();
 
-                changeScene(event, "/view/loggedin.fxml", "Library Management System", username, firstName, lastName);
+                if (role.equalsIgnoreCase("Admin")) {
+                    changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName);
+                } else {
+                    changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName);
+                }
             }
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (pscheckUserExists != null) pscheckUserExists.close();
+            if (psinsert != null) psinsert.close();
+            if (connection != null) connection.close();
+        }
     }
 
     public static void logInUser(ActionEvent event, String username, String password) throws SQLException, IOException {
@@ -82,7 +93,7 @@ public class DB {
                     String retrievedFname = resultSet.getString("fName");
                     String retrievedLname = resultSet.getString("lName");
                     if (retrievedPassword.equals(password)){
-                        changeScene(event, "/view/loggedin.fxml", "Library Management System", username, retrievedFname, retrievedLname);
+                        changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                     }
                 }
             }

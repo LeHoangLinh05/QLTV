@@ -193,20 +193,20 @@ public class AdminPanelController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-    public void updateAdminName(String firstName, String lastName, String username) throws IOException {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-
-        // Cập nhật tên trên DashboardController nếu nó đang được hiển thị
-        if (dashboard_anchorpane.isVisible()) {
-            try {
-                showDashboard(firstName, lastName, username);  // Gọi lại showDashboard để cập nhật tên mới
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void updateAdminName(String firstName, String lastName, String username) throws IOException {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.username = username;
+//
+//        // Cập nhật tên trên DashboardController nếu nó đang được hiển thị
+//        if (dashboard_anchorpane.isVisible()) {
+//            try {
+//                showDashboard(firstName, lastName, username);  // Gọi lại showDashboard để cập nhật tên mới
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 
 

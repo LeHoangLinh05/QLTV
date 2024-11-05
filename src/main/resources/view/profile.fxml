@@ -41,12 +41,9 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="first_name" layoutX="287.0" layoutY="372.0" promptText="name" styleClass="login_text" stylesheets="@../css/style.css">
-         <font>
-            <Font size="20.0" />
-         </font></TextField>
       <TextField fx:id="last_name" layoutX="287.0" layoutY="434.0" styleClass="login_text" stylesheets="@../css/style.css" />
       <TextField fx:id="date_of_birth" layoutX="287.0" layoutY="495.0" styleClass="login_text" stylesheets="@../css/style.css" />
       <Button fx:id="save_changes" layoutX="430.0" layoutY="600.0" mnemonicParsing="false" styleClass="login_button" stylesheets="@../css/style.css" text="save changes" />
+      <TextField fx:id="first_name" layoutX="287.0" layoutY="372.0" styleClass="login_text" stylesheets="@../css/style.css" />
    </children>
 </AnchorPane>

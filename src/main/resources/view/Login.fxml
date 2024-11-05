@@ -37,12 +37,6 @@
                <font>
                   <Font size="11.0" />
                </font></Label>
-            <Separator layoutX="23.0" layoutY="310.0" prefHeight="4.0" prefWidth="258.0" />
-            <Label layoutX="142.0" layoutY="303.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER">
-               <font>
-                  <Font name="EuclidCircularA-SemiBold" size="12.0" />
-               </font></Label>
-            <Button fx:id="btn_login_admin" layoutX="23.0" layoutY="328.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login with Admin" AnchorPane.rightAnchor="17.0" />
             </children></AnchorPane>
     </children>
 </HBox>

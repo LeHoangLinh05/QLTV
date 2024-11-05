@@ -2,16 +2,19 @@ package Controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import models.DB;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,10 +108,13 @@ public class ProfileController implements Initializable {
         try {
             DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath);
             System.out.println("Profile updated successfully.");
-            AdminPanelController.updateAdminName(firstName, lastName, username);
+          //  AdminPanelController.updateAdminName(firstName, lastName, username);
+            
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to update profile.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
