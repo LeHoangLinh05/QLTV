@@ -64,7 +64,7 @@
     -fx-font-weight: bold;
 }
 
-.save_button {
+.purple_button {
     -fx-background-color:#6A6BE6;
     -fx-border-width: 2px 2px 2px 2px;
     -fx-border-radius: 10px;
@@ -74,7 +74,7 @@
     -fx-text-fill: #ffffff;
 }
 
-.save_button:hover{
+.purple_button:hover{
     -fx-background-color:#9091f2;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
@@ -274,7 +274,7 @@
     -fx-font-weight: bold;
 }
 
-.back_button {
+.black_button {
     -fx-background-color:#30303d;
     -fx-border-width: 2px 2px 2px 2px;
     -fx-border-radius: 10px;
@@ -285,24 +285,7 @@
     -fx-text-fill: #ffffff;
 }
 
-.back_button:hover{
-    -fx-background-color:#434352;
-    -fx-font-family: 'Euclid Circular A Semibold';
-    -fx-font-weight: bold;
-}
-
-.add_button {
-    -fx-background-color:#30303d;
-    -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-text-fill:#000000;
-    -fx-font-family: 'Euclid Circular A Semibold';
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-}
-
-.add_button:hover{
+.black_button:hover{
     -fx-background-color:#434352;
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
@@ -349,15 +332,18 @@
 }*/
 
 .login_text {
-    -fx-background-color: transparent;
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: #ccc;
-    -fx-padding: 5 0 5 0;
-    -fx-font-size: 13px;
+    -fx-background-color:transparent;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #e9e8ec;
+    -fx-background-radius: 10px;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
 }
 
 .login_text:focused {
-    -fx-border-color: #0C3988;
+    -fx-border-color: #6A6BE6;
 }
 
 .login_text:focused .text-field-prompt {
@@ -394,6 +380,11 @@
    -fx-border-color: #ffffff;
    -fx-font-family: 'Euclid Circular A Semibold';
    -fx-font-weight: bold;
+}
+
+.login_background {
+    -fx-background-color: #dcd3f7;
+
 }
 
 

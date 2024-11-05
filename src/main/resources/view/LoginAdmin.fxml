@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -16,34 +15,27 @@
    <children>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <AnchorPane prefHeight="400.0" prefWidth="305.0" style="-fx-background-color: #336699;">
+            <AnchorPane prefHeight="400.0" prefWidth="300.0" styleClass="login_background" stylesheets="@../css/style.css">
                <children>
-                  <ImageView fitHeight="163.0" fitWidth="155.0" layoutX="73.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="66.60000000000002" AnchorPane.topAnchor="131.0">
+                  <ImageView fitHeight="400.0" fitWidth="300.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <image>
-                        <Image url="@../images/icon.png" />
+                        <Image url="@../images/login_background.png" />
                      </image>
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="400.0" prefWidth="301.0" style="-fx-background-color: #FFF;">
+            <AnchorPane prefHeight="400.0" prefWidth="301.0" styleClass="book_detail_pane" stylesheets="@../css/style.css">
                <children>
-                  <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" stylesheets="@../css/style.css">
-                     <styleClass>
-                        <String fx:value="text-field-prompt" />
-                        <String fx:value="text-field" />
-                     </styleClass>
-                  </PasswordField>
-                  <Separator layoutX="23.0" layoutY="255.0" prefHeight="4.0" prefWidth="258.0" />
-                  <Label layoutX="142.0" layoutY="246.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER" />
-                  <Button fx:id="btn_login_user" layoutX="23.0" layoutY="273.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@../css/style.css" text="Login with User" />
-                  <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" stylesheets="@../css/style.css">
-                     <styleClass>
-                        <String fx:value="text-field" />
-                        <String fx:value="text-field-prompt" />
-                     </styleClass>
-                  </TextField>
-                  <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" stylesheets="@../css/style.css" text="Login" />
-                  <Label fx:id="wrongLogin" layoutX="24.0" layoutY="155.0" prefHeight="18.0" prefWidth="258.0">
+                  <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" styleClass="login_text" stylesheets="@../css/style.css" />
+                  <Separator layoutX="23.0" layoutY="239.0" prefHeight="4.0" prefWidth="258.0" />
+                  <Label layoutX="142.0" layoutY="232.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER">
+                     <font>
+                        <Font name="EuclidCircularA-SemiBold" size="12.0" />
+                     </font></Label>
+                  <Button fx:id="btn_login_user" layoutX="23.0" layoutY="262.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login with User" />
+                  <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" styleClass="login_text" stylesheets="@../css/style.css" />
+                  <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login" />
+                  <Label fx:id="wrongLogin" layoutX="24.0" layoutY="155.0" prefHeight="18.0" prefWidth="258.0" styleClass="regular_text" stylesheets="@../css/style.css">
                      <font>
                         <Font size="11.0" />
                      </font>

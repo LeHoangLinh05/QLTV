@@ -17,7 +17,7 @@
       <AnchorPane fx:id="detail_anchorpane" layoutX="110.0" layoutY="100.0" prefHeight="500.0" prefWidth="700.0" styleClass="book_detail_pane" stylesheets="@../css/style.css">
          <children>
             <ImageView fx:id="cover_img" fitHeight="300.0" fitWidth="200.0" layoutX="42.0" layoutY="70.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="50.0" />
-            <Button fx:id="save_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="70.0" layoutY="408.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="save_button" stylesheets="@../css/style.css" text="Save" textFill="WHITE" AnchorPane.bottomAnchor="50.0">
+            <Button fx:id="save_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="70.0" layoutY="408.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Save" textFill="WHITE" AnchorPane.bottomAnchor="50.0">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="15.0" />
                </font>
