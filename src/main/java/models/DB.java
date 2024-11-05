@@ -23,7 +23,7 @@ public class DB {
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();
                 AdminPanelController loggedInController = fxmlLoader.getController();
-                loggedInController.displayDashboard(firstName, lastName);
+                loggedInController.displayDashboard(firstName, lastName, userName);
         }else {
                 FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
                 root = fxmlLoader.load();
@@ -109,6 +109,26 @@ public class DB {
                     changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                 }
             }
+        }
+    }
+    public static ResultSet getUserData(String username) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path FROM userdetail WHERE username = ?");
+        statement.setString(1, username);
+        return statement.executeQuery();
+    }
+
+    // New method to update profile data for a specific user
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath) throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ? WHERE username = ?")) {
+
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.setString(3, dateOfBirth);
+            statement.setString(4, avatarPath);
+            statement.setString(5, username);
+            statement.executeUpdate();
         }
     }
 }

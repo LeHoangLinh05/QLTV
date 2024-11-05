@@ -59,7 +59,7 @@ public class DashboardController implements Initializable {
         avatar_circle.setFill(new ImagePattern(im));
     }
 
-    public void setAdminInfo(String firstName, String lastName){
+    public void setAdminInfo(String firstName, String lastName, String username){
         label_adminName.setText( firstName + " " + lastName );
         label_accType.setText("      Admin");
     }
