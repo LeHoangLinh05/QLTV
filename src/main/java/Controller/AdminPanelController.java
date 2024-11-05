@@ -118,14 +118,14 @@ public class AdminPanelController implements Initializable {
         showBookManagement();
         showLibrary();
         showProfile();
-        showDashboard(firstName,lastName);
+        showDashboard(firstName,lastName, username);
     }
 
     public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
         if (selectedButton == dashboard_button) {
-            showDashboard(firstName, lastName);
+            showDashboard(firstName, lastName, username);
         } else if (selectedButton == book_management_button) {
             showBookManagement();
         } else if (selectedButton == logout_button) {
@@ -139,7 +139,7 @@ public class AdminPanelController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
-    private void showDashboard(String firstName, String lastName) throws IOException {
+    private void showDashboard(String firstName, String lastName, String username) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
@@ -147,7 +147,7 @@ public class AdminPanelController implements Initializable {
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
-        dashboardController.setAdminInfo(firstName, lastName);
+        dashboardController.setAdminInfo(firstName, lastName, username);
         dashboard_anchorpane.getChildren().clear();
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
@@ -193,6 +193,21 @@ public class AdminPanelController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+    public void updateAdminName(String firstName, String lastName, String username) throws IOException {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+
+        // Cập nhật tên trên DashboardController nếu nó đang được hiển thị
+        if (dashboard_anchorpane.isVisible()) {
+            try {
+                showDashboard(firstName, lastName, username);  // Gọi lại showDashboard để cập nhật tên mới
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 }
