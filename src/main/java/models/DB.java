@@ -44,7 +44,7 @@ public class DB {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -80,7 +80,7 @@ public class DB {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
             preparedStatement.setString(1,username);
             resultSet = preparedStatement.executeQuery();
@@ -104,8 +104,8 @@ public class DB {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/login_project_db", "root", "andrerieu");
-        preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM admindetail WHERE username = ?");
         preparedStatement.setString(1,username);
         resultSet = preparedStatement.executeQuery();
 

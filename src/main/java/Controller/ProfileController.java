@@ -37,6 +37,7 @@ public class ProfileController implements Initializable {
     private String username;
     private String avatarPath;
 
+    private AdminPanelController adminPanelController;
     public void setUsername(String username) {
         this.username = username;
         loadProfileData();
@@ -99,22 +100,35 @@ public class ProfileController implements Initializable {
         }
     }
 
+
+    public void setAdminPanelController(AdminPanelController adminPanelController) {
+        this.adminPanelController = adminPanelController;
+    }
     // Method to handle saving changes to profile data
     private void handleSaveChanges(ActionEvent event) {
         String firstName = first_name.getText();
         String lastName = last_name.getText();
         String dateOfBirth = date_of_birth.getText();
+        String avatarPath = this.avatarPath;
 
         try {
             DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath);
             System.out.println("Profile updated successfully.");
-          //  AdminPanelController.updateAdminName(firstName, lastName, username);
-            
+            if (adminPanelController != null) {
+                adminPanelController.updateInfo(firstName, lastName, username, avatarPath);
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to update profile.");
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+
+
+
+
 }
