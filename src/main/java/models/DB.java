@@ -52,11 +52,12 @@ public class DB {
             if (resultSet.isBeforeFirst()){
                 System.out.println("Username already taken.");
             }else {
-                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName) VALUES (?, ?, ?, ?)");
+                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role) VALUES (?, ?, ?, ?, ?)");
                 psinsert.setString(1, username);
                 psinsert.setString(2, password);
                 psinsert.setString(3, firstName);
                 psinsert.setString(4, lastName);
+                psinsert.setString(5, role);
                 psinsert.executeUpdate();
 
                 if (role.equalsIgnoreCase("Admin")) {
@@ -81,7 +82,7 @@ public class DB {
         ResultSet resultSet = null;
 
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-            preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
+            preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role FROM userdetail WHERE username = ?");
             preparedStatement.setString(1,username);
             resultSet = preparedStatement.executeQuery();
 
@@ -92,6 +93,8 @@ public class DB {
                     String retrievedPassword = resultSet.getString("password");
                     String retrievedFname = resultSet.getString("fName");
                     String retrievedLname = resultSet.getString("lName");
+                    String retrievedRole = resultSet.getString("role");
+
                     if (retrievedPassword.equals(password)){
                         changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                     }
@@ -124,21 +127,22 @@ public class DB {
     }
     public static ResultSet getUserData(String username) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path FROM userdetail WHERE username = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, id, email FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
     }
 
     // New method to update profile data for a specific user
-    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath) throws SQLException {
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email) throws SQLException {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ? WHERE username = ?")) {
+             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
             statement.setString(2, lastName);
             statement.setString(3, dateOfBirth);
             statement.setString(4, avatarPath);
-            statement.setString(5, username);
+            statement.setString(5, email);
+            statement.setString(6, username);
             statement.executeUpdate();
         }
     }

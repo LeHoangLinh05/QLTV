@@ -22,18 +22,31 @@ import java.util.ResourceBundle;
 import javafx.stage.FileChooser;
 
 public class ProfileController implements Initializable {
+
+    @FXML
+    private TextField id_text;
+
+    @FXML
+    private TextField email_text;
+
     @FXML
     private ImageView avatarImageView;
+
     @FXML
     private Button set_avatar;
+
     @FXML
     private Button save_changes;
+
     @FXML
     private TextField first_name;
+
     @FXML
     private TextField last_name;
+
     @FXML
     private TextField date_of_birth;
+
     private String username;
     private String avatarPath;
 
@@ -66,6 +79,8 @@ public class ProfileController implements Initializable {
                 first_name.setText(resultSet.getString("fName"));
                 last_name.setText(resultSet.getString("lName"));
                 date_of_birth.setText(resultSet.getString("date_of_birth"));
+                id_text.setText(resultSet.getString("id"));
+                email_text.setText(resultSet.getString("email"));
                 avatarPath = resultSet.getString("avatar_path");
 
                 if (avatarPath != null && !avatarPath.isEmpty()) {
@@ -109,10 +124,11 @@ public class ProfileController implements Initializable {
         String firstName = first_name.getText();
         String lastName = last_name.getText();
         String dateOfBirth = date_of_birth.getText();
+        String email = email_text.getText();
         String avatarPath = this.avatarPath;
 
         try {
-            DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath);
+            DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email);
             System.out.println("Profile updated successfully.");
             if (adminPanelController != null) {
                 adminPanelController.updateInfo(firstName, lastName, username, avatarPath);

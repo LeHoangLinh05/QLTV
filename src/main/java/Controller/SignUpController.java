@@ -86,7 +86,7 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
     choiceBox.setConverter(new StringConverter<String>() {
         @Override
         public String toString(String s) {
-            return (s == null) ? "Noting Selected" : s;
+            return (s == null) ? "Nothing Selected" : s;
         }
 
         @Override
