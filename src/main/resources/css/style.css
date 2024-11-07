@@ -398,7 +398,7 @@
     -fx-border-radius: 10px;
     -fx-border-color: #e9e8ec;
     -fx-background-radius: 10px;
-       -fx-mark-color: orange; // arrow color
+       -fx-mark-color: orange;
 }
 
 
@@ -406,4 +406,20 @@
     -fx-text-fill: black;
 }
 
+.circular-button {
+    -fx-background-radius: 50px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+    -fx-background-color : #355ECE;
+}
+.circular-button:hover {
+    -fx-background-radius: 50px;
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-max-width: 30px;
+    -fx-max-height: 30px;
+    -fx-background-color : #dcd3f7;
+}
 

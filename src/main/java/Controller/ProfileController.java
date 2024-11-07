@@ -38,6 +38,7 @@ public class ProfileController implements Initializable {
     private String avatarPath;
 
     private AdminPanelController adminPanelController;
+
     public void setUsername(String username) {
         this.username = username;
         loadProfileData();
@@ -104,6 +105,7 @@ public class ProfileController implements Initializable {
     public void setAdminPanelController(AdminPanelController adminPanelController) {
         this.adminPanelController = adminPanelController;
     }
+
     // Method to handle saving changes to profile data
     private void handleSaveChanges(ActionEvent event) {
         String firstName = first_name.getText();
@@ -126,9 +128,4 @@ public class ProfileController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-
 }

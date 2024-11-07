@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -8,19 +9,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="920.0" styleClass="profile_anchorpane" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileController">
+<AnchorPane prefHeight="700.0" prefWidth="920.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileController">
    <children>
       <Label layoutX="79.0" layoutY="36.0" prefHeight="30.0" prefWidth="174.0" text="Profile Settings">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <ImageView fx:id="avatarImageView" fitHeight="200.0" fitWidth="221.0" layoutX="362.0" layoutY="80.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: #000000;">
+      <ImageView fx:id="avatarImageView" fitHeight="252.0" fitWidth="227.0" layoutX="361.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true" style="-fx-image: #000000;">
          <image>
             <Image url="@../images/avatar_img.png" />
          </image>
       </ImageView>
-      <Button fx:id="set_avatar" layoutX="410.0" layoutY="253.0" mnemonicParsing="false" styleClass="login_button" stylesheets="@../css/style.css" text="change avatar" />
+      <Button fx:id="set_avatar" layoutX="483.0" layoutY="206.0" minHeight="30.0" minWidth="34.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="34.0" styleClass="circular-button" stylesheets="@../css/style.css">
+         <graphic>
+            <ImageView fitHeight="29.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/managebook_button.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <Label layoutX="89.0" layoutY="317.0" text="Profile details">
          <font>
             <Font name="System Bold" size="16.0" />
@@ -43,7 +51,11 @@
       </Label>
       <TextField fx:id="last_name" layoutX="287.0" layoutY="434.0" styleClass="login_text" stylesheets="@../css/style.css" />
       <TextField fx:id="date_of_birth" layoutX="287.0" layoutY="495.0" styleClass="login_text" stylesheets="@../css/style.css" />
-      <Button fx:id="save_changes" layoutX="430.0" layoutY="600.0" mnemonicParsing="false" styleClass="login_button" stylesheets="@../css/style.css" text="save changes" />
+      <Button fx:id="save_changes" layoutX="430.0" layoutY="600.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Save changes" />
       <TextField fx:id="first_name" layoutX="287.0" layoutY="372.0" styleClass="login_text" stylesheets="@../css/style.css" />
    </children>
+   <styleClass>
+      <String fx:value="button_avatar" />
+      <String fx:value="button_avatar1" />
+   </styleClass>
 </AnchorPane>

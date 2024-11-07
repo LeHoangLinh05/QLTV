@@ -92,7 +92,7 @@ public class UpdateBookController implements Initializable {
     public boolean saveToDB(Book book) {
         boolean isUpdated = false;
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             String query = "UPDATE books SET title = ?, author = ?, published_date = ?, publisher = ?, description = ?, categories = ?, quantity = ? WHERE ISBN = ?";
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, book.getTitle());

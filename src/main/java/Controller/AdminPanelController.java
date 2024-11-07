@@ -113,21 +113,23 @@ public class AdminPanelController implements Initializable {
         }
     };
 
-    public void displayDashboard(String firstName, String lastName, String username) throws IOException {
+    public void displayDashboard(String firstName, String lastName, String username, String role) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
+        this.role = role;
+        this.avatar_path = avatar_path;
         showBookManagement();
         showLibrary();
         showProfile();
-        showDashboard(firstName,lastName, username, avatar_path);
+        showDashboard(firstName,lastName, username, role);
     }
 
     public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
         if (selectedButton == dashboard_button) {
-            showDashboard(firstName, lastName, username, avatar_path);
+            showDashboard(firstName, lastName, username, role);
         } else if (selectedButton == book_management_button) {
             showBookManagement();
         } else if (selectedButton == logout_button) {
@@ -141,7 +143,7 @@ public class AdminPanelController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
-    private void showDashboard(String firstName, String lastName, String username, String avatar_path) throws IOException {
+    private void showDashboard(String firstName, String lastName, String username, String role) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
@@ -175,15 +177,9 @@ public class AdminPanelController implements Initializable {
         profile_anchorpane.setVisible(true);
         FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
         AnchorPane profilePane = profileLoader.load();
-
-        // Lấy instance của ProfileController
         ProfileController profileController = profileLoader.getController();
         profileController.setAdminPanelController(this);
-
-        // Truyền thông tin đăng nhập (username) vào ProfileController
         profileController.setUsername(username);
-
-        // Cập nhật nội dung của profile_anchorpane với profilePane
         profile_anchorpane.getChildren().clear();
         profile_anchorpane.getChildren().add(profilePane);
 
@@ -191,7 +187,7 @@ public class AdminPanelController implements Initializable {
 
     private void logOut(ActionEvent actionEvent) {
         try {
-            DB.changeScene(actionEvent, "/view/login.fxml", "Library Management System", null, null, null);
+            DB.changeScene(actionEvent, "/view/login.fxml", "Library Management System", null, null, null, null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -201,10 +197,9 @@ public class AdminPanelController implements Initializable {
         this.lastName = lastName;
         this.username = username;
         this.avatar_path = avatar_path;
-
         // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
         if (dashboard_anchorpane.isVisible()) {
-            showDashboard(firstName, lastName, username, avatar_path);  // Gọi lại showDashboard để cập nhật thông tin
+            showDashboard(firstName, lastName, username, role);  // Gọi lại showDashboard để cập nhật thông tin
         }
     }
 

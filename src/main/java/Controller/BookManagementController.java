@@ -271,7 +271,7 @@ public class BookManagementController implements Initializable {
         add_button.setOnMouseClicked(event -> {
 
             try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
 
                 PreparedStatement check = connection.prepareStatement("SELECT COUNT(*) FROM books where isbn = ?");
 
@@ -329,7 +329,7 @@ public class BookManagementController implements Initializable {
                 result_gridpane1.getChildren().clear();
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
 
                     String get = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
                     PreparedStatement preparedStatement = connection.prepareStatement(get);

@@ -58,6 +58,7 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         barChart();
+
 //        setUserAvatar();
 
     }
@@ -69,6 +70,7 @@ public class DashboardController implements Initializable {
 
     public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
         label_adminName.setText( firstName + " " + lastName );
+        System.out.print(role);
         if (Objects.equals(role, "Admin")) {
             label_accType.setText("      Admin");
         }
