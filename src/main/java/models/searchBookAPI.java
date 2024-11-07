@@ -1,4 +1,4 @@
-package org.example;
+package models;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.util.*;
 import java.net.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.Book;
 
 public class searchBookAPI {
 
@@ -58,7 +59,7 @@ public class searchBookAPI {
                     JsonNode thumbnailNode = bookNode.get("imageLinks").get("thumbnail");
                     thumbnailLink = thumbnailNode.asText();
                 } else {
-                    thumbnailLink = "E:\\BookAPI\\src\\main\\resources\\images\\no_cover_thumb.png";
+                    thumbnailLink = "/images/no_cover_thumb.png";
                 }
 
                 Book result = new Book(title, isbn, authors, publishedDate, publisher, pageCount, categories, description, thumbnailLink);
