@@ -392,4 +392,18 @@
 }
 
 
+.choice-box {
+    -fx-background-color:transparent;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #e9e8ec;
+    -fx-background-radius: 10px;
+       -fx-mark-color: orange; // arrow color
+}
+
+
+.choice-box > .label {
+    -fx-text-fill: black;
+}
+
 

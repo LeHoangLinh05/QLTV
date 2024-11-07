@@ -69,8 +69,12 @@ public class DashboardController implements Initializable {
 
     public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
         label_adminName.setText( firstName + " " + lastName );
-        if (Objects.equals(role, "Admin")) label_accType.setText("      Admin");
-        else label_accType.setText("       User");
+        if (Objects.equals(role, "Admin")) {
+            label_accType.setText("      Admin");
+        }
+        if (Objects.equals(role, "User")) {
+            label_accType.setText("       User");
+        }
         if (avatar_path != null && !avatar_path.isEmpty()) {
             File avatarFile = new File(avatar_path);
 

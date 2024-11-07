@@ -52,11 +52,12 @@ public class DB {
             if (resultSet.isBeforeFirst()){
                 System.out.println("Username already taken.");
             }else {
-                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName) VALUES (?, ?, ?, ?)");
+                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role) VALUES (?, ?, ?, ?, ?)");
                 psinsert.setString(1, username);
                 psinsert.setString(2, password);
                 psinsert.setString(3, firstName);
                 psinsert.setString(4, lastName);
+                psinsert.setString(5, role);
                 psinsert.executeUpdate();
 
                 if (role.equalsIgnoreCase("Admin")) {
@@ -81,7 +82,7 @@ public class DB {
         ResultSet resultSet = null;
 
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-            preparedStatement = connection.prepareStatement("SELECT password, fName, lName FROM userdetail WHERE username = ?");
+            preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role FROM userdetail WHERE username = ?");
             preparedStatement.setString(1,username);
             resultSet = preparedStatement.executeQuery();
 
@@ -92,6 +93,8 @@ public class DB {
                     String retrievedPassword = resultSet.getString("password");
                     String retrievedFname = resultSet.getString("fName");
                     String retrievedLname = resultSet.getString("lName");
+                    String retrievedRole = resultSet.getString("role");
+
                     if (retrievedPassword.equals(password)){
                         changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname);
                     }

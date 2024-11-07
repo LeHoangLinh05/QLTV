@@ -83,6 +83,7 @@ public class SignUpController implements Initializable {
 public void initialize(URL url, ResourceBundle resourceBundle) {
     // Thiết lập các lựa chọn trong ChoiceBox
     choiceBox.getItems().addAll("User", "Admin");
+    choiceBox.setValue("User");
     choiceBox.setConverter(new StringConverter<String>() {
         @Override
         public String toString(String s) {
