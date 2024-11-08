@@ -92,7 +92,7 @@
       </Pane>
       <AnchorPane fx:id="profile_anchorpane" layoutX="638.0" layoutY="61.0" prefHeight="601.0" prefWidth="229.0" styleClass="dashboard_stat_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="638.0">
          <children>
-            <ImageView fx:id="avatar" fitHeight="102.0" fitWidth="140.0" layoutX="43.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="avatar" fitHeight="160.0" fitWidth="194.0" layoutX="36.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="label_adminName" layoutX="66.0" layoutY="157.0" styleClass="body_label" stylesheets="@../css/style.css" text="Username">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="20.0" />

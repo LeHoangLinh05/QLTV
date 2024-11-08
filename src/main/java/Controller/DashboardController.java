@@ -57,7 +57,10 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         barChart();
-
+        Circle clip = new Circle(50); // Adjust radius as needed
+        clip.setCenterX(72); // Center X coordinate
+        clip.setCenterY(70); // Center Y coordinate
+        avatar.setClip(clip);
     }
 
 

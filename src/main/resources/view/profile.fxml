@@ -17,12 +17,12 @@
       </Label>
       <AnchorPane layoutX="51.2" prefHeight="431.0" prefWidth="819.0" styleClass="dashboard_stat_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="51.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="120.0">
          <children>
-            <ImageView fx:id="avatarImageView" fitHeight="200.0" fitWidth="221.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="60.0">
+            <ImageView fx:id="avatarImageView" fitHeight="234.0" fitWidth="240.0" layoutX="77.60000000000001" layoutY="69.60000000000001" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="67.0">
                <image>
                   <Image url="@../images/avatar_img.png" />
                </image>
             </ImageView>
-            <Button fx:id="set_avatar" layoutX="113.0" layoutY="296.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="136.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Change Avatar" AnchorPane.topAnchor="300.0">
+            <Button fx:id="set_avatar" layoutX="104.0" layoutY="304.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="136.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Change Avatar" AnchorPane.topAnchor="304.0">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="15.0" />
                </font>
