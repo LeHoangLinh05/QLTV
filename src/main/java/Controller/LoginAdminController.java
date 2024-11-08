@@ -43,7 +43,7 @@ public class LoginAdminController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "/view/Login.fxml", "Library Management System", null, null, null, null);
+                    DB.changeScene(event, "/view/Login.fxml", "Library Management System", null, null, null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

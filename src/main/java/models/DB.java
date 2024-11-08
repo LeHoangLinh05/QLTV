@@ -1,6 +1,4 @@
 package models;
-
-
 import Controller.AdminPanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -8,20 +6,18 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.*;
 
-
 public class DB {
-    public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role) throws IOException {
+    public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
         Parent root = null;
 
         if ((userName != null) && (firstName != null)){
             FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
             root = fxmlLoader.load();
             AdminPanelController loggedInController = fxmlLoader.getController();
-            loggedInController.displayDashboard(firstName, lastName, userName, role);
+            loggedInController.displayDashboard(firstName, lastName, userName, role, avatar_path);
         }else {
             FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
             root = fxmlLoader.load();
@@ -36,7 +32,7 @@ public class DB {
         stage.show();
     }
 
-    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role) throws SQLException, IOException {
+    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatar_path) throws SQLException, IOException {
         Connection connection = null;
         PreparedStatement psinsert = null;
         PreparedStatement pscheckUserExists = null;
@@ -51,18 +47,19 @@ public class DB {
                 System.out.println("Username already taken.");
                 throw new SQLException("Username already taken");
             }else {
-                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role) VALUES (?, ?, ?, ?, ?)");
+                psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role, avatar_path) VALUES (?, ?, ?, ?, ?, ?)");
                 psinsert.setString(1, username);
                 psinsert.setString(2, password);
                 psinsert.setString(3, firstName);
                 psinsert.setString(4, lastName);
                 psinsert.setString(5, role);
+                psinsert.setString(6, avatar_path);
                 psinsert.executeUpdate();
 
                 if (role.equals("Admin")) {
-                    changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role);
+                    changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
                 } else {
-                    changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role);
+                    changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
                 }
             }
         } catch (SQLException e) {
@@ -81,7 +78,7 @@ public class DB {
         ResultSet resultSet = null;
 
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role FROM userdetail WHERE username = ?");
+        preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
         preparedStatement.setString(1,username);
         resultSet = preparedStatement.executeQuery();
 
@@ -93,9 +90,10 @@ public class DB {
                 String retrievedFname = resultSet.getString("fName");
                 String retrievedLname = resultSet.getString("lName");
                 String retrievedRole = resultSet.getString("role");
+                String retrievedAvatarPath = resultSet.getString("avatar_path");
 
                 if (retrievedPassword.equals(password)){
-                    changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname, retrievedRole);
+                    changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
                 }
             }
         }
@@ -128,7 +126,7 @@ public class DB {
 
     public static ResultSet getUserData(String username) throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path FROM userdetail WHERE username = ?");
+        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
     }
@@ -136,13 +134,15 @@ public class DB {
     // New method to update profile data for a specific user
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ? WHERE username = ?")) {
+             PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
             statement.setString(2, lastName);
             statement.setString(3, dateOfBirth);
             statement.setString(4, avatarPath);
-            statement.setString(5, username);
+            statement.setString(5, email);
+            statement.setString(6, id);
+            statement.setString(7, username);
             statement.executeUpdate();
         }
     }

@@ -41,8 +41,7 @@ public class SignUpController implements Initializable {
     @FXML
     private ChoiceBox<String> choiceBox;
 
-
-@Override
+    @Override
 public void initialize(URL url, ResourceBundle resourceBundle) {
     choiceBox.getItems().addAll("User", "Admin");
     choiceBox.setValue("User");
@@ -51,7 +50,7 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
 
     btn_login.setOnAction(event -> {
         try {
-            DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null);
+            DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -76,16 +75,18 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
         }
 
         try {
-            if (DB.isUsernameTaken(username)) { // Thêm hàm kiểm tra username tồn tại
+            if (DB.isUsernameTaken(username)) {
                 FillIn.setText("Username already taken!");
                 return;
             }
 
-            DB.signUpUser(event, username, password, firstName, lastName, role);
+            // Default avatar path
+            String avatar_path = "/images/avatar_img.png";
+            DB.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
             if (role.equals("Admin")) {
-                DB.changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role);
+                DB.changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
             } else if (role.equals("User")) {
-                DB.changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role);
+                DB.changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
             }
 
             System.out.println("Profile created successfully.");
