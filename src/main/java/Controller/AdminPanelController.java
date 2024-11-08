@@ -74,16 +74,23 @@ public class AdminPanelController implements Initializable {
     @FXML
     private AnchorPane bookmanagement_anchorpane;
 
+    @FXML
+    private AnchorPane profile_anchorpane;
+
     private ButtonStyleManager buttonStyleManager;
 
     private String firstName;
     private String lastName;
+    private String username;
+    private String role;
+    private String avatar_path;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
+        profile_anchorpane.setVisible(false);
 
         List<Button> buttons = Arrays.asList(dashboard_button, library_button, book_management_button, user_management_button, profile_button, logout_button);
         List<ImageView> icons = Arrays.asList(dashboard_icon, library_icon, book_management_icon, user_management_icon, profile_icon, logout_icon);
@@ -96,65 +103,107 @@ public class AdminPanelController implements Initializable {
             Button button = buttons.get(i);
             ImageView icon = icons.get(i);
 
-            button.setOnAction(actionEvent -> menuControl(actionEvent, icon));
+            button.setOnAction(actionEvent -> {
+                try {
+                    menuControl(actionEvent, icon);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     };
 
-    public void displayDashboard(String firstName, String lastName) throws IOException {
+    public void displayDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
-        showDashboard(firstName,lastName);
-        //showBookManagement();
-
+        this.username = username;
+        this.role = role;
+        this.avatar_path = avatar_path;
+        showBookManagement();
+        showLibrary();
+        showProfile();
+        showDashboard(firstName,lastName, username, role, avatar_path);
     }
 
-    public void menuControl(ActionEvent actionEvent, ImageView icon) {
+    public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
         if (selectedButton == dashboard_button) {
-            showDashboard(firstName, lastName);
+            showDashboard(firstName, lastName, username, role, avatar_path);
         } else if (selectedButton == book_management_button) {
             showBookManagement();
         } else if (selectedButton == logout_button) {
             logOut(actionEvent);
         } else if (selectedButton == library_button) {
             showLibrary();
+        } else if (selectedButton == profile_button) {
+            showProfile();
         }
 
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
-    private void showDashboard(String firstName, String lastName) {
+    private void showDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
-       // FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
-        //AnchorPane dashboardPane = dashboardLoader.load();
-        //DashboardController dashboardController = dashboardLoader.getController();
-        //dashboardController.setAdminInfo(firstName, lastName);
-        //dashboard_anchorpane.getChildren().clear();
-        //dashboard_anchorpane.getChildren().add(dashboardPane);
+        profile_anchorpane.setVisible(false);
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+        AnchorPane dashboardPane = dashboardLoader.load();
+        DashboardController dashboardController = dashboardLoader.getController();
+        dashboardController.setAdminInfo(firstName, lastName, username, role, avatar_path);
+        dashboard_anchorpane.getChildren().clear();
+        dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
     private void showBookManagement() {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(true);
         library_anchorpane.setVisible(false);
+        profile_anchorpane.setVisible(false);
     }
 
     private void showLibrary() {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(true);
+        profile_anchorpane.setVisible(false);
+    }
+
+    private void showProfile() throws IOException {
+        dashboard_anchorpane.setVisible(false);
+        bookmanagement_anchorpane.setVisible(false);
+        library_anchorpane.setVisible(false);
+        profile_anchorpane.setVisible(true);
+        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
+        AnchorPane profilePane = profileLoader.load();
+        ProfileController profileController = profileLoader.getController();
+        profileController.setAdminPanelController(this);
+        profileController.setUsername(username);
+        profile_anchorpane.getChildren().clear();
+        profile_anchorpane.getChildren().add(profilePane);
+
     }
 
     private void logOut(ActionEvent actionEvent) {
         try {
-            DB.changeScene(actionEvent, "/view/login.fxml", "Library Management System", null, null, null);
+            DB.changeScene(actionEvent, "/view/login.fxml", "Library Management System", null, null, null, null, null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    public void updateInfo(String firstName, String lastName, String username, String avatar_path) throws IOException {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.avatar_path = avatar_path;
+        // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
+        if (dashboard_anchorpane.isVisible()) {
+            showDashboard(firstName, lastName, username, role, avatar_path);  // Gọi lại showDashboard để cập nhật thông tin
+        }
+    }
+
+
 
 
 }

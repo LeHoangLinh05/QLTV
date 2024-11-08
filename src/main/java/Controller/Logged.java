@@ -28,7 +28,7 @@ public class Logged implements Initializable {
             @Override
             public void handle(ActionEvent actionEvent) {
                 try {
-                    DB.changeScene(actionEvent, "/view/login.fxml", "Quản lý thư viện", null, null, null);
+                    DB.changeScene(actionEvent, "/view/login.fxml", "Quản lý thư viện", null, null, null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

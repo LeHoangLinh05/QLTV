@@ -39,29 +39,11 @@ public class LoginAdminController implements Initializable {
         txt_username.setFocusTraversable(false);
         txt_password.setFocusTraversable(false);
 
-        btn_login.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (txt_username.getText().trim().isEmpty() || (txt_password.getText().trim().isEmpty())) {
-                    wrongLogin.setText("Please fill in all information");
-                } else if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())){
-                    wrongLogin.setText("Wrong username or password");
-                    try {
-                        DB.logInAdmin(event, txt_username.getText(), txt_password.getText());
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        });
-
         btn_login_user.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "/view/Login.fxml", "Library Management System", null, null, null);
+                    DB.changeScene(event, "/view/Login.fxml", "Library Management System", null, null, null, null, null);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

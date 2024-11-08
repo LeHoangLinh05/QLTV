@@ -36,6 +36,10 @@
     -fx-font-weight: bold;
 }
 
+.profile_anchorpane {
+    -fx-background-color: transparent;
+}
+
 .library_anchorpane {
     -fx-background-color: transparent;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -88,6 +92,14 @@
     -fx-font-family: 'Euclid Circular A Semibold';
     -fx-font-weight: bold;
     -fx-text-fill: #6a6be6;
+}
+
+.smaller_button {
+    -fx-background-color:transparent;
+    -fx-cursor: hand;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+    -fx-text-fill: #5061cf;
 }
 
 .dashboard_stat_pane {
@@ -332,13 +344,13 @@
 }*/
 
 .login_text {
-    -fx-background-color:transparent;
+    -fx-background-color:#ffffff;
     -fx-border-width: 2px 2px 2px 2px;
     -fx-border-radius: 10px;
     -fx-border-color: #e9e8ec;
     -fx-background-radius: 10px;
-    -fx-font-family: 'Euclid Circular A Semibold';
-    -fx-font-weight: bold;
+    -fx-font-family: 'Euclid Circular A Medium';
+    -fx-font-weight: normal;
     -fx-text-fill: #000000;
 }
 
@@ -383,9 +395,38 @@
 }
 
 .login_background {
-    -fx-background-color: #dcd3f7;
-
+    -fx-background-color: linear-gradient(#9091f2, #dcd3f7);
 }
+
+.choice-box {
+    -fx-background-color: #f0f0f0; /* Màu nền */
+    -fx-background-radius:10px;    /* Bo góc */
+    -fx-border-color: transparent;     /* Màu viền */
+    -fx-border-radius: 10px;        /* Bo góc viền */
+    -fx-border-width: 2px 2px 2px 2px;         /* Độ rộng viền */
+    -fx-font-family: 'Euclid Circular A Semibold';      /* Phông chữ */
+    -fx-text-fill: #aaa;        /* Màu chữ */
+}
+
+.choice-box:hover {
+    -fx-background-color: #f6f7f9; /* Màu nền khi rê chuột */
+}
+
+.choice-box .arrow {
+    -fx-background-color: #000000; /* Màu mũi tên */
+    -fx-background-radius: 0 5px 5px 0; /* Bo góc cho phần mũi tên */
+}
+
+.choice-box .list-cell {
+    -fx-background-color: #000000; /* Màu nền cho từng lựa chọn */
+    -fx-text-fill: #ffffff;      /* Màu chữ cho từng lựa chọn */
+}
+
+.choice-box .list-cell:hover {
+    -fx-background-color: #f6f7f9; /* Màu nền khi rê chuột lên từng lựa chọn */
+}
+
+
 
 
 

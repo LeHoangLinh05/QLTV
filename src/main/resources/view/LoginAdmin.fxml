@@ -26,16 +26,16 @@
             </AnchorPane>
             <AnchorPane prefHeight="400.0" prefWidth="301.0" styleClass="book_detail_pane" stylesheets="@../css/style.css">
                <children>
-                  <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" styleClass="login_text" stylesheets="@../css/style.css" />
-                  <Separator layoutX="23.0" layoutY="239.0" prefHeight="4.0" prefWidth="258.0" />
-                  <Label layoutX="142.0" layoutY="232.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER">
+                  <PasswordField fx:id="txt_password" layoutX="23.0" layoutY="108.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="130.0" />
+                  <Separator layoutX="23.0" layoutY="239.0" prefHeight="4.0" prefWidth="258.0" AnchorPane.bottomAnchor="135.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" />
+                  <Label layoutX="139.0" layoutY="249.0" prefHeight="18.0" prefWidth="22.0" style="-fx-background-color: #FFF;" text=" Or" textAlignment="CENTER">
                      <font>
                         <Font name="EuclidCircularA-SemiBold" size="12.0" />
                      </font></Label>
-                  <Button fx:id="btn_login_user" layoutX="23.0" layoutY="262.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login with User" />
-                  <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" styleClass="login_text" stylesheets="@../css/style.css" />
-                  <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login" />
-                  <Label fx:id="wrongLogin" layoutX="24.0" layoutY="155.0" prefHeight="18.0" prefWidth="258.0" styleClass="regular_text" stylesheets="@../css/style.css">
+                  <Button fx:id="btn_login_user" layoutX="23.0" layoutY="262.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login with User" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" />
+                  <TextField fx:id="txt_username" layoutX="23.0" layoutY="46.0" prefHeight="40.0" prefWidth="258.0" promptText="Username" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="75.0" />
+                  <Button fx:id="btn_login" layoutX="24.0" layoutY="183.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Login" AnchorPane.bottomAnchor="160.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" />
+                  <Label fx:id="wrongLogin" layoutX="24.0" layoutY="155.0" prefHeight="18.0" prefWidth="258.0" styleClass="regular_text" stylesheets="@../css/style.css" AnchorPane.topAnchor="178.0">
                      <font>
                         <Font size="11.0" />
                      </font>

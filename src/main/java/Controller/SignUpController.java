@@ -1,5 +1,7 @@
 package Controller;
 
+import javafx.scene.control.ChoiceBox;
+import javafx.util.StringConverter;
 import models.DB;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -32,44 +34,68 @@ public class SignUpController implements Initializable {
 
     @FXML
     private TextField txt_lname;
+
     @FXML
     private Label FillIn;
 
+    @FXML
+    private ChoiceBox<String> choiceBox;
+
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        txt_username.setFocusTraversable(false);
-        txt_password.setFocusTraversable(false);
+public void initialize(URL url, ResourceBundle resourceBundle) {
+    choiceBox.getItems().addAll("User", "Admin");
+    choiceBox.setValue("User");
 
-        btn_signup.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())
-                        && (!txt_fname.getText().trim().isEmpty()) && (!txt_lname.getText().trim().isEmpty())){
-                    FillIn.setText("Username already taken");
-                    try {
-                        DB.signUpUser(event, txt_username.getText(), txt_password.getText(), txt_fname.getText(), txt_lname.getText());
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }else if (txt_username.getText().trim().isEmpty() || (txt_password.getText().trim().isEmpty())
-                        || (txt_fname.getText().trim().isEmpty()) || (txt_lname.getText().trim().isEmpty())){
-                    FillIn.setText("Please fill in all information");
-                }
-            }
-        });
+    btn_signup.setOnAction(event -> handleSignUp(event));
 
-        btn_login.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-    }
+    btn_login.setOnAction(event -> {
+        try {
+            DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    });
 }
 
+    private void handleSignUp(ActionEvent event) {
+        String role = choiceBox.getValue();
+        String username = txt_username.getText().trim();
+        String password = txt_password.getText().trim();
+        String firstName = txt_fname.getText().trim();
+        String lastName = txt_lname.getText().trim();
+
+        if (username.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
+            FillIn.setText("Please fill in all information!");
+            return;
+        } else
+
+        if (role == null) {
+            FillIn.setText("Please select a role!");
+            return;
+        }
+
+        try {
+            if (DB.isUsernameTaken(username)) {
+                FillIn.setText("Username already taken!");
+                return;
+            }
+
+            // Default avatar path
+            String avatar_path = "/images/avatar_img.png";
+            DB.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
+            if (role.equals("Admin")) {
+                DB.changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
+            } else if (role.equals("User")) {
+                DB.changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+            }
+
+            System.out.println("Profile created successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            FillIn.setText("Username already taken");
+        } catch (IOException e) {
+            e.printStackTrace();
+            FillIn.setText("Error loading the scene");
+        }
+    }
+}

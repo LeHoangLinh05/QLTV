@@ -11,16 +11,23 @@
 
 <AnchorPane fx:id="main_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1120.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdminPanelController">
     <children>
+      <AnchorPane fx:id="profile_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.leftAnchor="200.0">
+         <children>
+            <fx:include source="profile.fxml" />
+         </children>
+      </AnchorPane>
         <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <fx:include source="dashboard.fxml" />
         </AnchorPane>
 
-        <AnchorPane fx:id="bookmanagement_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
-            <fx:include source="addbook.fxml" />
+                       <AnchorPane fx:id="bookmanagement_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
+            <fx:include source="addbook.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         </AnchorPane>
 
-        <AnchorPane fx:id="library_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
+                                                           <AnchorPane fx:id="library_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
+         <children>
             <fx:include source="library.fxml" />
+         </children>
         </AnchorPane>
         <AnchorPane fx:id="menu_anchorpane" prefHeight="700.0" prefWidth="200.0" styleClass="menu_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="NEVER">
             <children>

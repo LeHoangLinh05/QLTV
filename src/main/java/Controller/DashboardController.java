@@ -6,12 +6,17 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class DashboardController implements Initializable {
@@ -46,22 +51,44 @@ public class DashboardController implements Initializable {
     @FXML
     private Label label_accType;
 
+    @FXML
+    private ImageView avatar;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         barChart();
-        setUserAvatar();
-
+        Circle clip = new Circle(50); // Adjust radius as needed
+        clip.setCenterX(72); // Center X coordinate
+        clip.setCenterY(70); // Center Y coordinate
+        avatar.setClip(clip);
     }
 
-    public void setUserAvatar() {
-        Image im = new Image(getClass().getResource("/images/avatar_img.png").toExternalForm(), false);
-        avatar_circle.setFill(new ImagePattern(im));
-    }
 
-    public void setAdminInfo(String firstName, String lastName){
+    public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
         label_adminName.setText( firstName + " " + lastName );
-        label_accType.setText("      Admin");
+        if (Objects.equals(role, "Admin")) {
+            label_accType.setText("      Admin");
+        }
+        if (Objects.equals(role, "User")) {
+            label_accType.setText("       User");
+        }
+        if (avatar_path != null && !avatar_path.isEmpty()) {
+            File avatarFile = new File(avatar_path);
+
+            if (avatarFile.exists()) {
+                try {
+                    Image avatarImage = new Image(new FileInputStream(avatarFile));
+                    avatar.setImage(avatarImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.out.println("Avatar file not found at path: " + avatar_path);
+                }
+            } else {
+                System.out.println("Avatar path does not exist: " + avatar_path);
+            }
+        } else {
+            System.out.println("Avatar path is empty or null.");
+        }
     }
 
     public void barChart() {

@@ -12,7 +12,7 @@ import java.io.IOException;
 public class My_library extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("/view/Login.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource("/view/SignUp.fxml"));
         Parent root = fxmlLoader.load();
         stage.setTitle("Library Management System");
         try {
