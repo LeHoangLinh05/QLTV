@@ -126,9 +126,10 @@ public class ProfileController implements Initializable {
         String dateOfBirth = date_of_birth.getText();
         String email = email_text.getText();
         String avatarPath = this.avatarPath;
+        String id = id_text.getText();
 
         try {
-            DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email);
+            DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
             System.out.println("Profile updated successfully.");
             if (adminPanelController != null) {
                 adminPanelController.updateInfo(firstName, lastName, username, avatarPath);

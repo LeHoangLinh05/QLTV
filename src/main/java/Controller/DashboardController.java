@@ -56,16 +56,10 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         barChart();
-//        setUserAvatar();
 
     }
 
-//    public void setUserAvatar() {
-//        Image im = new Image(getClass().getResource("/images/avatar_img.png").toExternalForm(), false);
-//        avatar_circle.setFill(new ImagePattern(im));
-//    }
 
     public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
         label_adminName.setText( firstName + " " + lastName );
