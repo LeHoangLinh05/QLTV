@@ -86,7 +86,7 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
             if (role.equals("Admin")) {
                 DB.changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
             } else if (role.equals("User")) {
-                DB.changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                DB.changeScene(event, "/view/mainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
             }
 
             System.out.println("Profile created successfully.");

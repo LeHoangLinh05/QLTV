@@ -1,5 +1,6 @@
 package models;
 import Controller.AdminPanelController;
+import Controller.UserPanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,27 +11,55 @@ import java.io.IOException;
 import java.sql.*;
 
 public class DB {
-    public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
-        Parent root = null;
+//    public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
+//        Parent root = null;
+//
+//        if ((userName != null) && (firstName != null)){
+//            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
+//            root = fxmlLoader.load();
+//            AdminPanelController loggedInController = fxmlLoader.getController();
+//            loggedInController.displayDashboard(firstName, lastName, userName, role, avatar_path);
+//        }else {
+//            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
+//            root = fxmlLoader.load();
+//        }
+//        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        stage.setTitle(title);
+//        if (fxmlFile.equals("/view/main.fxml") || fxmlFile.equals("/view/mainUser.fxml")) {
+//            stage.setScene(new Scene(root, 1120, 700));
+//        } else {
+//            stage.setScene(new Scene(root, 600, 400));
+//        }
+//        stage.show();
+//    }
+public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
+    Parent root = null;
+    FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
 
-        if ((userName != null) && (firstName != null)){
-            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
-            root = fxmlLoader.load();
-            AdminPanelController loggedInController = fxmlLoader.getController();
-            loggedInController.displayDashboard(firstName, lastName, userName, role, avatar_path);
-        }else {
-            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
-            root = fxmlLoader.load();
+    root = fxmlLoader.load();
+
+    // Kiểm tra nếu userName và firstName không null
+    if ((userName != null) && (firstName != null)){
+        if ("Admin".equals(role)) {
+            AdminPanelController adminController = fxmlLoader.getController();
+            adminController.displayDashboard(firstName, lastName, userName, role, avatar_path);
+        } else if ("User".equals(role)) {
+            UserPanelController userController = fxmlLoader.getController();
+            userController.displayDashboard(firstName, lastName, userName, role, avatar_path);
         }
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setTitle(title);
-        if (fxmlFile.equals("/view/main.fxml") || fxmlFile.equals("/view/mainUser.fxml")) {
-            stage.setScene(new Scene(root, 1120, 700));
-        } else {
-            stage.setScene(new Scene(root, 600, 400));
-        }
-        stage.show();
     }
+
+    // Thiết lập cửa sổ và cảnh
+    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    stage.setTitle(title);
+    if (fxmlFile.equals("/view/main.fxml") || fxmlFile.equals("/view/mainUser.fxml")) {
+        stage.setScene(new Scene(root, 1120, 700));
+    } else {
+        stage.setScene(new Scene(root, 600, 400));
+    }
+    stage.show();
+}
+
 
     public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatar_path) throws SQLException, IOException {
         Connection connection = null;
