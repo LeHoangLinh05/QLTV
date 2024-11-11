@@ -24,7 +24,7 @@ public class DB {
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setTitle(title);
-        if (fxmlFile.equals("/view/main.fxml")) {
+        if (fxmlFile.equals("/view/main.fxml") || fxmlFile.equals("/view/mainUser.fxml")) {
             stage.setScene(new Scene(root, 1120, 700));
         } else {
             stage.setScene(new Scene(root, 600, 400));
@@ -59,7 +59,7 @@ public class DB {
                 if (role.equals("Admin")) {
                     changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
                 } else {
-                    changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                    changeScene(event, "/view/mainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
                 }
             }
         } catch (SQLException e) {
