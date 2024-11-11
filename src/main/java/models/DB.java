@@ -1,5 +1,6 @@
 package models;
 import Controller.AdminPanelController;
+import Controller.UserPanelController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,25 +13,46 @@ import java.sql.*;
 public class DB {
     public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
         Parent root = null;
+        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
 
+        root = fxmlLoader.load();
+
+        // Kiểm tra nếu userName và firstName không null
         if ((userName != null) && (firstName != null)){
-            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
-            root = fxmlLoader.load();
-            AdminPanelController loggedInController = fxmlLoader.getController();
-            loggedInController.displayDashboard(firstName, lastName, userName, role, avatar_path);
-        }else {
-            FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
-            root = fxmlLoader.load();
+            if ("Admin".equals(role)) {
+                AdminPanelController adminController = fxmlLoader.getController();
+                adminController.displayDashboard(firstName, lastName, userName, role, avatar_path);
+            } else if ("User".equals(role)) {
+                UserPanelController userController = fxmlLoader.getController();
+                userController.displayDashboard(firstName, lastName, userName, role, avatar_path);
+            }
         }
+
+
+        Node source = (Node) event.getSource();
+        if (source == null) {
+            System.out.println("Event source is null.");
+            return;
+        }
+
+
+        // Thiết lập cửa sổ và cảnh
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        if (stage == null) {
+            System.out.println("Stage is null.");
+            return;
+        }
+
         stage.setTitle(title);
-        if (fxmlFile.equals("/view/main.fxml")) {
+        if (fxmlFile.equals("/view/main.fxml") || fxmlFile.equals("/view/mainUser.fxml")) {
             stage.setScene(new Scene(root, 1120, 700));
         } else {
             stage.setScene(new Scene(root, 600, 400));
         }
         stage.show();
     }
+
 
     public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatar_path) throws SQLException, IOException {
         Connection connection = null;
@@ -59,11 +81,11 @@ public class DB {
                 if (role.equals("Admin")) {
                     changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
                 } else {
-                    changeScene(event, "/view/main.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                    changeScene(event, "/view/mainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         } finally {
             if (resultSet != null) resultSet.close();
             if (pscheckUserExists != null) pscheckUserExists.close();
@@ -72,32 +94,48 @@ public class DB {
         }
     }
 
+
     public static void logInUser(ActionEvent event, String username, String password) throws SQLException, IOException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
-        preparedStatement.setString(1,username);
-        resultSet = preparedStatement.executeQuery();
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+            preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
 
-        if (!resultSet.isBeforeFirst()){
-            System.out.println("User not found in the database!");
-        }else {
-            while (resultSet.next()){
-                String retrievedPassword = resultSet.getString("password");
-                String retrievedFname = resultSet.getString("fName");
-                String retrievedLname = resultSet.getString("lName");
-                String retrievedRole = resultSet.getString("role");
-                String retrievedAvatarPath = resultSet.getString("avatar_path");
+            if (!resultSet.isBeforeFirst()) {
+                System.out.println("User not found in the database!");
+            } else {
+                while (resultSet.next()) {
+                    String retrievedPassword = resultSet.getString("password");
+                    String retrievedFname = resultSet.getString("fName");
+                    String retrievedLname = resultSet.getString("lName");
+                    String retrievedRole = resultSet.getString("role");
+                    String retrievedAvatarPath = resultSet.getString("avatar_path");
 
-                if (retrievedPassword.equals(password)){
-                    changeScene(event, "/view/main.fxml", "Library Management System", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
+                    if (retrievedPassword.equals(password)) {
+                        if ("Admin".equals(retrievedRole)) {
+                            changeScene(event, "/view/main.fxml", "Admin Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
+                        } else if ("User".equals(retrievedRole)) {
+                            changeScene(event, "/view/mainUser.fxml", "User Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
+                        } else {
+                            System.out.println("Unknown role: " + retrievedRole);
+                        }
+                    } else {
+                        System.out.println("Incorrect password!");
+                    }
                 }
             }
+        } finally {
+            if (resultSet != null) resultSet.close();
+            if (preparedStatement != null) preparedStatement.close();
+            if (connection != null) connection.close();
         }
     }
+
 
 
     public static boolean isUsernameTaken(String username) throws SQLException {
