@@ -125,7 +125,7 @@ public class ProfileController implements Initializable {
     public void setUserPanelController(UserPanelController userPanelController) {
         this.userPanelController = userPanelController;
     }
-    // Method to handle saving changes to profile data
+
     private void handleSaveChanges(ActionEvent event) {
         String firstName = first_name.getText();
         String lastName = last_name.getText();
@@ -139,6 +139,9 @@ public class ProfileController implements Initializable {
             System.out.println("Profile updated successfully.");
             if (adminPanelController != null) {
                 adminPanelController.updateInfo(firstName, lastName, username, avatarPath);
+            }
+            if (userPanelController != null) {
+                userPanelController.updateInfo(firstName, lastName, username, avatarPath);
             }
 
         } catch (SQLException e) {
