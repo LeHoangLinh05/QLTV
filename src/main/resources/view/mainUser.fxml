@@ -104,12 +104,12 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Label fx:id="name_label" layoutX="29.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label1" stylesheets="@../css/style.css" text="Book" textFill="#feda69">
+                <Label fx:id="name_label" layoutX="29.0" layoutY="37.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label1" stylesheets="@../css/style.css" text="Book" textFill="#feda69">
                     <font>
                         <Font name="EuclidCircularA-SemiBold" size="30.0" />
                     </font>
                 </Label>
-                <Label fx:id="name_label1" layoutX="103.0" layoutY="36.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label2" stylesheets="@../css/style.css" text="Nest" textFill="#feda69">
+                <Label fx:id="name_label1" layoutX="103.0" layoutY="37.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label2" stylesheets="@../css/style.css" text="Nest" textFill="#feda69">
                     <font>
                         <Font name="EuclidCircularA-SemiBold" size="30.0" />
                     </font>
