@@ -40,7 +40,7 @@ public class LibraryController implements Initializable {
         int row = 1;
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
 
             String get = "SELECT * FROM books";
             PreparedStatement preparedStatement = connection.prepareStatement(get);

@@ -1,49 +1,56 @@
 package models;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.CheckBox;
+
 public class User {
-    private String userId;
+    private int id;
     private String name;
+    private String dateOfBirth;
     private String email;
-    private String phoneNumber;
+    private CheckBox selected;
+   // private final BooleanProperty selected = new SimpleBooleanProperty(false);
 
-    public User() {}
-
-    public User(String userId, String name, String email, String phoneNumber) {
-        this.userId = userId;
+    public User(int id, String name, String dateOfBirth, String email) {
+        this.id = id;
         this.name = name;
+        this.dateOfBirth = dateOfBirth;
         this.email = email;
-        this.phoneNumber = phoneNumber;
+        this.selected = new CheckBox(); // Initialize with unchecked
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public int getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public CheckBox getSelected() {
+        return selected;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setSelected(boolean isSelected) {
+        this.selected.setSelected(isSelected);
     }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+//   public BooleanProperty selectedProperty() {
+//       return selected;
+//   }
+    public boolean isSelected() {
+        return selected.isSelected();
     }
+//
+//    public void setSelected(boolean selected) {
+//        this.selected.set(selected);
+//    }
 }

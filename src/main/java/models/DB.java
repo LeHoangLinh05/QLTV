@@ -168,6 +168,14 @@ public class DB {
         statement.setString(1, username);
         return statement.executeQuery();
     }
+    public static ResultSet getAllUsers() throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        String query = "SELECT id, fName, lName, date_of_birth, email FROM userdetail WHERE role = 'User'";
+        PreparedStatement statement = connection.prepareStatement(query);
+        return statement.executeQuery();
+    }
+
+
 
     // New method to update profile data for a specific user
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
@@ -184,4 +192,13 @@ public class DB {
             statement.executeUpdate();
         }
     }
+    public static void deleteUser(int userId) throws SQLException {
+        String query = "DELETE FROM users WHERE id = ?";
+        try ( Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+              PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        }
+    }
+
 }
