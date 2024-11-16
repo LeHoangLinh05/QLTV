@@ -193,12 +193,47 @@ public class DB {
         }
     }
     public static void deleteUser(int userId) throws SQLException {
-        String query = "DELETE FROM users WHERE id = ?";
-        try ( Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-              PreparedStatement stmt = connection.prepareStatement(query)) {
+        String query = "DELETE FROM userdetail WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Re-throw the exception for debugging
+        }
+    }
+
+    public static void updateUser(User user) throws SQLException {
+        String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            // Split the name field into fName and lName
+            String[] nameParts = splitName(user.getName());
+            String fName = nameParts[0];
+            String lName = nameParts[1];
+
+            // Set parameters in the SQL query
+            stmt.setString(1, fName);
+            stmt.setString(2, lName);
+            stmt.setString(3, user.getDateOfBirth());
+            stmt.setString(4, user.getEmail());
+            stmt.setInt(5, user.getId());
+
+            // Execute the update
             stmt.executeUpdate();
         }
     }
+
+    // Utility method to split a full name into first and last name
+    private static String[] splitName(String fullName) {
+        String[] parts = fullName.trim().split(" ", 2);
+        String fName = parts.length > 0 ? parts[0] : ""; // First part is the first name
+        String lName = parts.length > 1 ? parts[1] : ""; // Second part is the last name
+        return new String[]{fName, lName};
+    }
+
+
 
 }

@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import static models.DB.updateUser;
+
 public class UserManagementController implements Initializable {
     @FXML
     private TableView<User> tableView;
@@ -33,6 +35,9 @@ public class UserManagementController implements Initializable {
     @FXML
     private TableColumn<User, String> emailColumn;
     @FXML
+    private TableColumn<User, Void> editColumn;
+
+    @FXML
     private CheckBox checkBox;
     @FXML
     private TableColumn<User, Boolean> checkBoxColumn; // New column for checkboxes
@@ -43,7 +48,7 @@ public class UserManagementController implements Initializable {
 
     private String username;
     private ObservableList<User> userList = FXCollections.observableArrayList();
-    private static final int ROWS_PER_PAGE = 10; // Number of rows per page
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,16 +64,15 @@ public class UserManagementController implements Initializable {
         }));
         loadUserData();
         updateDeleteButtonVisibility();
+        addEditButtonToTable();
+
 
     }
-
-
 
     private void updateDeleteButtonVisibility() {
         boolean anySelected = userList.stream().anyMatch(User::isSelected);
         deleteButton.setVisible(anySelected);
     }
-
 
     @FXML
     private void handleDeleteButton(ActionEvent event) {
@@ -121,20 +125,17 @@ public class UserManagementController implements Initializable {
         }
     }
 
-
-
-
-
     private void deleteUserFromDatabase(int userId) {
+        System.out.println("Attempting to delete user with ID: " + userId);
         try {
-            DB.deleteUser(userId); // Assuming you have a deleteUser method in DB class
-            System.out.println("Deleted user with ID: " + userId);
+            DB.deleteUser(userId);
+            System.out.println("Successfully deleted user with ID: " + userId);
         } catch (SQLException e) {
+            System.err.println("Failed to delete user with ID: " + userId);
             e.printStackTrace();
         }
     }
 
-    // Method to load data from the database and populate the TableView
     private void loadUserData() {
         try {
             ResultSet rs = DB.getAllUsers();
@@ -161,6 +162,47 @@ public class UserManagementController implements Initializable {
 
         tableView.setItems(userList);
     }
+
+    private void addEditButtonToTable() {
+        editColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button editButton = new Button("Edit");
+
+            {
+                editButton.setOnAction(event -> {
+                    User selectedUser = getTableView().getItems().get(getIndex());
+                    boolean isEdited = EditUserDialogController.openEditDialog(selectedUser);
+
+                    if (isEdited) {
+                        try {
+                            updateUser(selectedUser); // Save updates to the database
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        refreshTable();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(editButton);
+                }
+            }
+        });
+    }
+
+    private void refreshTable() {
+        // Re-assign the userList to refresh the TableView
+        tableView.setItems(null); // Clear the items
+        tableView.setItems(userList); // Reassign the updated list
+        tableView.refresh(); // Force the TableView to refresh
+    }
+
+
 
 
 

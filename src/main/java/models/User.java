@@ -7,10 +7,12 @@ import javafx.scene.control.CheckBox;
 public class User {
     private int id;
     private String name;
+    private String fname;
+    private String lname;
     private String dateOfBirth;
     private String email;
     private CheckBox selected;
-   // private final BooleanProperty selected = new SimpleBooleanProperty(false);
+
 
     public User(int id, String name, String dateOfBirth, String email) {
         this.id = id;
@@ -43,14 +45,18 @@ public class User {
     public void setSelected(boolean isSelected) {
         this.selected.setSelected(isSelected);
     }
-//   public BooleanProperty selectedProperty() {
-//       return selected;
-//   }
+
     public boolean isSelected() {
         return selected.isSelected();
     }
-//
-//    public void setSelected(boolean selected) {
-//        this.selected.set(selected);
-//    }
+
+    public void setName(String text) {
+        this.name = text;
+    }
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
