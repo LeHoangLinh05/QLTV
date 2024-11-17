@@ -428,65 +428,44 @@
 
 
 /*table*/
-.table-button {
-    -fx-background-color: -fx-primary-color;
-    -fx-cursor: hand;
-}
-.table-button:hover{
-    -fx-background-color: transparent;
-}
-.table-view {
-    -fx-border-color: transparent;
-    -fx-background-color: transparent; /* OR  -fx-background-insets: 0.0; */
-    -fx-text-fill: white;
-}
-.table-view .column-header-background,
-.table-view .column-header-background .filler,
-.table-view .corner {
-    -fx-background-color: #009879;
-}
-.table-view .column-header {
-    -fx-background-color: -fx-light-grey-color;
-    -fx-border-color: -fx-grey-color;
-}
-.table-view .column-header .label{
-    -fx-font-weight: bold;
-    -fx-alignment: center-left;
+
+
+/* Style for search */
+.search {
+    -fx-padding: 5 12; /* Padding */
+    -fx-font-size: 14px; /* Font size */
+    -fx-pref-height: 20px; /* Line height */
+    -fx-text-fill: #24292e; /* Text color */
+    -fx-background-color: #ffffff; /* Background color */
+    -fx-background-repeat: no-repeat; /* No repeat for background */
+    -fx-background-position: right 8px center; /* Background position */
+    -fx-border-color: #e1e4e8; /* Border color */
+    -fx-border-radius: 6; /* Rounded corners for the border */
+    -fx-background-radius: 6; /* Rounded corners for the background */
+    -fx-effect: innershadow(two-pass-box, rgba(225, 228, 232, 0.2), 1, 0, 0, 1); /* Shadow effect */
 }
 
-.table-row-cell:filled {
-    -fx-background-color: #EEEEEE;
-    -fx-border-color: transparent -fx-lightest-grey-color -fx-lightest-grey-color -fx-lightest-grey-color, transparent;
+/* Focused state for the button */
+.search:focused {
+    -fx-border-color: #0366d6; /* Border color when focused */
+    -fx-effect: dropshadow(three-pass-box, rgba(3, 102, 214, 0.3), 3, 0, 0, 0); /* Shadow effect when focused */
+    -fx-background-color: #ffffff; /* Keep background white */
+    -fx-text-fill: #24292e; /* Text color remains same */
+}
 
+/* Style for the edit button */
+.edit-button {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-padding: 0; /* No padding */
+    -fx-cursor: hand; /* Pointer cursor on hover */
 }
-.table-row-cell:empty {
-    -fx-background-color: transparent;
+
+/* Hover effect for the icon button */
+.edit-button:hover {
+    -fx-background-color: #e0e0e0; /* Light gray background on hover */
+    -fx-border-radius: 6; /* Rounded border for hover */
+    -fx-background-radius: 6; /* Match rounded corners */
 }
-.table-row-cell:filled:hover {
-    -fx-background-color: -fx-light-grey-color;
-}
-.table-row-cell:filled:selected:hover {
-    -fx-background-color: -fx-light-grey-color;
-}
-.table-row-cell:filled:selected {
-    -fx-background-color: #eaeaea;
-    -fx-background-insets: 0.0;
-    -fx-background-radius: 0.0;
-}
-.table-row-cell:filled:selected .table-cell {
-    -fx-text-fill: black;
-}
-.table-view .cell:filled{
-    -fx-cell-size: 30;
-    -fx-alignment: center-left;
-}
-.check-box-table-cell > .check-box:selected .box .mark {
-    -fx-background-color: white;
-}
-.check-box-table-cell > .check-box:selected .box{
-    -fx-background-color: -fx-accent-color;
-}
-.table-view .placeholder .label {
-    -fx-text-fill: red;
-    -fx-padding:20px;
-}
+
+
+

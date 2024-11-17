@@ -170,7 +170,7 @@ public class DB {
     }
     public static ResultSet getAllUsers() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        String query = "SELECT id, fName, lName, date_of_birth, email FROM userdetail WHERE role = 'User'";
+        String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'User'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
     }
@@ -233,6 +233,27 @@ public class DB {
         String lName = parts.length > 1 ? parts[1] : ""; // Second part is the last name
         return new String[]{fName, lName};
     }
+
+    public static void addUser(User user) throws SQLException {
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, avatar_path) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+
+        String[] nameParts = user.getName().split(" ", 2); // Split name into first and last names
+        String firstName = nameParts[0];
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
+        statement.setString(1, firstName);
+        statement.setString(2, lastName);
+        statement.setString(3, user.getDateOfBirth());
+        statement.setString(4, user.getEmail());
+        statement.setString(5, user.getImagePath());
+
+        statement.executeUpdate();
+        statement.close();
+        connection.close();
+    }
+
 
 
 

@@ -6,23 +6,27 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx. scene. image. ImageView;
 import models.DB;
 import models.User;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class EditUserDialogController implements Initializable {
-
     @FXML
     private TextField nameField;
     @FXML
     private TextField dobField;
     @FXML
     private TextField emailField;
+    @FXML
+    private ImageView profileImageView;
 
     private User user;
     private boolean isSaved = false;
@@ -40,6 +44,14 @@ public class EditUserDialogController implements Initializable {
             nameField.setText(user.getName());
             dobField.setText(user.getDateOfBirth());
             emailField.setText(user.getEmail());
+            if (user.imagePathProperty() != null && user.imagePathProperty().get() != null && !user.imagePathProperty().get().isEmpty()) {
+                File imageFile = new File(user.imagePathProperty().get()); // Use .get() to get the String value
+                if (imageFile.exists()) {
+                    profileImageView.setImage(new Image(imageFile.toURI().toString()));
+                } else {
+                    System.out.println("Image file does not exist: " + user.imagePathProperty().get());
+                }
+            }
         }
     }
 
@@ -53,7 +65,7 @@ public class EditUserDialogController implements Initializable {
         user.setName(nameField.getText());
         user.setDateOfBirth(dobField.getText());
         user.setEmail(emailField.getText());
-
+        user.setImagePath(user.getImagePath());
         try {
             DB.updateUser(user); // Update the database
             System.out.println("User updated successfully!");
@@ -64,7 +76,6 @@ public class EditUserDialogController implements Initializable {
         // Close the dialog
         ((Stage) nameField.getScene().getWindow()).close();
     }
-
 
     @FXML
     private void handleCancel() {

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -18,20 +20,29 @@
         </Label>
 
         <!-- Search Field and Button -->
-        <TextField fx:id="searchField" layoutX="513.0" layoutY="136.0" prefHeight="26.0" prefWidth="259.0" />
-        <Button layoutX="772.0" layoutY="137.0" mnemonicParsing="false" text="Button" />
+        <TextField fx:id="searchBar" layoutX="538.0" layoutY="119.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
+        <Button fx:id="searchButton" layoutX="813.0" layoutY="118.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="38.0" styleClass="purple_button" stylesheets="@../css/style.css">
+         <graphic>
+            <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/search_icon.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
 
         <!-- TableView with Anchors for Dynamic Resizing -->
-        <TableView fx:id="tableView" layoutX="64.0" layoutY="195.0" prefHeight="390.0" prefWidth="790.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="115.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="56.0" AnchorPane.topAnchor="195.0">
+        <TableView fx:id="tableView" layoutX="64.0" layoutY="195.0" prefHeight="402.0" prefWidth="796.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="195.0">
             <columns>
-                <TableColumn fx:id="checkBoxColumn" prefWidth="38.0" />
-                <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="checkBoxColumn" prefWidth="26.4000244140625" />
+                <TableColumn fx:id="idColumn" prefWidth="87.19998168945312" styleClass="table-row-cell" text="ID" />
                 <TableColumn fx:id="nameColumn" prefWidth="174.39996337890625" text="Name" />
                 <TableColumn fx:id="dobColumn" prefWidth="180.79998779296875" text="Date of Birth" />
-                <TableColumn fx:id="emailColumn" prefWidth="233.60003662109375" text="Email" />
-            <TableColumn fx:id="editColumn" prefWidth="73.5999755859375" text="Edit" />
+                <TableColumn fx:id="emailColumn" prefWidth="276.0" text="Email" />
+            <TableColumn fx:id="editColumn" minWidth="8.7999267578125" prefWidth="52.0" text="Edit" />
             </columns>
         </TableView>
-      <Button fx:id="deleteButton" layoutX="74.0" layoutY="162.0" mnemonicParsing="false" onAction="#handleDeleteButton" text="delete" visible="false" />
+      <Button fx:id="deleteButton" layoutX="122.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleDeleteButton" styleClass="purple_button" stylesheets="@../css/style.css" text="Remove" visible="false" />
+      <Button fx:id="printButton" layoutX="64.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Print" />
+      <Button fx:id="addUserButton" layoutX="233.0" layoutY="156.0" mnemonicParsing="false" text="add new" />
     </children>
 </AnchorPane>
