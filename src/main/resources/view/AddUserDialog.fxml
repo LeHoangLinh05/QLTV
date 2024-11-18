@@ -5,18 +5,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AddUserDialogController">
+<AnchorPane prefHeight="360.0" prefWidth="491.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23" fx:controller="Controller.AddUserDialogController">
     <children>
-        <Label layoutX="20.0" layoutY="20.0" text="Name:" />
-        <TextField fx:id="nameField" layoutX="80.0" layoutY="20.0" prefWidth="200.0" />
+        <Label layoutX="20.0" layoutY="100.0" text="Name:" />
+        <TextField fx:id="usernameField" layoutX="125.0" layoutY="16.0" prefWidth="200.0" />
 
-        <Label layoutX="20.0" layoutY="60.0" text="Date of Birth:" />
-        <TextField fx:id="dobField" layoutX="80.0" layoutY="60.0" prefWidth="200.0" />
+        <Label layoutX="16.0" layoutY="140.0" text="Date of Birth:" />
+        <TextField fx:id="passwordField" layoutX="125.0" layoutY="56.0" prefWidth="200.0" />
 
-        <Label layoutX="20.0" layoutY="100.0" text="Email:" />
-        <TextField fx:id="emailField" layoutX="80.0" layoutY="100.0" prefWidth="200.0" />
+        <Label layoutX="21.0" layoutY="184.0" text="Email:" />
+        <TextField fx:id="nameField" layoutX="125.0" layoutY="96.0" prefWidth="200.0" />
 
-        <Button layoutX="80.0" layoutY="150.0" text="Save" onAction="#handleSave" />
-        <Button layoutX="160.0" layoutY="150.0" text="Cancel" onAction="#handleCancel" />
+        <Button layoutX="105.0" layoutY="281.0" onAction="#handleSave" text="Save" />
+        <Button layoutX="302.0" layoutY="281.0" onAction="#handleCancel" text="Cancel" />
+      <Label layoutX="23.0" layoutY="20.0" text="Username" />
+      <Label layoutX="23.0" layoutY="60.0" text="Password" />
+      <TextField fx:id="dobField" layoutX="125.0" layoutY="136.0" />
+      <TextField fx:id="emailField" layoutX="126.0" layoutY="180.0" />
     </children>
 </AnchorPane>

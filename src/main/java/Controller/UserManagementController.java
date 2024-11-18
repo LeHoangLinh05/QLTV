@@ -65,18 +65,22 @@ public class UserManagementController implements Initializable {
         userList.forEach(user -> user.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
             updateDeleteButtonVisibility();
         }));
-        loadUserData();
-        updateDeleteButtonVisibility();
-        addEditButtonToTable();
+
         filteredList = new FilteredList<>(userList, p -> true);
 
-        // Bind the filtered list to the TableView
-        tableView.setItems(filteredList);
-
         // Add action handler to the search button
-        searchButton.setOnAction(event -> filterUserList());
+        //searchButton.setOnAction(event -> filterUserList());
         printButton.setOnAction(event -> handlePrintButton());
+
+        loadUserData();
         addUserButton.setOnAction(event -> handleAddUserButton());
+        tableView.setItems(filteredList);
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterUserList());
+        userList.forEach(user -> user.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
+            updateDeleteButtonVisibility();
+        }));
+        updateDeleteButtonVisibility();
+        addEditButtonToTable();
     }
 
     private void updateDeleteButtonVisibility() {
@@ -147,7 +151,9 @@ public class UserManagementController implements Initializable {
     }
 
     private void loadUserData() {
+        refreshTable();
         try {
+
             ResultSet rs = DB.getAllUsers();
 
             while (rs.next()) {
@@ -158,7 +164,7 @@ public class UserManagementController implements Initializable {
                 String email = rs.getString("email");
                 String imagePath = rs.getString("avatar_path");
 
-                User user = new User(id, fName + " " + lName, dateOfBirth, email, imagePath);
+                User user = new User(id, fName + " " + lName, dateOfBirth, email, "", "", imagePath);
                 user.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
                     updateDeleteButtonVisibility();
                 });
@@ -167,11 +173,12 @@ public class UserManagementController implements Initializable {
                 System.out.println("Loaded user: " + user.getName()); // Debugging print
             }
             rs.close();
+            tableView.refresh();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         tableView.setItems(userList);
+
     }
 
     private void addEditButtonToTable() {
@@ -215,9 +222,8 @@ public class UserManagementController implements Initializable {
     }
 
     private void refreshTable() {
-        tableView.setItems(null);
-        tableView.setItems(userList);
-        tableView.refresh();
+        userList.clear();
+
     }
 
     private void filterUserList() {
@@ -227,9 +233,13 @@ public class UserManagementController implements Initializable {
             if (searchQuery == null || searchQuery.isEmpty()) {
                 return true;
             }
+
+            // Match user name or email with the search query
             return user.getName().toLowerCase().contains(searchQuery);
         });
     }
+
+
 
     @FXML
     private void handlePrintButton() {
@@ -307,28 +317,23 @@ public class UserManagementController implements Initializable {
 
     @FXML
     private void handleAddUserButton() {
-        // Open the Add User dialog
         User newUser = AddUserDialogController.openAddDialog();
 
         if (newUser != null) {
-            try {
-                // Add the new user to the database
-                DB.addUser(newUser);
 
-                // Add the new user to the ObservableList
-                userList.add(newUser);
+            userList.add(newUser);
 
-                // Refresh the TableView
-                refreshTable();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Error Adding User");
-                errorAlert.setHeaderText(null);
-                errorAlert.setContentText("Could not add the user. Please try again.");
-                errorAlert.showAndWait();
-            }
+            newUser.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
+                updateDeleteButtonVisibility();
+            });
+            tableView.refresh();
+            searchBar.clear();
+
         }
+        tableView.refresh();
     }
+
+
+
 
 }

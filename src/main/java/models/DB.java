@@ -234,24 +234,52 @@ public class DB {
         return new String[]{fName, lName};
     }
 
-    public static void addUser(User user) throws SQLException {
+    public static int addUser(User user) throws SQLException {
+        if (doesUserExist(user.getUsername(), user.getEmail())) {
+            throw new SQLException("User already exists with the given username or email.");
+        }
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-        String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, avatar_path) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement statement = connection.prepareStatement(query);
+        String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        String[] nameParts = user.getName().split(" ", 2); // Split name into first and last names
-        String firstName = nameParts[0];
-        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        String[] nameParts = splitName(user.getName());
+        String fName = nameParts[0];
+        String lName = nameParts[1];
 
-        statement.setString(1, firstName);
-        statement.setString(2, lastName);
+        statement.setString(1, fName);
+        statement.setString(2, lName);
         statement.setString(3, user.getDateOfBirth());
         statement.setString(4, user.getEmail());
-        statement.setString(5, user.getImagePath());
+        statement.setString(5, user.getUsername());
+        statement.setString(6, user.getPassword());
+        statement.setString(7, user.getImagePath());
+        statement.setString(8, "User"); // Set role to 'User'
+
 
         statement.executeUpdate();
-        statement.close();
-        connection.close();
+        try (ResultSet keys = statement.getGeneratedKeys()) {
+            if (keys.next()) {
+                return keys.getInt(1); // Return the auto-generated ID
+            } else {
+                throw new SQLException("Failed to retrieve generated ID.");
+            }
+        }
+    }
+    public static boolean doesUserExist(String username, String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, username);
+            statement.setString(2, email);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0; // If count > 0, user exists
+                }
+            }
+        }
+        return false;
     }
 
 

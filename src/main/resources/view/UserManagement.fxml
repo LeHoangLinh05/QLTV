@@ -5,8 +5,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -20,15 +18,7 @@
         </Label>
 
         <!-- Search Field and Button -->
-        <TextField fx:id="searchBar" layoutX="538.0" layoutY="119.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
-        <Button fx:id="searchButton" layoutX="813.0" layoutY="118.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="38.0" styleClass="purple_button" stylesheets="@../css/style.css">
-         <graphic>
-            <ImageView fitHeight="16.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/search_icon.png" />
-               </image>
-            </ImageView>
-         </graphic></Button>
+        <TextField fx:id="searchBar" layoutX="584.0" layoutY="123.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
 
         <!-- TableView with Anchors for Dynamic Resizing -->
         <TableView fx:id="tableView" layoutX="64.0" layoutY="195.0" prefHeight="402.0" prefWidth="796.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="195.0">
