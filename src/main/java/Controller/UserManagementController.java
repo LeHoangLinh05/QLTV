@@ -200,14 +200,16 @@ public class UserManagementController implements Initializable {
 
                     if (isEdited) {
                         try {
-                            updateUser(selectedUser); // Save updates to the database
+                            updateUser(selectedUser);
+                            tableView.refresh();
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-                        refreshTable();
                     }
+                    tableView.refresh();
                 });
             }
+
 
             @Override
             protected void updateItem(Void item, boolean empty) {

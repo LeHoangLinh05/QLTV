@@ -18,21 +18,21 @@
         </Label>
 
         <!-- Search Field and Button -->
-        <TextField fx:id="searchBar" layoutX="584.0" layoutY="123.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
+        <TextField fx:id="searchBar" layoutX="620.0" layoutY="123.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
 
         <!-- TableView with Anchors for Dynamic Resizing -->
-        <TableView fx:id="tableView" layoutX="64.0" layoutY="195.0" prefHeight="402.0" prefWidth="796.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="195.0">
+        <TableView fx:id="tableView" layoutX="-1.6" layoutY="195.0" prefHeight="505.0" prefWidth="927.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-15.0" AnchorPane.topAnchor="195.0">
             <columns>
-                <TableColumn fx:id="checkBoxColumn" prefWidth="26.4000244140625" />
-                <TableColumn fx:id="idColumn" prefWidth="87.19998168945312" styleClass="table-row-cell" text="ID" />
-                <TableColumn fx:id="nameColumn" prefWidth="174.39996337890625" text="Name" />
-                <TableColumn fx:id="dobColumn" prefWidth="180.79998779296875" text="Date of Birth" />
-                <TableColumn fx:id="emailColumn" prefWidth="276.0" text="Email" />
-            <TableColumn fx:id="editColumn" minWidth="8.7999267578125" prefWidth="52.0" text="Edit" />
+                <TableColumn fx:id="checkBoxColumn" prefWidth="34.39999312162399" />
+                <TableColumn fx:id="idColumn" prefWidth="116.80002212524414" styleClass="table-row-cell" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="176.80003356933594" text="Name" />
+                <TableColumn fx:id="dobColumn" prefWidth="212.00003051757812" text="Date of Birth" />
+                <TableColumn fx:id="emailColumn" prefWidth="309.60003662109375" text="Email" />
+            <TableColumn fx:id="editColumn" minWidth="8.7999267578125" prefWidth="63.199951171875" text="Detail" />
             </columns>
         </TableView>
-      <Button fx:id="deleteButton" layoutX="122.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleDeleteButton" styleClass="purple_button" stylesheets="@../css/style.css" text="Remove" visible="false" />
-      <Button fx:id="printButton" layoutX="64.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Print" />
-      <Button fx:id="addUserButton" layoutX="233.0" layoutY="156.0" mnemonicParsing="false" text="add new" />
+      <Button fx:id="deleteButton" layoutX="174.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleDeleteButton" styleClass="purple_button" stylesheets="@../css/style.css" text="Remove" />
+      <Button fx:id="printButton" layoutX="22.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Print" />
+      <Button fx:id="addUserButton" layoutX="86.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Add new" />
     </children>
 </AnchorPane>
