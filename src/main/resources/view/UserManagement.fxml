@@ -31,7 +31,7 @@
             <TableColumn fx:id="editColumn" minWidth="8.7999267578125" prefWidth="63.199951171875" text="Detail" />
             </columns>
         </TableView>
-      <Button fx:id="deleteButton" layoutX="174.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleDeleteButton" styleClass="purple_button" stylesheets="@../css/style.css" text="Remove" />
+      <Button fx:id="deleteButton" layoutX="174.0" layoutY="156.0" mnemonicParsing="false" onAction="#handleDeleteButton" styleClass="purple_button" stylesheets="@../css/style.css" text="Remove" visible="false" />
       <Button fx:id="printButton" layoutX="22.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Print" />
       <Button fx:id="addUserButton" layoutX="86.0" layoutY="156.0" mnemonicParsing="false" styleClass="purple_button" stylesheets="@../css/style.css" text="Add new" />
     </children>
