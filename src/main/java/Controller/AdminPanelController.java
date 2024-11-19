@@ -155,6 +155,8 @@ public class AdminPanelController implements Initializable {
         library_anchorpane.setVisible(false);
         profile_anchorpane.setVisible(false);
         usermanagement_anchorpane.setVisible(false);
+
+        //to refresh
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
@@ -163,27 +165,49 @@ public class AdminPanelController implements Initializable {
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
-    private void showBookManagement() {
+    private void showBookManagement() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(true);
         library_anchorpane.setVisible(false);
         profile_anchorpane.setVisible(false);
         usermanagement_anchorpane.setVisible(false);
+
+        //to refresh
+        //FXMLLoader bookManagementLoader = new FXMLLoader(getClass().getResource("/view/addbook.fxml"));
+       // AnchorPane bookManagementPane = bookManagementLoader.load();
+        //BookManagementController bookManagementController = bookManagementLoader.getController();
+        //bookmanagement_anchorpane.getChildren().clear();
+        //bookmanagement_anchorpane.getChildren().add(bookManagementPane);
     }
 
-    private void showUserManagement() {
+    private void showUserManagement() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
         profile_anchorpane.setVisible(false);
         usermanagement_anchorpane.setVisible(true);
+
+        //to refresh
+        //FXMLLoader userManagementLoader = new FXMLLoader(getClass().getResource("/view/UserManagement.fxml"));
+        //AnchorPane userManagementPane = userManagementLoader.load();
+        //UserManagementController userManagementController = userManagementLoader.getController();
+        //usermanagement_anchorpane.getChildren().clear();
+        //usermanagement_anchorpane.getChildren().add(userManagementPane);
     }
-    private void showLibrary() {
+
+    private void showLibrary() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(true);
         profile_anchorpane.setVisible(false);
         usermanagement_anchorpane.setVisible(false);
+
+        //to refresh
+        //FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/library.fxml"));
+        //AnchorPane libraryPane = libraryLoader.load();
+        //LibraryController libraryController = libraryLoader.getController();
+        //library_anchorpane.getChildren().clear();
+        //library_anchorpane.getChildren().add(libraryPane);
     }
 
     private void showProfile() throws IOException {
@@ -192,6 +216,8 @@ public class AdminPanelController implements Initializable {
         library_anchorpane.setVisible(false);
         profile_anchorpane.setVisible(true);
         usermanagement_anchorpane.setVisible(false);
+
+        //to refresh
         FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
         AnchorPane profilePane = profileLoader.load();
         ProfileController profileController = profileLoader.getController();

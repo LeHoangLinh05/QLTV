@@ -49,9 +49,7 @@ public class LoginController implements Initializable {
                     wrongLogin.setText("Wrong username or password");
                     try {
                         DB.logInUser(event, txt_username.getText(), txt_password.getText());
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
+                    } catch (SQLException | IOException e) {
                         throw new RuntimeException(e);
                     }
                 }

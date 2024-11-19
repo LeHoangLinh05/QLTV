@@ -9,6 +9,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DB {
     public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
@@ -60,7 +65,7 @@ public class DB {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -101,7 +106,7 @@ public class DB {
         ResultSet resultSet = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -145,7 +150,7 @@ public class DB {
         boolean usernameExists = false;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
             psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?");
             psCheckUserExists.setString(1, username);
             resultSet = psCheckUserExists.executeQuery();
@@ -163,7 +168,7 @@ public class DB {
 
 
     public static ResultSet getUserData(String username) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
         PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
@@ -171,7 +176,7 @@ public class DB {
 
     // New method to update profile data for a specific user
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
@@ -183,5 +188,112 @@ public class DB {
             statement.setString(7, username);
             statement.executeUpdate();
         }
+    }
+
+    public static List<ActivityLog> fetchActivityLog() {
+        List<ActivityLog> logs = new ArrayList<>();
+
+        String query = """
+    SELECT 
+        l.issue_date, 
+        l.return_date, 
+        m.username AS user_name, 
+        b.title AS book_title
+    FROM loans l
+    JOIN userdetail m ON l.member_id = m.id
+    JOIN books b ON l.book_id = b.id
+    ORDER BY 
+        CASE 
+            WHEN l.return_date IS NOT NULL THEN l.return_date
+            ELSE l.issue_date
+        END DESC;
+    """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String memberName = rs.getString("user_name");
+                String bookTitle = rs.getString("book_title");
+
+                // Lấy ngày mượn (issue date)
+                Timestamp issueDate = rs.getTimestamp("issue_date");
+                if (issueDate != null) {
+                    logs.add(new ActivityLog(
+                            issueDate,
+                            "User " + memberName + " borrowed the book '" + bookTitle + "'."
+                    ));
+                }
+
+                // Lấy ngày trả (return date)
+                Timestamp returnDate = rs.getTimestamp("return_date");
+                if (returnDate != null) {
+                    logs.add(new ActivityLog(
+                            returnDate,
+                            "User " + memberName + " returned the book '" + bookTitle + "'."
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Sắp xếp theo actionDate từ mới nhất đến cũ nhất (nếu chưa sắp xếp trong SQL)
+        logs.sort((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
+
+        System.out.println("Fetch successful.");
+        return logs;
+    }
+
+    public static Map<String, Integer> getBorrowData() {
+        Map<String, Integer> borrowData = new HashMap<>();
+        String query = """
+            SELECT DAYNAME(issue_date) AS day_of_week, COUNT(*) AS borrow_count
+            FROM loans
+            GROUP BY DAYNAME(issue_date)
+        """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String day = rs.getString("day_of_week");
+                int count = rs.getInt("borrow_count");
+                borrowData.put(day, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Get data successful.");
+        return borrowData;
+    }
+
+    // Phương thức lấy dữ liệu trả sách (series2)
+    public static Map<String, Integer> getReturnData() {
+        Map<String, Integer> returnData = new HashMap<>();
+        String query = """
+            SELECT DAYNAME(return_date) AS day_of_week, COUNT(*) AS return_count
+            FROM loans
+            WHERE return_date IS NOT NULL
+            GROUP BY DAYNAME(return_date)
+        """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String day = rs.getString("day_of_week");
+                int count = rs.getInt("return_count");
+                returnData.put(day, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Get data2 successful.");
+        return returnData;
     }
 }

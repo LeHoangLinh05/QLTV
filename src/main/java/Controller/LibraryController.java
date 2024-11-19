@@ -36,6 +36,8 @@ public class LibraryController implements Initializable {
     }
 
     public void displayLibrary() {
+        library_gridpane.getChildren().clear();
+
         int column = 0;
         int row = 1;
 

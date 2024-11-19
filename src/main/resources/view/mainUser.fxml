@@ -17,7 +17,7 @@
             </children>
         </AnchorPane>
         <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <fx:include source="dashboard.fxml" />
+            <fx:include source="dashboardUser.fxml" />
         </AnchorPane>
         <AnchorPane fx:id="rental_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
             <fx:include source="rental.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

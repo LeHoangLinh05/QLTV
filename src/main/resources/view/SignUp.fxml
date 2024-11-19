@@ -36,7 +36,7 @@
             <TextField fx:id="txt_fname" layoutX="27.0" layoutY="160.0" prefHeight="40.0" prefWidth="258.0" promptText="First name" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="145.0" />
             <TextField fx:id="txt_lname" layoutX="27.0" layoutY="217.0" prefHeight="40.0" prefWidth="258.0" promptText="Last name" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="200.0" />
             <TextField fx:id="txt_password" layoutX="21.0" layoutY="96.0" prefHeight="40.0" prefWidth="258.0" promptText="Password" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="90.0" />
-            <Button fx:id="btn_signup" layoutX="22.0" layoutY="307.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Sign up" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="300.0" />
+            <Button fx:id="btn_signup" layoutX="22.0" layoutY="307.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="258.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Sign Up" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="300.0" />
             <Label fx:id="FillIn" layoutX="22.0" layoutY="264.0" prefHeight="18.0" prefWidth="258.0">
                <font>
                   <Font size="11.0" />

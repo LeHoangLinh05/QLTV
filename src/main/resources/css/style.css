@@ -280,6 +280,13 @@
     -fx-font-weight: bold;
 }
 
+.logCard {
+    -fx-background-color:#ffffff;
+    -fx-border-color: #ffffff;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+}
+
 .bookdetail_anchorpane {
     -fx-background-color:#30303d;
     -fx-font-family: 'Euclid Circular A Semibold';
