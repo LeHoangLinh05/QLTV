@@ -1,11 +1,13 @@
 package Controller;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -21,6 +23,7 @@ import models.searchBookAPI;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -122,58 +125,83 @@ public class RentalController implements Initializable {
 
                 result_gridpane1.getChildren().clear();
 
-                try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                // Hiển thị giao diện tạm thời
+                Label loadingLabel = new Label("Loading...");
+                loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+                result_gridpane1.add(loadingLabel, 0, 0);
 
-                    String get = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
-                    PreparedStatement preparedStatement = connection.prepareStatement(get);
+                // Tạo background task
+                Task<List<HBox>> task = new Task<>() {
+                    @Override
+                    protected List<HBox> call() throws Exception {
+                        List<HBox> bookCards = new ArrayList<>();
 
-                    preparedStatement.setString(1, "%" + queryText + "%");
-                    preparedStatement.setString(2, "%" + queryText + "%");
+                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                            preparedStatement.setString(1, "%" + queryText + "%");
+                            preparedStatement.setString(2, "%" + queryText + "%");
 
-                    int column = 0;
-                    int row = 1;
+                            ResultSet resultSet = preparedStatement.executeQuery();
 
-                    while (resultSet.next()) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
-                        HBox bigCard_box = fxmlLoader.load();
+                            while (resultSet.next()) {
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                                HBox bigCard_box = fxmlLoader.load();
 
-                        BigCardController cardController = fxmlLoader.getController();
+                                BigCardController cardController = fxmlLoader.getController();
 
-                        Book book = new Book();
-                        book.setTitle(resultSet.getString("title"));
-                        book.setAuthor(resultSet.getString("author"));
-                        book.setPublishedDate(resultSet.getString("published_date"));
-                        book.setCategories(resultSet.getString("categories"));
-                        book.setDescription(resultSet.getString("description"));
-                        book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                        book.setISBN(resultSet.getString("isbn"));
-                        book.setQuantity(resultSet.getInt("quantity"));
+                                Book book = new Book();
+                                book.setTitle(resultSet.getString("title"));
+                                book.setAuthor(resultSet.getString("author"));
+                                book.setPublishedDate(resultSet.getString("published_date"));
+                                book.setCategories(resultSet.getString("categories"));
+                                book.setDescription(resultSet.getString("description"));
+                                book.setThumbnailLink(resultSet.getString("thumbnail_link"));
+                                book.setISBN(resultSet.getString("isbn"));
+                                book.setQuantity(resultSet.getInt("quantity"));
 
-                        cardController.setData(book);
+                                cardController.setData(book);
 
-                        bigCard_box.setOnMouseClicked(event -> {
-                            //Trang viết phần hiện form borrow
-                        });
+                                bigCard_box.setOnMouseClicked(event -> {
+                                    //Trang
+                                });
 
+                                bookCards.add(bigCard_box);
+                            }
+                        }
+                        return bookCards;
+                    }
+                };
+
+                // Xử lý khi hoàn thành
+                task.setOnSucceeded(workerStateEvent -> {
+                    result_gridpane1.getChildren().clear();
+                    List<HBox> bookCards = task.getValue();
+                    int column = 0, row = 1;
+
+                    for (HBox bookCard : bookCards) {
+                        result_gridpane1.add(bookCard, column++, row);
+                        GridPane.setMargin(bookCard, new Insets(8));
                         if (column >= 3) {
                             column = 0;
                             row++;
                         }
-                        result_gridpane1.add(bigCard_box, column++, row);
-                        GridPane.setMargin(bigCard_box, new Insets(8));
                     }
+                });
 
-                    resultSet.close();
-                    preparedStatement.close();
-                    connection.close();
+                // Khi Task thất bại
+                task.setOnFailed(workerStateEvent -> {
+                    result_gridpane1.getChildren().clear();
+                    Label errorLabel = new Label("Error loading data.");
+                    errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+                    result_gridpane1.add(errorLabel, 0, 0);
+                });
 
-                } catch (SQLException | IOException ex) {
-                    ex.printStackTrace();
-                }
+                // Chạy background thread
+                Thread thread = new Thread(task);
+                thread.setDaemon(true);
+                thread.start();
             }
         });
     }

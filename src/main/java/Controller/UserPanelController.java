@@ -143,12 +143,12 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        //FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboardUser.fxml"));
-        //AnchorPane dashboardPane = dashboardLoader.load();
-        //DashboardUserController dashboardController = dashboardLoader.getController();
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboardUser.fxml"));
+        AnchorPane dashboardPane = dashboardLoader.load();
+        DashboardUserController dashboardController = dashboardLoader.getController();
         //dashboardController.setAdminInfo(firstName, lastName, username, role, avatar_path);
-        //dashboard_anchorpane.getChildren().clear();
-        //dashboard_anchorpane.getChildren().add(dashboardPane);
+        dashboard_anchorpane.getChildren().clear();
+        dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
     private void showRental() throws IOException {
@@ -158,11 +158,11 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        //FXMLLoader rentalLoader = new FXMLLoader(getClass().getResource("/view/rental.fxml"));
-        //AnchorPane rentalPane = rentalLoader.load();
-        //RentalController rentalController = rentalLoader.getController();
-        //rental_anchorpane.getChildren().clear();
-        //rental_anchorpane.getChildren().add(rentalPane);
+        FXMLLoader rentalLoader = new FXMLLoader(getClass().getResource("/view/rental.fxml"));
+        AnchorPane rentalPane = rentalLoader.load();
+        RentalController rentalController = rentalLoader.getController();
+        rental_anchorpane.getChildren().clear();
+        rental_anchorpane.getChildren().add(rentalPane);
     }
 
     private void showLibrary() throws IOException {
@@ -172,11 +172,11 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        //FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/library.fxml"));
-        //AnchorPane libraryPane = libraryLoader.load();
-        //LibraryController libraryController = libraryLoader.getController();
-        //library_anchorpane.getChildren().clear();
-        //library_anchorpane.getChildren().add(libraryPane);
+        FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/library.fxml"));
+        AnchorPane libraryPane = libraryLoader.load();
+        LibraryController libraryController = libraryLoader.getController();
+        library_anchorpane.getChildren().clear();
+        library_anchorpane.getChildren().add(libraryPane);
     }
 
     private void showProfile() throws IOException {
