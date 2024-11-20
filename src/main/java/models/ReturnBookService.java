@@ -18,7 +18,7 @@ public class ReturnBookService {
             book.setQuantity(book.getQuantity() + 1);
 
             Member member = loan.getMember();
-            member.addReturnHistory(loan);
+            member.addReturnHistory(loan); //không add mà chỉ điều chỉnh returnDate thôi
         });
     }
 }

@@ -1,23 +1,31 @@
 package Controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import models.ActivityLog;
+import models.Book;
+import models.DB;
+import models.searchBookAPI;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.sql.*;
+import java.util.*;
 
 public class DashboardController implements Initializable {
 
@@ -29,6 +37,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private AnchorPane main_pane;
+
+    @FXML
+    private ScrollPane stat_scrollpane;
 
     @FXML
     private Pane pane_1;
@@ -43,6 +54,9 @@ public class DashboardController implements Initializable {
     private Pane pane_4;
 
     @FXML
+    private AnchorPane activityLogPane;
+
+    @FXML
     private BarChart<String, ?> barChart;
 
     @FXML
@@ -54,9 +68,25 @@ public class DashboardController implements Initializable {
     @FXML
     private ImageView avatar;
 
+    @FXML
+    private Label numOfBooks;
+
+    @FXML
+    private Label numOfUsers;
+
+    @FXML
+    private Label numOfLoans;
+
+    @FXML
+    private VBox logVBox;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         barChart();
+        setNumOfBooks();
+        setNumOfUsers();
+        setNumOfLoans();
+        loadActivityLog();
         Circle clip = new Circle(50); // Adjust radius as needed
         clip.setCenterX(72); // Center X coordinate
         clip.setCenterY(70); // Center Y coordinate
@@ -67,10 +97,10 @@ public class DashboardController implements Initializable {
     public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
         label_adminName.setText( firstName + " " + lastName );
         if (Objects.equals(role, "Admin")) {
-            label_accType.setText("      Admin");
+            label_accType.setText("Admin");
         }
         if (Objects.equals(role, "User")) {
-            label_accType.setText("       User");
+            label_accType.setText("User");
         }
         if (avatar_path != null && !avatar_path.isEmpty()) {
             File avatarFile = new File(avatar_path);
@@ -91,29 +121,108 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public void barChart() {
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("Visitors");
-        series1.getData().add(new XYChart.Data("SAT", 10));
-        series1.getData().add(new XYChart.Data("SUN", 20));
-        series1.getData().add(new XYChart.Data("MON", 45));
-        series1.getData().add(new XYChart.Data("TUE", 30));
-        series1.getData().add(new XYChart.Data("WED", 25));
-        series1.getData().add(new XYChart.Data("THU", 10));
-        series1.getData().add(new XYChart.Data("FRI", 5));
+    public void setNumOfBooks() {
+        int count = 0;
 
-        XYChart.Series series2 = new XYChart.Series();
-        series2.setName("Borrowers");
-        series2.getData().add(new XYChart.Data("SAT", 20));
-        series2.getData().add(new XYChart.Data("SUN", 20));
-        series2.getData().add(new XYChart.Data("MON", 55));
-        series2.getData().add(new XYChart.Data("TUE", 40));
-        series2.getData().add(new XYChart.Data("WED", 35));
-        series2.getData().add(new XYChart.Data("THU", 20));
-        series2.getData().add(new XYChart.Data("FRI", 50));
+        String query = "SELECT COUNT(*) AS total FROM books";
 
-        barChart.getData().addAll(series1, series2);
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numOfBooks.setText(String.valueOf(count));
     }
 
+    public void setNumOfUsers() {
+        int count = 0;
+
+        String query = "SELECT COUNT(*) AS total FROM userdetail";
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numOfUsers.setText(String.valueOf(count));
+    }
+
+    public void setNumOfLoans() {
+        int count = 0;
+
+        String query = "SELECT COUNT(*) AS total FROM loans";
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt("total");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        numOfLoans.setText(String.valueOf(count));
+    }
+
+    public void barChart() {
+        Series series1 = new Series<>();
+        series1.setName("Borrowings");
+
+        Series series2 = new Series<>();
+        series2.setName("Returnings");
+
+        Map<String, Integer> borrowData = DB.getBorrowData();
+        Map<String, Integer> returnData = DB.getReturnData();
+
+        // Danh sách các ngày trong tuần
+        List<String> daysOfTheWeek = Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
+
+        for (String day : daysOfTheWeek) {
+            series1.getData().add(new XYChart.Data<>(day, borrowData.getOrDefault(day, 0)));
+            series2.getData().add(new XYChart.Data<>(day, returnData.getOrDefault(day, 0)));
+        }
+
+        // Thêm dữ liệu vào biểu đồ
+        barChart.getData().clear();
+        barChart.getData().add(series1);
+        barChart.getData().add(series2);
+    }
+
+    public void loadActivityLog() {
+        List<ActivityLog> logs = DB.fetchActivityLog();
+
+        try {
+            logVBox.getChildren().clear();
+
+            for (ActivityLog log : logs) {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("/view/logCard.fxml"));
+                HBox logBox = fxmlLoader.load();
+                ActivityLogController logController = fxmlLoader.getController();
+                logController.setData(log);
+
+                logVBox.getChildren().add(logBox);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

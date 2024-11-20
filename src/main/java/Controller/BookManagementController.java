@@ -1,6 +1,7 @@
 package Controller;
 
 import javafx.animation.TranslateTransition;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import models.searchBookAPI;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -170,42 +172,75 @@ public class BookManagementController implements Initializable {
             if (e.getCode() == KeyCode.ENTER) {
                 String queryText = search_text.getText();
 
+                // Hiển thị giao diện tạm thời
                 result_gridpane.getChildren().clear();
+                Label loadingLabel = new Label("Searching for books...");
+                loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+                result_gridpane.add(loadingLabel, 0, 0);
 
-                searchBookAPI query = new searchBookAPI();
-                try {
-                    query.getBookInfos(search_text.getText());
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
+                // Tạo background task
+                Task<List<HBox>> searchTask = new Task<>() {
+                    @Override
+                    protected List<HBox> call() throws Exception {
+                        List<HBox> searchResults = new ArrayList<>();
+                        searchBookAPI query = new searchBookAPI();
+                        query.getBookInfos(queryText);
 
-                int column = 0;
-                int row = 1;
+                        int column = 0;
+                        int row = 1;
 
-                try {
-                    for (Book book : searchBookAPI.searchResult) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
-                        HBox bigCard_box = fxmlLoader.load();
-                        BigCardController cardController = fxmlLoader.getController();
-                        cardController.setData(book);
+                        for (Book book : searchBookAPI.searchResult) {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                            HBox bigCard_box = fxmlLoader.load();
+                            BigCardController cardController = fxmlLoader.getController();
+                            cardController.setData(book);
 
-                        bigCard_box.setOnMouseClicked(event -> {
-                            showBookDetail(book, "Add");
-                            restoreFormat();
-                            addBookToDb(book);
-                        });
+                            bigCard_box.setOnMouseClicked(event -> {
+                                showBookDetail(book, "Add");
+                                restoreFormat();
+                                addBookToDb(book);
+                            });
 
+                            if (column >= 3) {
+                                column = 0;
+                                row++;
+                            }
+                            searchResults.add(bigCard_box);
+                        }
+                        return searchResults;
+                    }
+                };
+
+                // Xử lý khi hoàn thành
+                searchTask.setOnSucceeded(event -> {
+                    result_gridpane.getChildren().clear();
+                    List<HBox> searchResults = searchTask.getValue();
+
+                    int column = 0;
+                    int row = 1;
+                    for (HBox bigCard_box : searchResults) {
+                        result_gridpane.add(bigCard_box, column++, row);
                         if (column >= 3) {
                             column = 0;
                             row++;
                         }
-                        result_gridpane.add(bigCard_box, column++, row);
                         GridPane.setMargin(bigCard_box, new Insets(8));
                     }
-                } catch (IOException exx) {
-                    exx.printStackTrace();
-                }
+                });
+
+                // Xử lý lỗi
+                searchTask.setOnFailed(event -> {
+                    result_gridpane.getChildren().clear();
+                    Label errorLabel = new Label("Failed to load search results.");
+                    errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+                    result_gridpane.add(errorLabel, 0, 0);
+                });
+
+                // Chạy background thread
+                Thread thread = new Thread(searchTask);
+                thread.setDaemon(true);
+                thread.start();
             }
         });
     }
@@ -326,63 +361,95 @@ public class BookManagementController implements Initializable {
             if (e.getCode() == KeyCode.ENTER) {
                 String queryText = search_text.getText();
 
+                // Hiển thị giao diện tạm thời
                 result_gridpane1.getChildren().clear();
+                Label loadingLabel = new Label("Searching for books...");
+                loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+                result_gridpane1.add(loadingLabel, 0, 0);
 
-                try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                // Tạo background task
+                Task<List<VBox>> searchTask = new Task<>() {
+                    @Override
+                    protected List<VBox> call() throws Exception {
+                        List<VBox> searchResults = new ArrayList<>();
+                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
-                    String get = "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
-                    PreparedStatement preparedStatement = connection.prepareStatement(get);
+                            preparedStatement.setString(1, "%" + queryText + "%");
+                            preparedStatement.setString(2, "%" + queryText + "%");
 
-                    preparedStatement.setString(1, "%" + queryText + "%");
-                    preparedStatement.setString(2, "%" + queryText + "%");
+                            ResultSet resultSet = preparedStatement.executeQuery();
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                            int column = 0;
+                            int row = 1;
+
+                            while (resultSet.next()) {
+                                FXMLLoader fxmlLoader = new FXMLLoader();
+                                fxmlLoader.setLocation(getClass().getResource("/view/smallCard.fxml"));
+                                VBox smallCard_box = fxmlLoader.load();
+
+                                SmallCardController cardController = fxmlLoader.getController();
+
+                                Book book = new Book();
+                                book.setTitle(resultSet.getString("title"));
+                                book.setAuthor(resultSet.getString("author"));
+                                book.setPublishedDate(resultSet.getString("published_date"));
+                                book.setCategories(resultSet.getString("categories"));
+                                book.setDescription(resultSet.getString("description"));
+                                book.setThumbnailLink(resultSet.getString("thumbnail_link"));
+                                book.setISBN(resultSet.getString("isbn"));
+                                book.setQuantity(resultSet.getInt("quantity"));
+
+                                cardController.setData(book);
+
+                                smallCard_box.setOnMouseClicked(event -> {
+                                    showBookDetail(book, "Manage");
+                                    restoreFormat();
+                                    removeBook(book);
+                                    updateBook(book);
+                                });
+
+                                if (column >= 6) {
+                                    column = 0;
+                                    row++;
+                                }
+                                searchResults.add(smallCard_box);
+                            }
+                            resultSet.close();
+                        }
+                        return searchResults;
+                    }
+                };
+
+                // Xử lý khi hoàn thành
+                searchTask.setOnSucceeded(event -> {
+                    result_gridpane1.getChildren().clear();
+                    List<VBox> searchResults = searchTask.getValue();
 
                     int column = 0;
                     int row = 1;
-
-                    while (resultSet.next()) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/smallCard.fxml"));
-                        VBox smallCard_box = fxmlLoader.load();
-
-                        SmallCardController cardController = fxmlLoader.getController();
-
-                        Book book = new Book();
-                        book.setTitle(resultSet.getString("title"));
-                        book.setAuthor(resultSet.getString("author"));
-                        book.setPublishedDate(resultSet.getString("published_date"));
-                        book.setCategories(resultSet.getString("categories"));
-                        book.setDescription(resultSet.getString("description"));
-                        book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                        book.setISBN(resultSet.getString("isbn"));
-                        book.setQuantity(resultSet.getInt("quantity"));
-
-                        cardController.setData(book);
-
-                        smallCard_box.setOnMouseClicked(event -> {
-                            showBookDetail(book, "Manage");
-                            restoreFormat();
-                            removeBook(book);
-                            updateBook(book);
-                        });
-
+                    for (VBox smallCard_box : searchResults) {
+                        result_gridpane1.add(smallCard_box, column++, row);
                         if (column >= 6) {
                             column = 0;
                             row++;
                         }
-                        result_gridpane1.add(smallCard_box, column++, row);
                         GridPane.setMargin(smallCard_box, new Insets(8));
                     }
+                });
 
-                    resultSet.close();
-                    preparedStatement.close();
-                    connection.close();
+                // Xử lý lỗi
+                searchTask.setOnFailed(event -> {
+                    result_gridpane1.getChildren().clear();
+                    Label errorLabel = new Label("Failed to load search results.");
+                    errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+                    result_gridpane1.add(errorLabel, 0, 0);
+                });
 
-                } catch (SQLException | IOException ex) {
-                    ex.printStackTrace();
-                }
+                // Chạy background thread
+                Thread thread = new Thread(searchTask);
+                thread.setDaemon(true);
+                thread.start();
             }
         });
     }
