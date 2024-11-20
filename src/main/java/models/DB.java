@@ -1,6 +1,8 @@
 package models;
 import Controller.AdminPanelController;
 import Controller.UserPanelController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -9,6 +11,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DB {
     public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
@@ -192,6 +198,114 @@ public class DB {
             statement.executeUpdate();
         }
     }
+
+    public static List<ActivityLog> fetchActivityLog() {
+        List<ActivityLog> logs = new ArrayList<>();
+
+        String query = """
+    SELECT 
+        l.issue_date, 
+        l.return_date, 
+        m.username AS user_name, 
+        b.title AS book_title
+    FROM loans l
+    JOIN userdetail m ON l.member_id = m.id
+    JOIN books b ON l.book_id = b.id
+    ORDER BY 
+        CASE 
+            WHEN l.return_date IS NOT NULL THEN l.return_date
+            ELSE l.issue_date
+        END DESC;
+    """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String memberName = rs.getString("user_name");
+                String bookTitle = rs.getString("book_title");
+
+                // Lấy ngày mượn (issue date)
+                Timestamp issueDate = rs.getTimestamp("issue_date");
+                if (issueDate != null) {
+                    logs.add(new ActivityLog(
+                            issueDate,
+                            "User " + memberName + " borrowed the book '" + bookTitle + "'."
+                    ));
+                }
+
+                // Lấy ngày trả (return date)
+                Timestamp returnDate = rs.getTimestamp("return_date");
+                if (returnDate != null) {
+                    logs.add(new ActivityLog(
+                            returnDate,
+                            "User " + memberName + " returned the book '" + bookTitle + "'."
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // Sắp xếp theo actionDate từ mới nhất đến cũ nhất (nếu chưa sắp xếp trong SQL)
+        logs.sort((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
+
+        System.out.println("Fetch successful.");
+        return logs;
+    }
+
+    public static Map<String, Integer> getBorrowData() {
+        Map<String, Integer> borrowData = new HashMap<>();
+        String query = """
+            SELECT DAYNAME(issue_date) AS day_of_week, COUNT(*) AS borrow_count
+            FROM loans
+            GROUP BY DAYNAME(issue_date)
+        """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String day = rs.getString("day_of_week");
+                int count = rs.getInt("borrow_count");
+                borrowData.put(day, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Get data successful.");
+        return borrowData;
+    }
+
+    // Phương thức lấy dữ liệu trả sách (series2)
+    public static Map<String, Integer> getReturnData() {
+        Map<String, Integer> returnData = new HashMap<>();
+        String query = """
+            SELECT DAYNAME(return_date) AS day_of_week, COUNT(*) AS return_count
+            FROM loans
+            WHERE return_date IS NOT NULL
+            GROUP BY DAYNAME(return_date)
+        """;
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement pst = con.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                String day = rs.getString("day_of_week");
+                int count = rs.getInt("return_count");
+                returnData.put(day, count);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Get data2 successful.");
+        return returnData;
+    }
+
     public static void deleteUser(int userId) throws SQLException {
         String query = "DELETE FROM userdetail WHERE id = ?";
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
@@ -282,6 +396,39 @@ public class DB {
         return false;
     }
 
+    public static ObservableList<Loan> getLoansByMemberId(int memberId) throws SQLException {
+        ObservableList<Loan> loans = FXCollections.observableArrayList();
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, memberId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Loan object
+                System.out.println("Found loan with ID: " + rs.getInt("loanId"));
+                Loan loan = new Loan();
+                loan.setLoanId(rs.getString("loanId"));
+                loan.setIssueDate(rs.getDate("issue_date"));
+                loan.setDueDate(rs.getDate("due_date"));
+                loan.setReturnDate(rs.getDate("return_date"));
+
+                // Create and populate Book object
+                Book book = new Book();
+                book.setTitle(rs.getString("bookTitle"));
+                loan.setBook(book);
+
+                // Add the loan to the list
+                loans.add(loan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching loan history for member ID: " + memberId, e);
+        }
+        return loans;
+    }
 
 
 

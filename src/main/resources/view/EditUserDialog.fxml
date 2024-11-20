@@ -2,26 +2,38 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="393.0" prefWidth="475.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditUserDialogController">
+<AnchorPane prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditUserDialogController">
     <children>
 
-        <Label layoutX="48.0" layoutY="215.0" text="Name:" />
-        <TextField fx:id="nameField" layoutX="163.0" layoutY="211.0" styleClass="login_text" stylesheets="@../css/style.css" />
+        <Label layoutX="105.0" layoutY="202.0" text="Name:" />
+        <TextField fx:id="nameField" layoutX="221.0" layoutY="195.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
 
-        <Label layoutX="47.0" layoutY="259.0" text="Date of Birth:" />
-        <TextField fx:id="dobField" layoutX="163.0" layoutY="255.0" styleClass="login_text" stylesheets="@../css/style.css" />
+        <Label layoutX="103.0" layoutY="237.0" text="Date of Birth:" />
+        <TextField fx:id="dobField" layoutX="221.0" layoutY="230.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
 
-        <Label layoutX="49.0" layoutY="299.0" text="Email:" />
-        <TextField fx:id="emailField" layoutX="163.0" layoutY="295.0" styleClass="login_text" stylesheets="@../css/style.css" />
+        <Label layoutX="103.0" layoutY="277.0" text="Email:" />
+        <TextField fx:id="emailField" layoutX="221.0" layoutY="270.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
 
-        <Button layoutX="126.0" layoutY="344.0" onAction="#handleSave" prefHeight="26.0" prefWidth="54.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Save" />
-        <Button layoutX="297.0" layoutY="345.0" onAction="#handleCancel" styleClass="purple_button" stylesheets="@../css/style.css" text="Cancel" />
-      <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="200.0" layoutX="164.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+        <Button layoutX="152.0" layoutY="459.0" onAction="#handleSave" prefHeight="26.0" prefWidth="54.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Save" />
+        <Button layoutX="372.0" layoutY="459.0" onAction="#handleCancel" styleClass="purple_button" stylesheets="@../css/style.css" text="Cancel" />
+
+        <TableView fx:id="loanTable" layoutX="78.0" layoutY="320.0" prefHeight="126.0" prefWidth="471.0">
+            <columns>
+                <TableColumn fx:id="loanIdColumn" prefWidth="53.59998321533203" text="Loan ID" />
+                <TableColumn fx:id="bookIdColumn" prefWidth="88.79998779296875" text="Book ID" />
+                <TableColumn fx:id="issueDateColumn" prefWidth="99.20001220703125" text="Issue Date" />
+                <TableColumn fx:id="dueDateColumn" prefWidth="111.2000732421875" text="Due Date" />
+                <TableColumn fx:id="returnDateColumn" prefWidth="119.99990844726562" text="Return Date" />
+            </columns>
+        </TableView>
+      <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="200.0" layoutX="240.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/avatar_img.png" />
          </image></ImageView>
