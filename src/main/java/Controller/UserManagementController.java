@@ -15,9 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx. scene. layout. VBox;
-import javafx.stage.FileChooser;
 import models.DB;
 import models.User;
 import org.apache.poi.ss.usermodel.Row;
@@ -56,8 +53,6 @@ public class UserManagementController implements Initializable {
     @FXML
     private TextField searchBar;
     @FXML
-    private Button searchButton;
-    @FXML
     private Button printButton;
     @FXML
     private Button addUserButton;
@@ -85,11 +80,7 @@ public class UserManagementController implements Initializable {
         }));
 
         filteredList = new FilteredList<>(userList, p -> true);
-
-        // Add action handler to the search button
-        //searchButton.setOnAction(event -> filterUserList());
         printButton.setOnAction(event -> handlePrintButton());
-
         loadUserData();
         addUserButton.setOnAction(event -> handleAddUserButton());
         tableView.setItems(filteredList);
@@ -146,8 +137,6 @@ public class UserManagementController implements Initializable {
         }
     }
 
-
-
     private void updateDeleteButtonVisibility() {
         boolean anySelected = userList.stream().anyMatch(User::isSelected);
         deleteButton.setVisible(anySelected);
@@ -185,16 +174,12 @@ public class UserManagementController implements Initializable {
                 // Delete user from the database
                 deleteUserFromDatabase(user.getId());
             }
-
             // Remove the selected users from the ObservableList
             userList.removeAll(selectedUsers);
-
             // Refresh the TableView
             tableView.refresh();
-
             // Update the Delete button visibility
             updateDeleteButtonVisibility();
-
             // Show success message
             Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
             successAlert.setTitle("Deletion Successful");
@@ -302,13 +287,9 @@ public class UserManagementController implements Initializable {
                 return true;
             }
 
-            // Match user name or email with the search query
             return user.getName().toLowerCase().contains(searchQuery);
         });
     }
-
-
-
 
 
     @FXML
