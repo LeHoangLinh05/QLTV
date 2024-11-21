@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditUserDialogController">
+<AnchorPane fx:id="rootPane" prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditUserDialogController">
     <children>
 
         <Label layoutX="105.0" layoutY="202.0" text="Name:" />
@@ -24,13 +24,13 @@
         <Button layoutX="152.0" layoutY="459.0" onAction="#handleSave" prefHeight="26.0" prefWidth="54.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Save" />
         <Button layoutX="372.0" layoutY="459.0" onAction="#handleCancel" styleClass="purple_button" stylesheets="@../css/style.css" text="Cancel" />
 
-        <TableView fx:id="loanTable" layoutX="78.0" layoutY="320.0" prefHeight="126.0" prefWidth="471.0">
+        <TableView fx:id="loanTable" layoutX="9.0" layoutY="320.0" prefHeight="126.0" prefWidth="609.0">
             <columns>
-                <TableColumn fx:id="loanIdColumn" prefWidth="53.59998321533203" text="Loan ID" />
-                <TableColumn fx:id="bookIdColumn" prefWidth="88.79998779296875" text="Book ID" />
-                <TableColumn fx:id="issueDateColumn" prefWidth="99.20001220703125" text="Issue Date" />
-                <TableColumn fx:id="dueDateColumn" prefWidth="111.2000732421875" text="Due Date" />
-                <TableColumn fx:id="returnDateColumn" prefWidth="119.99990844726562" text="Return Date" />
+                <TableColumn fx:id="loanIdColumn" prefWidth="60.79998588562012" text="Loan ID" />
+                <TableColumn fx:id="bookIdColumn" prefWidth="199.20001983642578" text="Book ID" />
+                <TableColumn fx:id="issueDateColumn" prefWidth="95.199951171875" text="Issue Date" />
+                <TableColumn fx:id="dueDateColumn" prefWidth="141.60003662109375" text="Due Date" />
+                <TableColumn fx:id="returnDateColumn" prefWidth="113.59994506835938" text="Return Date" />
             </columns>
         </TableView>
       <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="200.0" layoutX="240.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">

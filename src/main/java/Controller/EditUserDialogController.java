@@ -14,6 +14,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx. scene. image. ImageView;
@@ -53,6 +54,8 @@ public class EditUserDialogController implements Initializable {
 
     @FXML
     private TableColumn<Loan, String> returnDateColumn;
+    @FXML
+    private AnchorPane rootPane;
 
     private User user;
     private final ObservableList<Loan> loanList = FXCollections.observableArrayList();
@@ -68,8 +71,14 @@ public class EditUserDialogController implements Initializable {
                 data.getValue().getReturnDate() != null ? data.getValue().getReturnDate().toString() : "Not Returned"));
 
         loanTable.setItems(loanList);
-        //loadLoanHistory(user.getId());
-        System.out.println("EditUserDialogController initialized.");
+        rootPane.setOnMouseClicked(event -> {
+            if (!(event.getTarget() instanceof TextField || event.getTarget() instanceof TableView)) {
+                if (loanTable.getSelectionModel().getSelectedItem() != null) {
+                    loanTable.getSelectionModel().clearSelection();
+                }
+                nameField.getParent().requestFocus();
+            }
+        });
     }
 
     private void loadLoanHistory(int userId) {

@@ -6,7 +6,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.DB;
@@ -31,12 +33,18 @@ public class AddUserDialogController implements Initializable {
     private TextField usernameField;
     @FXML
     private TextField passwordField;
+    @FXML
+    private AnchorPane rootPane;
 
     private User user;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialization logic if needed
+        rootPane.setOnMouseClicked(event -> {
+            if (!(event.getTarget() instanceof TextField )) {
+                nameField.getParent().requestFocus();
+            }
+        });
     }
 
     @FXML

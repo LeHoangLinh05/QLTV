@@ -306,7 +306,7 @@ public class BookManagementController implements Initializable {
         add_button.setOnMouseClicked(event -> {
 
             try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
 
                 PreparedStatement check = connection.prepareStatement("SELECT COUNT(*) FROM books where isbn = ?");
 

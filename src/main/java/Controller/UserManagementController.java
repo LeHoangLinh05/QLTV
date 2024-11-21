@@ -6,19 +6,32 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.print.PrinterJob;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx. scene. layout. VBox;
+import javafx.stage.FileChooser;
 import models.DB;
 import models.User;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import static models.DB.updateUser;
@@ -48,6 +61,11 @@ public class UserManagementController implements Initializable {
     private Button printButton;
     @FXML
     private Button addUserButton;
+    @FXML
+    private AnchorPane usermanagement_anchorpane;
+    @FXML
+    private ComboBox<String> sortByComboBox;
+
 
     private String username;
     private ObservableList<User> userList = FXCollections.observableArrayList();
@@ -81,7 +99,54 @@ public class UserManagementController implements Initializable {
         }));
         updateDeleteButtonVisibility();
         addEditButtonToTable();
+        sortByComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && !newValue.isEmpty()) {
+                sortTableByCriteria(newValue);
+            }
+        });
+        usermanagement_anchorpane.setOnMouseClicked(event -> {
+            if (!(event.getTarget() instanceof TextField || event.getTarget() instanceof TableView)) {
+                if (tableView.getSelectionModel().getSelectedItem() != null) {
+                    tableView.getSelectionModel().clearSelection();
+                }
+                searchBar.getParent().requestFocus();
+            }
+        });
     }
+
+    private void sortTableByCriteria(String criteria) {
+        Comparator<User> comparator = null;
+
+        switch (criteria) {
+            case "ID":
+                comparator = Comparator.comparing(User::getId, Comparator.nullsLast(Comparator.naturalOrder()));
+                break;
+            case "Name":
+                comparator = Comparator.comparing(User::getName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                break;
+            case "Date of Birth":
+                comparator = Comparator.comparing(
+                        User::getDateOfBirth,
+                        Comparator.nullsLast(Comparator.naturalOrder()) // Sắp xếp null ở cuối
+                );
+                break;
+            case "Email":
+                comparator = Comparator.comparing(
+                        User::getEmail,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER) // Sắp xếp email null ở cuối
+                );
+                break;
+            default:
+                return; // Không làm gì nếu tiêu chí không hợp lệ
+        }
+
+        if (comparator != null) {
+            FXCollections.sort(userList, comparator);
+            tableView.refresh();
+        }
+    }
+
+
 
     private void updateDeleteButtonVisibility() {
         boolean anySelected = userList.stream().anyMatch(User::isSelected);
@@ -218,6 +283,7 @@ public class UserManagementController implements Initializable {
                     setGraphic(null);
                 } else {
                     setGraphic(editButton);
+                    setAlignment(Pos.CENTER);
                 }
             }
         });
@@ -243,79 +309,62 @@ public class UserManagementController implements Initializable {
 
 
 
+
+
     @FXML
     private void handlePrintButton() {
-        // Create a VBox to hold the header and user data
-        VBox content = new VBox(10); // Spacing between rows
-        content.setStyle("-fx-padding: 20;"); // Add some padding
+        try {
+            // Tạo Workbook và Sheet
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("User List");
 
-        // Add the title
-        Label title = new Label("Users");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 0 0 20 0;");
-        content.getChildren().add(title);
+            // Tạo hàng tiêu đề
+            Row headerRow = sheet.createRow(0);
+            headerRow.createCell(0).setCellValue("ID Number");
+            headerRow.createCell(1).setCellValue("Name");
+            headerRow.createCell(2).setCellValue("Date of Birth");
+            headerRow.createCell(3).setCellValue("Email");
 
-        // Add the header row
-        HBox headerRow = new HBox(20); // Spacing between columns
-        headerRow.setStyle("-fx-font-weight: bold; -fx-border-width: 0 0 2 0; -fx-border-color: black;");
-        headerRow.getChildren().addAll(
-                createCell("Membership Number", 150),
-                createCell("Name", 200),
-                createCell("Contact", 150),
-                createCell("ID Number", 150)
-        );
-        content.getChildren().add(headerRow);
-
-        // Add user data rows
-        for (User user : userList) {
-            HBox dataRow = new HBox(20); // Spacing between columns
-            dataRow.getChildren().addAll(
-                    createCell(String.valueOf(user.getId()), 150),
-                    createCell(user.getName(), 200),
-                    createCell("N/A", 150), // Replace with actual contact info if available
-                    createCell("N/A", 150)  // Replace with actual ID number if available
-            );
-            content.getChildren().add(dataRow);
-        }
-
-        // Create a PrinterJob
-        PrinterJob printerJob = PrinterJob.createPrinterJob();
-
-        if (printerJob != null) {
-            boolean proceed = printerJob.showPrintDialog(tableView.getScene().getWindow()); // Show print dialog
-
-            if (proceed) {
-                boolean success = printerJob.printPage(content); // Print the VBox content
-                if (success) {
-                    printerJob.endJob();
-                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Print Successful");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("User list printed successfully.");
-                    successAlert.showAndWait();
-                } else {
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Print Failed");
-                    errorAlert.setHeaderText(null);
-                    errorAlert.setContentText("Failed to print the user list.");
-                    errorAlert.showAndWait();
-                }
+            // Ghi dữ liệu từ userList vào Sheet
+            int rowIndex = 1;
+            for (User user : userList) {
+                Row dataRow = sheet.createRow(rowIndex++);
+                dataRow.createCell(0).setCellValue(user.getId());
+                dataRow.createCell(1).setCellValue(user.getName());
+                dataRow.createCell(2).setCellValue(user.getDateOfBirth()); // Thay bằng thông tin liên lạc nếu có
+                dataRow.createCell(3).setCellValue(user.getEmail()); // Thay bằng số ID nếu có
             }
-        } else {
+
+            // Tự động căn chỉnh cột
+            for (int i = 0; i < 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Tạo file tạm để lưu workbook
+            File tempFile = File.createTempFile("UserList", ".xlsx");
+            try (FileOutputStream fileOut = new FileOutputStream(tempFile)) {
+                workbook.write(fileOut);
+            }
+            workbook.close();
+
+            // Mở file Excel vừa tạo bằng ứng dụng mặc định (Microsoft Excel)
+            if (Desktop.isDesktopSupported()) {
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(tempFile);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Hiển thị thông báo lỗi
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Print Error");
+            errorAlert.setTitle("Export Failed");
             errorAlert.setHeaderText(null);
-            errorAlert.setContentText("Could not create a printer job.");
+            errorAlert.setContentText("Failed to export user list to Excel.");
             errorAlert.showAndWait();
         }
     }
 
-    // Helper method to create a styled cell
-    private Label createCell(String text, double width) {
-        Label cell = new Label(text);
-        cell.setPrefWidth(width);
-        cell.setStyle("-fx-padding: 5; -fx-border-width: 0 0 1 0; -fx-border-color: lightgray;");
-        return cell;
-    }
+
 
     @FXML
     private void handleAddUserButton() {
