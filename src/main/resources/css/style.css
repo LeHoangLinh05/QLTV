@@ -280,6 +280,13 @@
     -fx-font-weight: bold;
 }
 
+.logCard {
+    -fx-background-color:#ffffff;
+    -fx-border-color: #ffffff;
+    -fx-font-family: 'Euclid Circular A Semibold';
+    -fx-font-weight: bold;
+}
+
 .bookdetail_anchorpane {
     -fx-background-color:#30303d;
     -fx-font-family: 'Euclid Circular A Semibold';
@@ -427,6 +434,120 @@
 }
 
 
+/*table*/
 
+
+/* Style for search */
+.search {
+    -fx-padding: 5 12; /* Padding */
+    -fx-font-size: 14px; /* Font size */
+    -fx-pref-height: 20px; /* Line height */
+    -fx-text-fill: #24292e; /* Text color */
+    -fx-background-color: #ffffff; /* Background color */
+    -fx-background-repeat: no-repeat; /* No repeat for background */
+    -fx-background-position: right 8px center; /* Background position */
+    -fx-border-color: #e1e4e8; /* Border color */
+    -fx-border-radius: 6; /* Rounded corners for the border */
+    -fx-background-radius: 6; /* Rounded corners for the background */
+    -fx-effect: innershadow(two-pass-box, rgba(225, 228, 232, 0.2), 1, 0, 0, 1); /* Shadow effect */
+}
+
+/* Focused state for the button */
+.search:focused {
+    -fx-border-color: #0366d6; /* Border color when focused */
+    -fx-effect: dropshadow(three-pass-box, rgba(3, 102, 214, 0.3), 3, 0, 0, 0); /* Shadow effect when focused */
+    -fx-background-color: #ffffff; /* Keep background white */
+    -fx-text-fill: #24292e; /* Text color remains same */
+}
+
+/* Style for the edit button */
+.edit-button {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-padding: 0; /* No padding */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+}
+
+/* Hover effect for the icon button */
+.edit-button:hover {
+    -fx-background-color: #e0e0e0; /* Light gray background on hover */
+    -fx-border-radius: 6; /* Rounded border for hover */
+    -fx-background-radius: 6; /* Match rounded corners */
+}
+
+/* Table*/
+
+.table-view{
+    -fx-background-color: transparent;
+}
+.table-view .column-header,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: #609cd4;
+    -fx-font-size: 14px;
+}
+
+.table-view .column-header-background{
+    /*-fx-background-color: -hlight-gradient;*/
+    /*-fx-background-radius: 7px 7px 0px 0px;*/
+    /*-fx-background-insets: 0 11px 0 0;*/
+    /*-fx-padding: 0 0 5px 0;*/
+}
+
+.table-view .table-cell{
+    -fx-border-color: transparent;
+    -fx-padding: 2 0 2 10px;
+    -fx-font-size: 13px;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #93f9b911;
+    -fx-text-background-color: -tertiary;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: #c0d4ec;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+    -fx-cell-size: 40px;
+
+}
+
+.table-row-cell:even{
+    -fx-background-color: #e0ecf4;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+    -fx-cell-size: 40px;
+
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #609cd4;
+    -fx-text-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    /*-fx-background-color: transparent;*/
+}
+
+.table-view .virtual-flow .scroll-bar:vertical .thumb{
+    -fx-background-color:  #1dbbdd44
+}
+
+.table-view .virtual-flow .scroll-bar:horizontal .thumb {
+    -fx-background-color:  #1dbbdd44
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-opacity: 50;
+    -fx-padding: 2;
+}
 
 

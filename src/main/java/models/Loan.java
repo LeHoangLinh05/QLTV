@@ -1,19 +1,25 @@
 package models;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import java.util.Date;
 
 public class Loan {
-    private String loanId;
+    private final StringProperty loanId;
     private Member member;
     private Book book;
     private Date issueDate;
     private Date dueDate;
     private Date returnDate;
 
-    public Loan() {}
+    public Loan() {
+        this.loanId = (new SimpleStringProperty());
+    }
+
 
     public Loan(String loanId, Member member, Book book, Date issueDate, Date dueDate) {
-        this.loanId = loanId;
+        this.loanId = new SimpleStringProperty(loanId);
         this.member = member;
         this.book = book;
         this.issueDate = issueDate;
@@ -22,12 +28,18 @@ public class Loan {
     }
 
     public String getLoanId() {
-        return loanId;
+        return loanId.get();
     }
 
+    // Setter for loanId
     public void setLoanId(String loanId) {
-        this.loanId = loanId;
+        this.loanId.set(loanId); // Use set() to assign the value
     }
+
+    public StringProperty loanIdProperty() {
+        return this.loanId;
+    }
+
 
     public Member getMember() {
         return member;

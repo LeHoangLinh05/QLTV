@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane fx:id="usermanagement_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="library_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserManagementController">
     <children>
+        <ComboBox fx:id="sortByComboBox" layoutX="196.0" layoutY="155.0" prefHeight="26.0" prefWidth="119.0" promptText="Sort by" stylesheets="@../css/style.css">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="ID" />
+                    <String fx:value="Name" />
+                    <String fx:value="Date of Birth" />
+                    <String fx:value="Email" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+        <!-- Title Label -->
         <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@../css/style.css" text="User Management" textFill="#32364d">
             <font>
                 <Font name="EuclidCircularA-SemiBold" size="30.0" />
             </font>
         </Label>
+
+        <!-- Search Field and Button -->
+        <TextField fx:id="searchBar" layoutX="620.0" layoutY="123.0" prefHeight="24.0" prefWidth="275.0" promptText="Search" styleClass="search" stylesheets="@../css/style.css" />
+
+        <!-- TableView with Anchors for Dynamic Resizing -->
+        <TableView fx:id="tableView" layoutX="-1.6" layoutY="195.0" prefHeight="505.0" prefWidth="927.0" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-15.0" AnchorPane.topAnchor="195.0">
+            <columns>
+                <TableColumn fx:id="checkBoxColumn" prefWidth="41.599974036216736" />
+                <TableColumn fx:id="idColumn" prefWidth="111.20001983642578" text="ID" />
+                <TableColumn fx:id="nameColumn" prefWidth="176.80003356933594" text="Name" />
+                <TableColumn fx:id="dobColumn" prefWidth="212.00003051757812" text="Date of Birth" />
+                <TableColumn fx:id="emailColumn" prefWidth="321.59991455078125" text="Email" />
+            <TableColumn fx:id="editColumn" minWidth="8.7999267578125" prefWidth="46.39990234375" text="Detail" />
+            </columns>
+        </TableView>
+      <Button fx:id="deleteButton" layoutX="315.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="86.0" stylesheets="@../css/style.css" text="Remove" />
+      <Button fx:id="printButton" layoutX="24.0" layoutY="155.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="86.0" stylesheets="@../css/style.css" text="Print" />
+      <Button fx:id="addUserButton" layoutX="110.0" layoutY="155.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="86.0" stylesheets="@../css/style.css" text="Add new" />
     </children>
 </AnchorPane>
-
