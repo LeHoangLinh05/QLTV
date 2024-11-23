@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class Library {
     private String libraryName;
@@ -96,5 +97,15 @@ public class Library {
         return result;
     }
 
+    public List<Book> getAvailableBooks() {
+        return books.stream()
+                .filter(book -> book.getQuantity() > 0)
+                .collect(Collectors.toList());
+    }
+
+
 }
+
+
+
 
