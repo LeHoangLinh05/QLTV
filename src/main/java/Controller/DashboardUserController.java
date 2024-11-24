@@ -61,7 +61,7 @@ public class DashboardUserController implements Initializable {
                                      "JOIN loans l ON b.id = l.book_id " +
                                      "GROUP BY b.id, b.title, b.author " +
                                      "ORDER BY borrow_count DESC " +
-                                     "LIMIT 2"
+                                     "LIMIT 5"
                      );
                      ResultSet resultSet = preparedStatement.executeQuery()) {
 

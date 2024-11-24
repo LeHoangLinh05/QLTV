@@ -23,7 +23,6 @@ public class Member  {
     }
 
     public Member(String userId, String name, String email, String phoneNumber, String address) {
-       // super(userId, name, email, phoneNumber);
         this.address = address;
         this.returnHistory = new ArrayList<>();
     }
@@ -43,4 +42,8 @@ public class Member  {
     public void addReturnHistory(Loan loan) {
         returnHistory.add(loan);
     }
+
+    public String getMemberId() {return memberId;}
+
+    public void setMemberId(String memberId) {this.memberId = memberId;}
 }

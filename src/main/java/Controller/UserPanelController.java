@@ -7,13 +7,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import models.ButtonStyleManager;
 import models.DB;
+import models.Member;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -163,6 +170,22 @@ public class UserPanelController implements Initializable{
         RentalController rentalController = rentalLoader.getController();
         rental_anchorpane.getChildren().clear();
         rental_anchorpane.getChildren().add(rentalPane);
+
+        Member member = null;
+        try {
+            ResultSet resultSet = DB.getUserData(username);
+            if (resultSet.next()) {
+                System.out.println("User " + username + " is now borrowing");  // Debugging
+                String name = firstName + " " + lastName;
+                String id = resultSet.getString("id");
+                member = new Member(name, id);
+                rentalController.setCurrentMember(member);
+            } else {
+                System.out.println("No data found for username: " + username);  // Debugging
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showLibrary() throws IOException {

@@ -24,7 +24,7 @@ public class DB {
         root = fxmlLoader.load();
 
         // Kiểm tra nếu userName và firstName không null
-        if ((userName != null) && (firstName != null)){
+        if ((userName != null) && (firstName != null)) {
             if ("Admin".equals(role)) {
                 AdminPanelController adminController = fxmlLoader.getController();
                 adminController.displayDashboard(firstName, lastName, userName, role, avatar_path);
@@ -71,10 +71,10 @@ public class DB {
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
 
-            if (resultSet.isBeforeFirst()){
+            if (resultSet.isBeforeFirst()) {
                 System.out.println("Username already taken.");
                 throw new SQLException("Username already taken");
-            }else {
+            } else {
                 psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role, avatar_path) VALUES (?, ?, ?, ?, ?, ?)");
                 psinsert.setString(1, username);
                 psinsert.setString(2, password);
@@ -91,7 +91,7 @@ public class DB {
                 }
             }
         } catch (SQLException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         } finally {
             if (resultSet != null) resultSet.close();
             if (pscheckUserExists != null) pscheckUserExists.close();
@@ -143,7 +143,6 @@ public class DB {
     }
 
 
-
     public static boolean isUsernameTaken(String username) throws SQLException {
         Connection connection = null;
         PreparedStatement psCheckUserExists = null;
@@ -174,13 +173,13 @@ public class DB {
         statement.setString(1, username);
         return statement.executeQuery();
     }
+
     public static ResultSet getAllUsers() throws SQLException {
         Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
         String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'User'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
     }
-
 
 
     // New method to update profile data for a specific user
@@ -203,20 +202,20 @@ public class DB {
         List<ActivityLog> logs = new ArrayList<>();
 
         String query = """
-    SELECT 
-        l.issue_date, 
-        l.return_date, 
-        m.username AS user_name, 
-        b.title AS book_title
-    FROM loans l
-    JOIN userdetail m ON l.member_id = m.id
-    JOIN books b ON l.book_id = b.id
-    ORDER BY 
-        CASE 
-            WHEN l.return_date IS NOT NULL THEN l.return_date
-            ELSE l.issue_date
-        END DESC;
-    """;
+                SELECT 
+                    l.issue_date, 
+                    l.return_date, 
+                    m.username AS user_name, 
+                    b.title AS book_title
+                FROM loans l
+                LEFT JOIN userdetail m ON l.member_id = m.id
+                LEFT JOIN books b ON l.book_id = b.id
+                ORDER BY 
+                    CASE 
+                        WHEN l.return_date IS NOT NULL THEN l.return_date
+                        ELSE l.issue_date
+                    END DESC;
+                """;
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement pst = con.prepareStatement(query);
@@ -259,10 +258,10 @@ public class DB {
     public static Map<String, Integer> getBorrowData() {
         Map<String, Integer> borrowData = new HashMap<>();
         String query = """
-            SELECT DAYNAME(issue_date) AS day_of_week, COUNT(*) AS borrow_count
-            FROM loans
-            GROUP BY DAYNAME(issue_date)
-        """;
+                    SELECT DAYNAME(issue_date) AS day_of_week, COUNT(*) AS borrow_count
+                    FROM loans
+                    GROUP BY DAYNAME(issue_date)
+                """;
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement pst = con.prepareStatement(query);
@@ -284,11 +283,11 @@ public class DB {
     public static Map<String, Integer> getReturnData() {
         Map<String, Integer> returnData = new HashMap<>();
         String query = """
-            SELECT DAYNAME(return_date) AS day_of_week, COUNT(*) AS return_count
-            FROM loans
-            WHERE return_date IS NOT NULL
-            GROUP BY DAYNAME(return_date)
-        """;
+                    SELECT DAYNAME(return_date) AS day_of_week, COUNT(*) AS return_count
+                    FROM loans
+                    WHERE return_date IS NOT NULL
+                    GROUP BY DAYNAME(return_date)
+                """;
 
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement pst = con.prepareStatement(query);
@@ -379,6 +378,7 @@ public class DB {
             }
         }
     }
+
     public static boolean doesUserExist(String username, String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
@@ -430,6 +430,68 @@ public class DB {
         return loans;
     }
 
+    public static int getBookIdByISBN(Book book) throws SQLException {
+        int id = 0;
 
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM books WHERE isbn = ?")) {
 
+            preparedStatement.setString(1, book.getISBN());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) { // Di chuyển con trỏ tới dòng đầu tiên
+                id = resultSet.getInt("id");
+            } else {
+                System.out.println("No book found with ISBN: " + book.getISBN());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Ném ngoại lệ để xử lý ở tầng cao hơn
+        }
+        return id;
+    }
+
+    public static void updateQuantityAfterBorrow(Book book) throws SQLException {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity - 1 WHERE isbn = ?")) {
+
+            preparedStatement.setString(1, book.getISBN());
+            int rowCount = preparedStatement.executeUpdate();
+
+            if (rowCount > 0) {
+                System.out.println("Quantity updated successfully for ISBN: " + book.getISBN());
+            } else {
+                System.out.println("No book found with ISBN: " + book.getISBN());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static int getBookQuantity(Book book) throws SQLException {
+        int quantity = 0;
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT quantity FROM books WHERE isbn = ?")) {
+
+            preparedStatement.setString(1, book.getISBN());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) { // Di chuyển con trỏ tới dòng đầu tiên
+                quantity = resultSet.getInt("quantity");
+            } else {
+                System.out.println("No book found with ISBN: " + book.getISBN());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return quantity;
+    }
 }
+

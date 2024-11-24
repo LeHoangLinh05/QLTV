@@ -320,7 +320,7 @@ public class BookManagementController implements Initializable {
                     alert.showAndWait();
                 }
                 else {
-                    PreparedStatement prepare = connection.prepareStatement("INSERT INTO books (title, author, isbn, published_date, publisher, page_count, categories, description, thumbnail_link) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    PreparedStatement prepare = connection.prepareStatement("INSERT INTO books (title, author, isbn, published_date, publisher, page_count, categories, description, thumbnail_link, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                     prepare.setString(1, book.getTitle());
                     prepare.setString(2, book.getAuthor());
@@ -340,6 +340,7 @@ public class BookManagementController implements Initializable {
                     prepare.setString(7, book.getCategories());
                     prepare.setString(8, book.getDescription());
                     prepare.setString(9, book.getThumbnailLink());
+                    prepare.setString(10, String.valueOf(book.getQuantity()));
 
                     prepare.executeUpdate();
 

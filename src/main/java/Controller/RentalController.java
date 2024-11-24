@@ -6,19 +6,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import models.Book;
-import models.ButtonStyleManager;
-import models.searchBookAPI;
+import models.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -65,11 +59,18 @@ public class RentalController implements Initializable {
     @FXML
     private AnchorPane rental_anchorpane;
 
-
     @FXML
     private AnchorPane returnbook_anchorpane;
 
     private ButtonStyleManager buttonStyleManager;
+
+    private Member member;
+
+    public void setCurrentMember(Member member) {
+        this.member = member;
+    }
+
+    public Member getMember() {return member;}
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -164,7 +165,7 @@ public class RentalController implements Initializable {
                                 cardController.setData(book);
 
                                 bigCard_box.setOnMouseClicked(event -> {
-                                    //Trang
+                                    borrowBook(book, getMember());
                                 });
 
                                 bookCards.add(bigCard_box);
@@ -204,5 +205,33 @@ public class RentalController implements Initializable {
                 thread.start();
             }
         });
+    }
+
+    private void borrowBook(Book book, Member member) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("/view/BorrowForm.fxml"));
+            AnchorPane borrowPane = fxmlLoader.load();
+
+            BorrowBookController borrowController = fxmlLoader.getController();
+            borrowController.setData(book, member);
+
+            rental_anchorpane.getChildren().add(borrowPane);
+            borrowPane.toFront();
+
+            borrowController.saveLoan(book, member, () -> {
+                // Nếu lưu thành công, hiển thị Alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Book Borrowed");
+                alert.setHeaderText(null);
+                alert.setContentText("You have borrowed this book successfully.");
+                alert.showAndWait();
+
+                // Sau khi mượn, bạn có thể xóa borrowPane
+                rental_anchorpane.getChildren().remove(borrowPane);
+            });
+        } catch (IOException exx) {
+            exx.printStackTrace();
+        }
     }
 }

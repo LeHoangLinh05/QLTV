@@ -476,36 +476,43 @@
 
 /* Table*/
 
-.table-view{
+.table-view {
     -fx-background-color: transparent;
-}
-.table-view .column-header,
-.table-view .column-header-background .filler,
-.table-view .corner {
-    -fx-background-color: #609cd4;
-    -fx-font-size: 14px;
-}
-
-.table-view .column-header-background{
-    /*-fx-background-color: -hlight-gradient;*/
-    /*-fx-background-radius: 7px 7px 0px 0px;*/
-    /*-fx-background-insets: 0 11px 0 0;*/
-    /*-fx-padding: 0 0 5px 0;*/
-}
-
-.table-view .table-cell{
     -fx-border-color: transparent;
-    -fx-padding: 2 0 2 10px;
-    -fx-font-size: 13px;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
 }
 
-.table-row-cell:hover {
-    -fx-background-color: #93f9b911;
-    -fx-text-background-color: -tertiary;
+.table-view .column-header {
+    -fx-background-color: #ffffff; /* Màu nền tiêu đề cột */
+    -fx-text-fill: #ffffff; /* Màu chữ trắng */
+    -fx-font-size: 14px;
+    -fx-alignment: center-left; /* Căn giữa nội dung */
+}
+
+.table-view .table-cell {
+    -fx-background-color: white; /* Nền trắng cho các hàng */
+    -fx-text-fill: black; /* Chữ đen */
+    -fx-alignment: center-left; /* Căn chữ trái */
+    -fx-font-size: 13px;
+    -fx-border-color: transparent; /* Loại bỏ border */
+}
+
+.table-row-cell {
+    -fx-cell-size: 40px; /* Độ cao hàng */
+    -fx-background-color: white; /* Nền trắng mặc định */
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #609cd4; /* Nền xanh khi được chọn */
+    -fx-text-fill: white; /* Chữ trắng khi được chọn */
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
 }
 
 .table-row-cell:odd{
-    -fx-background-color: #c0d4ec;
+    -fx-background-color: #f6f7f9;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
     -fx-cell-size: 40px;
@@ -513,41 +520,11 @@
 }
 
 .table-row-cell:even{
-    -fx-background-color: #e0ecf4;
+    -fx-background-color: #ffffff;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em;
     -fx-cell-size: 40px;
 
-}
-
-.table-row-cell:selected {
-    -fx-background-color: #609cd4;
-    -fx-text-background-color: white;
-    -fx-background-radius: 5px;
-    -fx-background-insets: 2px;
-}
-
-.table-view .virtual-flow .scroll-bar:vertical,
-.table-view .virtual-flow .scroll-bar:vertical .track,
-.table-view .virtual-flow .scroll-bar:vertical .track-background,
-.table-view .virtual-flow .scroll-bar:horizontal,
-.table-view .virtual-flow .scroll-bar:horizontal .track,
-.table-view .virtual-flow .scroll-bar:horizontal .track-background {
-    /*-fx-background-color: transparent;*/
-}
-
-.table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  #1dbbdd44
-}
-
-.table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  #1dbbdd44
-}
-
-.table-view .virtual-flow .scroll-bar .increment-button,
-.table-view .virtual-flow .scroll-bar .decrement-button {
-    -fx-opacity: 50;
-    -fx-padding: 2;
 }
 
 
