@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="models.CurrentLoansController">
+    <TableView fx:id="currentLoansTable" layoutX="50" layoutY="50" prefWidth="600" prefHeight="400">
+        <TableColumn text="Book Title" fx:id="titleColumn" prefWidth="200"/>
+        <TableColumn text="Issue Date" fx:id="issueDateColumn" prefWidth="200"/>
+        <TableColumn text="Due Date" fx:id="dueDateColumn" prefWidth="200"/>
+    </TableView>
+</AnchorPane>
