@@ -25,7 +25,7 @@
                     <graphic>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../images/save_button.png" />
+                                <Image url="@../images/borrow_button.png" />
                             </image>
                         </ImageView>
                     </graphic>
