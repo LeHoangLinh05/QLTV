@@ -54,7 +54,7 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> popularBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
                      PreparedStatement preparedStatement = connection.prepareStatement(
                              "SELECT b.*, COUNT(l.book_id) AS borrow_count " +
                                      "FROM books b " +
@@ -122,7 +122,7 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<VBox> call() throws Exception {
                 List<VBox> newBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
                      PreparedStatement preparedStatement = connection.prepareStatement(
                              "SELECT * FROM books ORDER BY id DESC LIMIT 10"
                      );

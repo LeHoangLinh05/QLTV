@@ -66,7 +66,7 @@ public class DB {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -107,7 +107,7 @@ public class DB {
         ResultSet resultSet = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -150,7 +150,7 @@ public class DB {
         boolean usernameExists = false;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
             psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?");
             psCheckUserExists.setString(1, username);
             resultSet = psCheckUserExists.executeQuery();
@@ -168,14 +168,14 @@ public class DB {
 
 
     public static ResultSet getUserData(String username) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
         PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
     }
 
     public static ResultSet getAllUsers() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
         String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'User'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
@@ -184,7 +184,7 @@ public class DB {
 
     // New method to update profile data for a specific user
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
@@ -217,7 +217,7 @@ public class DB {
                     END DESC;
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -263,7 +263,7 @@ public class DB {
                     GROUP BY DAYNAME(issue_date)
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -289,7 +289,7 @@ public class DB {
                     GROUP BY DAYNAME(return_date)
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -307,7 +307,7 @@ public class DB {
 
     public static void deleteUser(int userId) throws SQLException {
         String query = "DELETE FROM userdetail WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
@@ -319,7 +319,7 @@ public class DB {
 
     public static void updateUser(User user) throws SQLException {
         String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             // Split the name field into fName and lName
@@ -351,7 +351,7 @@ public class DB {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
             throw new SQLException("User already exists with the given username or email.");
         }
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
         String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -381,7 +381,7 @@ public class DB {
 
     public static boolean doesUserExist(String username, String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, username);
@@ -400,7 +400,7 @@ public class DB {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, memberId);
@@ -433,7 +433,7 @@ public class DB {
     public static int getBookIdByISBN(Book book) throws SQLException {
         int id = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM books WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -453,7 +453,7 @@ public class DB {
     }
 
     public static void updateQuantityAfterBorrow(Book book) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity - 1 WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -474,7 +474,7 @@ public class DB {
     public static int getBookQuantity(Book book) throws SQLException {
         int quantity = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT quantity FROM books WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -493,5 +493,6 @@ public class DB {
 
         return quantity;
     }
+
 }
 

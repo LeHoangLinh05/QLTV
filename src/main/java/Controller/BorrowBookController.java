@@ -74,7 +74,7 @@ public class BorrowBookController {
             if (DB.getBookQuantity(book) < 1) {
                 return false;
             } else {
-                try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
                      PreparedStatement pst = con.prepareStatement("INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
 
                     pst.setString(1, member.getMemberId());

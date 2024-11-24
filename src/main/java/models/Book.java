@@ -3,6 +3,7 @@ package models;
 import java.util.*;
 
 public class Book {
+    private int id;
     private String title;
     private String author;
     private String ISBN;
@@ -17,7 +18,8 @@ public class Book {
     public Book() {}
 
     public Book(int id, String title) {
-        this.ISBN = String.valueOf(id); // Set ID as ISBN or another placeholder
+        //this.ISBN = String.valueOf(id); // Set ID as ISBN or another placeholder
+        this.id = id;
         this.title = title;
     }
 
@@ -33,6 +35,13 @@ public class Book {
         this.description = description;
         this.thumbnailLink = thumbnailLink;
         this.quantity = 10;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {

@@ -306,7 +306,7 @@ public class BookManagementController implements Initializable {
         add_button.setOnMouseClicked(event -> {
 
             try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
 
                 PreparedStatement check = connection.prepareStatement("SELECT COUNT(*) FROM books where isbn = ?");
 
@@ -373,7 +373,7 @@ public class BookManagementController implements Initializable {
                     @Override
                     protected List<VBox> call() throws Exception {
                         List<VBox> searchResults = new ArrayList<>();
-                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
                              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
                             preparedStatement.setString(1, "%" + queryText + "%");
@@ -459,7 +459,7 @@ public class BookManagementController implements Initializable {
         remove_button.setOnMouseClicked(event -> {
             boolean isDeleted = false;
             try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
                 String query = "DELETE FROM books WHERE ISBN = ?";
                 PreparedStatement pst = connection.prepareStatement(query);
                 pst.setString(1, book.getISBN());

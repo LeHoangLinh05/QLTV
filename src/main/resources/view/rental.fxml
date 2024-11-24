@@ -54,7 +54,20 @@
                 </TextField>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="returnbook_anchorpane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0" />
+        <AnchorPane fx:id="returnbook_anchorpane" layoutX="10.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+         <children>
+            <ScrollPane fx:id="library_scrollpane1" hbarPolicy="NEVER" prefHeight="559.0" prefWidth="800.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" vbarPolicy="NEVER" AnchorPane.bottomAnchor="-324.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="-675.0" AnchorPane.topAnchor="31.0">
+               <content>
+                  <GridPane fx:id="result_gridpane2" prefHeight="6.0" prefWidth="0.0">
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                  </GridPane>
+               </content>
+            </ScrollPane>
+         </children>
+        </AnchorPane>
+
         <AnchorPane fx:id="borrowbook_anchorpane" layoutX="10.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
             <children>
                 <ScrollPane fx:id="library_scrollpane" hbarPolicy="NEVER" prefHeight="559.0" prefWidth="800.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" vbarPolicy="NEVER" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="30.0">
