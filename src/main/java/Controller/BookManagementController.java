@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import models.Book;
 import models.ButtonStyleManager;
+import models.DB;
 import models.SearchBookAPI;
 
 import java.io.IOException;
@@ -305,55 +306,27 @@ public class BookManagementController implements Initializable {
     private void addBookToDb(Book book) {
         add_button.setOnMouseClicked(event -> {
 
-            try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-
-                PreparedStatement check = connection.prepareStatement("SELECT COUNT(*) FROM books where isbn = ?");
-
-                check.setString(1, book.getISBN());
-                ResultSet result = check.executeQuery();
-                if (result.next() && result.getInt(1) > 0) {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Duplicate Book");
-                    alert.setHeaderText(null);
-                    alert.setContentText("This book has already existed in the database.");
-                    alert.showAndWait();
-                }
-                else {
-                    PreparedStatement prepare = connection.prepareStatement("INSERT INTO books (title, author, isbn, published_date, publisher, page_count, categories, description, thumbnail_link, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-                    prepare.setString(1, book.getTitle());
-                    prepare.setString(2, book.getAuthor());
-                    prepare.setString(3, book.getISBN());
-
-                    String publishedDate = book.getPublishedDate();
-                    if (publishedDate.length() == 4) {
-                        publishedDate += "-01-01";
-                    }
-                    else if (publishedDate.length() == 7) {
-                        publishedDate += "-01";
-                    }
-                    prepare.setString(4, publishedDate);
-
-                    prepare.setString(5, book.getPublisher());
-                    prepare.setLong(6, book.getPageCount());
-                    prepare.setString(7, book.getCategories());
-                    prepare.setString(8, book.getDescription());
-                    prepare.setString(9, book.getThumbnailLink());
-                    prepare.setString(10, String.valueOf(book.getQuantity()));
-
-                    prepare.executeUpdate();
-
+            if (DB.doesBookExists(book.getISBN())) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Duplicate Book");
+                alert.setHeaderText(null);
+                alert.setContentText("This book already exists in the database.");
+                alert.showAndWait();
+            } else {
+                if (DB.addBook(book)) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Book Added");
                     alert.setHeaderText(null);
-                    alert.setContentText("This book is added successfully");
+                    alert.setContentText("This book has been added successfully.");
+                    alert.showAndWait();
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Failed to add the book. Please try again.");
                     alert.showAndWait();
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
-
         });
     }
 
@@ -373,50 +346,31 @@ public class BookManagementController implements Initializable {
                     @Override
                     protected List<VBox> call() throws Exception {
                         List<VBox> searchResults = new ArrayList<>();
-                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
+                        List<Book> books = DB.searchBooks(queryText);
 
-                            preparedStatement.setString(1, "%" + queryText + "%");
-                            preparedStatement.setString(2, "%" + queryText + "%");
+                        int column = 0;
+                        int row = 1;
 
-                            ResultSet resultSet = preparedStatement.executeQuery();
+                        for (Book book : books) {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
+                            VBox smallCard_box = fxmlLoader.load();
 
-                            int column = 0;
-                            int row = 1;
+                            SmallCardController cardController = fxmlLoader.getController();
+                            cardController.setData(book);
 
-                            while (resultSet.next()) {
-                                FXMLLoader fxmlLoader = new FXMLLoader();
-                                fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
-                                VBox smallCard_box = fxmlLoader.load();
+                            smallCard_box.setOnMouseClicked(event -> {
+                                showBookDetail(book, "Manage");
+                                restoreFormat();
+                                removeBook(book);
+                                updateBook(book);
+                            });
 
-                                SmallCardController cardController = fxmlLoader.getController();
-
-                                Book book = new Book();
-                                book.setTitle(resultSet.getString("title"));
-                                book.setAuthor(resultSet.getString("author"));
-                                book.setPublishedDate(resultSet.getString("published_date"));
-                                book.setCategories(resultSet.getString("categories"));
-                                book.setDescription(resultSet.getString("description"));
-                                book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                                book.setISBN(resultSet.getString("isbn"));
-                                book.setQuantity(resultSet.getInt("quantity"));
-
-                                cardController.setData(book);
-
-                                smallCard_box.setOnMouseClicked(event -> {
-                                    showBookDetail(book, "Manage");
-                                    restoreFormat();
-                                    removeBook(book);
-                                    updateBook(book);
-                                });
-
-                                if (column >= 6) {
-                                    column = 0;
-                                    row++;
-                                }
-                                searchResults.add(smallCard_box);
+                            if (column >= 6) {
+                                column = 0;
+                                row++;
                             }
-                            resultSet.close();
+                            searchResults.add(smallCard_box);
                         }
                         return searchResults;
                     }
@@ -457,18 +411,7 @@ public class BookManagementController implements Initializable {
 
     private void removeBook(Book book){
         remove_button.setOnMouseClicked(event -> {
-            boolean isDeleted = false;
-            try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-                String query = "DELETE FROM books WHERE ISBN = ?";
-                PreparedStatement pst = connection.prepareStatement(query);
-                pst.setString(1, book.getISBN());
-
-                int rowCount = pst.executeUpdate();
-                isDeleted = (rowCount > 0);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            boolean isDeleted = DB.removeBook(book);
 
             if (isDeleted) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

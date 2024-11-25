@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import models.Book;
+import models.DB;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -89,33 +90,10 @@ public class UpdateBookController implements Initializable {
         book.setQuantity(Integer.parseInt(quantity_text.getText()));
     }
 
-    public boolean saveToDB(Book book) {
-        boolean isUpdated = false;
-        try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-            String query = "UPDATE books SET title = ?, author = ?, published_date = ?, publisher = ?, description = ?, categories = ?, quantity = ? WHERE ISBN = ?";
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setString(1, book.getTitle());
-            pst.setString(2, book.getAuthor());
-            pst.setString(3, book.getPublishedDate());
-            pst.setString(4, book.getPublisher());
-            pst.setString(5, book.getDescription());
-            pst.setString(6, book.getCategories());
-            pst.setInt(7, book.getQuantity());
-            pst.setString(8, book.getISBN());
-
-            int rowCount = pst.executeUpdate();
-            isUpdated = (rowCount > 0);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return isUpdated;
-    }
-
     public void saveChanges(Book book, Runnable onSuccess) {
         save_button.setOnMouseClicked(event -> {
             getChanges(book);
-            boolean isSaved = saveToDB(book);
+            boolean isSaved = DB.updateBook(book);
 
             if (isSaved) {
                 onSuccess.run();

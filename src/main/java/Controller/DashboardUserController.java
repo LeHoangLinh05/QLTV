@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Book;
+import models.DB;
 
 import java.net.URL;
 import java.sql.*;
@@ -53,36 +54,16 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> popularBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT b.*, COUNT(l.book_id) AS borrow_count " +
-                                     "FROM books b " +
-                                     "JOIN loans l ON b.id = l.book_id " +
-                                     "GROUP BY b.id, b.title, b.author " +
-                                     "ORDER BY borrow_count DESC " +
-                                     "LIMIT 5"
-                     );
-                     ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<Book> books = DB.getMostPopularBooks();
 
-                    while (resultSet.next()) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
-                        HBox bigCard_box = fxmlLoader.load();
-                        BigCardController cardController = fxmlLoader.getController();
+                for (Book book : books) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
+                    HBox bigCard_box = fxmlLoader.load();
+                    BigCardController cardController = fxmlLoader.getController();
 
-                        Book book = new Book();
-                        book.setTitle(resultSet.getString("title"));
-                        book.setAuthor(resultSet.getString("author"));
-                        book.setPublishedDate(resultSet.getString("published_date"));
-                        book.setCategories(resultSet.getString("categories"));
-                        book.setDescription(resultSet.getString("description"));
-                        book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                        book.setISBN(resultSet.getString("isbn"));
-                        book.setQuantity(resultSet.getInt("quantity"));
-
-                        cardController.setData(book);
-                        popularBooks.add(bigCard_box);
-                    }
+                    cardController.setData(book);
+                    popularBooks.add(bigCard_box);
                 }
                 return popularBooks;
             }
@@ -121,31 +102,16 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<VBox> call() throws Exception {
                 List<VBox> newBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT * FROM books ORDER BY id DESC LIMIT 10"
-                     );
-                     ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<Book> books = DB.getNewBooks();
 
-                    while (resultSet.next()) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
-                        VBox smallCard_box = fxmlLoader.load();
-                        SmallCardController cardController = fxmlLoader.getController();
+                for (Book book : books) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
+                    VBox smallCard_box = fxmlLoader.load();
+                    SmallCardController cardController = fxmlLoader.getController();
 
-                        Book book = new Book();
-                        book.setTitle(resultSet.getString("title"));
-                        book.setAuthor(resultSet.getString("author"));
-                        book.setPublishedDate(resultSet.getString("published_date"));
-                        book.setCategories(resultSet.getString("categories"));
-                        book.setDescription(resultSet.getString("description"));
-                        book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                        book.setISBN(resultSet.getString("isbn"));
-                        book.setQuantity(resultSet.getInt("quantity"));
-
-                        cardController.setData(book);
-                        newBooks.add(smallCard_box);
-                    }
+                    cardController.setData(book);
+                    newBooks.add(smallCard_box);
                 }
                 return newBooks;
             }

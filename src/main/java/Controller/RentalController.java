@@ -165,40 +165,21 @@ public class RentalController implements Initializable {
                     @Override
                     protected List<HBox> call() throws Exception {
                         List<HBox> bookCards = new ArrayList<>();
+                        List<Book> books = DB.searchBooks(queryText);
 
-                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
+                        for (Book book : books) {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
+                            HBox bigCard_box = fxmlLoader.load();
 
-                            preparedStatement.setString(1, "%" + queryText + "%");
-                            preparedStatement.setString(2, "%" + queryText + "%");
+                            BigCardController cardController = fxmlLoader.getController();
+                            cardController.setData(book);
 
-                            ResultSet resultSet = preparedStatement.executeQuery();
+                            bigCard_box.setOnMouseClicked(event -> {
+                                borrowBook(book, getMember());
+                            });
 
-                            while (resultSet.next()) {
-                                FXMLLoader fxmlLoader = new FXMLLoader();
-                                fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
-                                HBox bigCard_box = fxmlLoader.load();
-
-                                BigCardController cardController = fxmlLoader.getController();
-
-                                Book book = new Book();
-                                book.setTitle(resultSet.getString("title"));
-                                book.setAuthor(resultSet.getString("author"));
-                                book.setPublishedDate(resultSet.getString("published_date"));
-                                book.setCategories(resultSet.getString("categories"));
-                                book.setDescription(resultSet.getString("description"));
-                                book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                                book.setISBN(resultSet.getString("isbn"));
-                                book.setQuantity(resultSet.getInt("quantity"));
-
-                                cardController.setData(book);
-
-                                bigCard_box.setOnMouseClicked(event -> {
-                                    borrowBook(book, getMember());
-                                });
-
-                                bookCards.add(bigCard_box);
-                            }
+                            bookCards.add(bigCard_box);
                         }
                         return bookCards;
                     }
@@ -424,20 +405,10 @@ public class RentalController implements Initializable {
     }
 
     public void returnBook(Book book, Member member) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
-
-            preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.now())); // Ngày trả là ngày hiện tại
-            preparedStatement.setInt(2, DB.getBookIdByISBN(book)); // Lấy ID của sách
-            preparedStatement.setInt(3, Integer.parseInt(member.getMemberId())); // Lấy ID của thành viên
-
-            int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                try {
-                    DB.updateQuantityAfterReturn(book);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            boolean isReturned = DB.returnBook(DB.getBookIdByISBN(book), Integer.parseInt(member.getMemberId()));
+            if (isReturned) {
+                DB.updateQuantityAfterReturn(book);
 
                 System.out.println("Book returned successfully: " + book.getTitle());
                 // Hiển thị thông báo thành công

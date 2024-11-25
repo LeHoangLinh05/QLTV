@@ -118,62 +118,17 @@ public class DashboardController implements Initializable {
     }
 
     public void setNumOfBooks() {
-        int count = 0;
-
-        String query = "SELECT COUNT(*) AS total FROM books";
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-             PreparedStatement pst = con.prepareStatement(query);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        int count = DB.countRecords("books");
         numOfBooks.setText(String.valueOf(count));
     }
 
     public void setNumOfUsers() {
-        int count = 0;
-
-        String query = "SELECT COUNT(*) AS total FROM userdetail";
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-             PreparedStatement pst = con.prepareStatement(query);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        int count = DB.countRecords("userdetail");
         numOfUsers.setText(String.valueOf(count));
     }
 
     public void setNumOfLoans() {
-        int count = 0;
-
-        String query = "SELECT COUNT(*) AS total FROM loans";
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-             PreparedStatement pst = con.prepareStatement(query);
-             ResultSet rs = pst.executeQuery()) {
-
-            if (rs.next()) {
-                count = rs.getInt("total");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        int count = DB.countRecords("loans");
         numOfLoans.setText(String.valueOf(count));
     }
 

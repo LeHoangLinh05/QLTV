@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import models.Book;
+import models.DB;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,40 +49,17 @@ public class LibraryController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> bookCards = new ArrayList<>();
-                try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+                List<Book> books = DB.getAllBooks();
 
-                    String get = "SELECT * FROM books";
-                    PreparedStatement preparedStatement = connection.prepareStatement(get);
+                for (Book book : books) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
+                    HBox bigCard_box = fxmlLoader.load();
+                    BigCardController cardController = fxmlLoader.getController();
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                    cardController.setData(book);
 
-                    while (resultSet.next()) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
-                        HBox bigCard_box = fxmlLoader.load();
-                        BigCardController cardController = fxmlLoader.getController();
-
-                        Book book = new Book();
-                        book.setTitle(resultSet.getString("title"));
-                        book.setAuthor(resultSet.getString("author"));
-                        book.setPublishedDate(resultSet.getString("published_date"));
-                        book.setCategories(resultSet.getString("categories"));
-                        book.setDescription(resultSet.getString("description"));
-                        book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                        book.setISBN(resultSet.getString("isbn"));
-                        book.setQuantity(resultSet.getInt("quantity"));
-
-                        cardController.setData(book);
-
-                        bookCards.add(bigCard_box);
-                    }
-
-                    resultSet.close();
-                    preparedStatement.close();
-                    connection.close();
-                } catch (SQLException | IOException ex) {
-                    ex.printStackTrace();
+                    bookCards.add(bigCard_box);
                 }
 
                 return bookCards;

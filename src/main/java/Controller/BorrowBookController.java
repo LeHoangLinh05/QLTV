@@ -66,23 +66,20 @@ public class BorrowBookController {
     }
 
     public boolean createLoan(Book book, Member member) {
+        LocalDate issueDate = LocalDate.now();
         LocalDate dueDate = dueDatePicker.getValue();
 
         boolean isCreated = false;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-             PreparedStatement pst = con.prepareStatement("INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
+        try {
+            int bookId = DB.getBookIdByISBN(book);
+            int memberId = Integer.parseInt(member.getMemberId());
 
-            pst.setString(1, member.getMemberId());
-            pst.setString(2, String.valueOf(DB.getBookIdByISBN(book)));
-            pst.setString(3, issue_date_text.getText());
-            pst.setString(4, dueDate.toString());
-
-            int rowCount = pst.executeUpdate();
-            isCreated = (rowCount > 0);
+            isCreated = DB.createLoan(memberId, bookId, issueDate, dueDate);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return isCreated;
     }
 
