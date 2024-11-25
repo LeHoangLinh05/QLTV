@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import models.Book;
 import models.ButtonStyleManager;
-import models.searchBookAPI;
+import models.SearchBookAPI;
 
 import java.io.IOException;
 import java.net.URL;
@@ -183,15 +183,15 @@ public class BookManagementController implements Initializable {
                     @Override
                     protected List<HBox> call() throws Exception {
                         List<HBox> searchResults = new ArrayList<>();
-                        searchBookAPI query = new searchBookAPI();
+                        SearchBookAPI query = new SearchBookAPI();
                         query.getBookInfos(queryText);
 
                         int column = 0;
                         int row = 1;
 
-                        for (Book book : searchBookAPI.searchResult) {
+                        for (Book book : SearchBookAPI.searchResult) {
                             FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                            fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
                             HBox bigCard_box = fxmlLoader.load();
                             BigCardController cardController = fxmlLoader.getController();
                             cardController.setData(book);
@@ -306,7 +306,7 @@ public class BookManagementController implements Initializable {
         add_button.setOnMouseClicked(event -> {
 
             try {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
 
                 PreparedStatement check = connection.prepareStatement("SELECT COUNT(*) FROM books where isbn = ?");
 
@@ -373,7 +373,7 @@ public class BookManagementController implements Initializable {
                     @Override
                     protected List<VBox> call() throws Exception {
                         List<VBox> searchResults = new ArrayList<>();
-                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
                             preparedStatement.setString(1, "%" + queryText + "%");
@@ -386,7 +386,7 @@ public class BookManagementController implements Initializable {
 
                             while (resultSet.next()) {
                                 FXMLLoader fxmlLoader = new FXMLLoader();
-                                fxmlLoader.setLocation(getClass().getResource("/view/smallCard.fxml"));
+                                fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
                                 VBox smallCard_box = fxmlLoader.load();
 
                                 SmallCardController cardController = fxmlLoader.getController();
@@ -484,7 +484,7 @@ public class BookManagementController implements Initializable {
         update_button.setOnMouseClicked(event -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/view/updateDetail.fxml"));
+                fxmlLoader.setLocation(getClass().getResource("/view/UpdateDetail.fxml"));
                 AnchorPane updatePane = fxmlLoader.load();
 
                 UpdateBookController updateController = fxmlLoader.getController();

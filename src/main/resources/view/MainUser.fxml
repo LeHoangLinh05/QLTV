@@ -9,27 +9,22 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1120.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdminPanelController">
+<AnchorPane fx:id="main_root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1120.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserPanelController">
     <children>
-      <AnchorPane fx:id="profile_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.leftAnchor="200.0">
-         <children>
-            <fx:include source="profile.fxml" />
-         </children>
-      </AnchorPane>
-        <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <fx:include source="dashboard.fxml" />
+        <AnchorPane fx:id="profile_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.leftAnchor="200.0">
+            <children>
+                <fx:include source="Profile.fxml" />
+            </children>
         </AnchorPane>
-        <AnchorPane fx:id="bookmanagement_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
-            <fx:include source="addbook.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <AnchorPane fx:id="dashboard_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <fx:include source="DashboardUser.fxml" />
+        </AnchorPane>
+        <AnchorPane fx:id="rental_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
+            <fx:include source="Rental.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
         </AnchorPane>
         <AnchorPane fx:id="library_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <fx:include source="library.fxml" />
-         </children>
-        </AnchorPane>
-        <AnchorPane fx:id="usermanagement_anchorpane" prefHeight="700.0" prefWidth="920.0" AnchorPane.leftAnchor="200.0">
             <children>
-                <fx:include source="UserManagement.fxml" />
+                <fx:include source="Library.fxml" />
             </children>
         </AnchorPane>
         <AnchorPane fx:id="menu_anchorpane" prefHeight="700.0" prefWidth="200.0" styleClass="menu_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="NEVER">
@@ -64,14 +59,14 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="book_management_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="245.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Book Management" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="223.0">
+                <Button fx:id="rental_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="5.0" layoutY="245.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Rental" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="223.0">
                     <font>
                         <Font name="EuclidCircularA-SemiBold" size="13.0" />
                     </font>
                     <graphic>
-                        <ImageView fx:id="book_management_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="rental_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../images/book_management_button.png" />
+                                <Image url="@../images/rental_button.png" />
                             </image>
                             <viewport>
                                 <Rectangle2D />
@@ -94,21 +89,21 @@
                         </ImageView>
                     </graphic>
                 </Button>
-            <Button fx:id="profile_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="11.0" layoutY="287.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Profile" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="343.0">
-               <font>
-                  <Font name="EuclidCircularA-SemiBold" size="13.0" />
-               </font>
-               <graphic>
-                  <ImageView fx:id="profile_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/profile_button.png" />
-                     </image>
-                     <viewport>
-                        <Rectangle2D />
-                     </viewport>
-                  </ImageView>
-               </graphic>
-            </Button>
+                <Button fx:id="profile_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="11.0" layoutY="287.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="Profile" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="283.0">
+                    <font>
+                        <Font name="EuclidCircularA-SemiBold" size="13.0" />
+                    </font>
+                    <graphic>
+                        <ImageView fx:id="profile_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/profile_button.png" />
+                            </image>
+                            <viewport>
+                                <Rectangle2D />
+                            </viewport>
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Label fx:id="name_label" layoutX="29.0" layoutY="37.0" prefHeight="40.0" prefWidth="78.0" styleClass="name_label1" stylesheets="@../css/style.css" text="Book" textFill="#feda69">
                     <font>
                         <Font name="EuclidCircularA-SemiBold" size="30.0" />
@@ -119,21 +114,6 @@
                         <Font name="EuclidCircularA-SemiBold" size="30.0" />
                     </font>
                 </Label>
-            <Button fx:id="user_management_button" alignment="BASELINE_LEFT" graphicTextGap="30.0" layoutX="20.0" layoutY="233.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="192.0" styleClass="menu_button" stylesheets="@../css/style.css" text="User Management" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="283.0">
-               <font>
-                  <Font name="EuclidCircularA-SemiBold" size="13.0" />
-               </font>
-               <graphic>
-                  <ImageView fx:id="user_management_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/user_management_button.png" />
-                     </image>
-                     <viewport>
-                        <Rectangle2D />
-                     </viewport>
-                  </ImageView>
-               </graphic>
-            </Button>
             </children>
         </AnchorPane>
     </children>

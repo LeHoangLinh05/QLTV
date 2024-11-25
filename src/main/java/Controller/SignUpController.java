@@ -1,10 +1,8 @@
 package Controller;
 
 import javafx.scene.control.ChoiceBox;
-import javafx.util.StringConverter;
 import models.DB;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -84,9 +82,9 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
             String avatar_path = "/images/avatar_img.png";
             DB.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
             if (role.equals("Admin")) {
-                DB.changeScene(event, "/view/main.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
+                DB.changeScene(event, "/view/MainAdmin.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
             } else if (role.equals("User")) {
-                DB.changeScene(event, "/view/mainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                DB.changeScene(event, "/view/MainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
             }
 
             System.out.println("Profile created successfully.");

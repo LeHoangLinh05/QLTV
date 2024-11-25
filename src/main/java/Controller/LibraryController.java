@@ -1,7 +1,5 @@
 package Controller;
 
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,13 +7,10 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.util.Duration;
 import models.Book;
-import models.searchBookAPI;
 
 import java.io.IOException;
 import java.net.URL;
@@ -54,7 +49,7 @@ public class LibraryController implements Initializable {
             protected List<HBox> call() throws Exception {
                 List<HBox> bookCards = new ArrayList<>();
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
 
                     String get = "SELECT * FROM books";
                     PreparedStatement preparedStatement = connection.prepareStatement(get);
@@ -63,7 +58,7 @@ public class LibraryController implements Initializable {
 
                     while (resultSet.next()) {
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                        fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
                         HBox bigCard_box = fxmlLoader.load();
                         BigCardController cardController = fxmlLoader.getController();
 

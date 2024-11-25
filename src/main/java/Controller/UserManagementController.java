@@ -365,7 +365,4 @@ public class UserManagementController implements Initializable {
         tableView.refresh();
     }
 
-
-
-
 }

@@ -3,7 +3,6 @@ package Controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
@@ -12,12 +11,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import models.ActivityLog;
-import models.Book;
 import models.DB;
-import models.searchBookAPI;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -146,7 +142,7 @@ public class DashboardController implements Initializable {
 
         String query = "SELECT COUNT(*) AS total FROM userdetail";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -166,7 +162,7 @@ public class DashboardController implements Initializable {
 
         String query = "SELECT COUNT(*) AS total FROM loans";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -213,7 +209,7 @@ public class DashboardController implements Initializable {
 
             for (ActivityLog log : logs) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/view/logCard.fxml"));
+                fxmlLoader.setLocation(getClass().getResource("/view/LogCard.fxml"));
                 HBox logBox = fxmlLoader.load();
                 ActivityLogController logController = fxmlLoader.getController();
                 logController.setData(log);

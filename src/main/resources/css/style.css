@@ -488,13 +488,12 @@
     -fx-background-color: #ffffff; /* Màu nền tiêu đề cột */
     -fx-text-fill: #ffffff; /* Màu chữ trắng */
     -fx-font-size: 14px;
-    -fx-alignment: center-left; /* Căn giữa nội dung */
 }
 
 .table-view .table-cell {
     -fx-background-color: white; /* Nền trắng cho các hàng */
     -fx-text-fill: black; /* Chữ đen */
-    -fx-alignment: center-left; /* Căn chữ trái */
+    -fx-alignment: center; /* Căn chữ giữa */
     -fx-font-size: 13px;
     -fx-border-color: transparent; /* Loại bỏ border */
 }

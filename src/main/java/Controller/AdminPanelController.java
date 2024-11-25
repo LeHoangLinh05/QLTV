@@ -1,12 +1,10 @@
 package Controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import models.ButtonStyleManager;
@@ -157,7 +155,7 @@ public class AdminPanelController implements Initializable {
         usermanagement_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
         dashboardController.setAdminInfo(firstName, lastName, username, role, avatar_path);
@@ -173,7 +171,7 @@ public class AdminPanelController implements Initializable {
         usermanagement_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader bookManagementLoader = new FXMLLoader(getClass().getResource("/view/addbook.fxml"));
+        FXMLLoader bookManagementLoader = new FXMLLoader(getClass().getResource("/view/BookManagement.fxml"));
         AnchorPane bookManagementPane = bookManagementLoader.load();
         BookManagementController bookManagementController = bookManagementLoader.getController();
         bookmanagement_anchorpane.getChildren().clear();
@@ -203,7 +201,7 @@ public class AdminPanelController implements Initializable {
         usermanagement_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/library.fxml"));
+        FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/Library.fxml"));
         AnchorPane libraryPane = libraryLoader.load();
         LibraryController libraryController = libraryLoader.getController();
         library_anchorpane.getChildren().clear();
@@ -218,7 +216,7 @@ public class AdminPanelController implements Initializable {
         usermanagement_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
+        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
         AnchorPane profilePane = profileLoader.load();
         ProfileController profileController = profileLoader.getController();
         profileController.setAdminPanelController(this);

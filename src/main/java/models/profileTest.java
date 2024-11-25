@@ -11,7 +11,7 @@ public class profileTest extends Application {
     public void start(Stage primaryStage) {
         try {
             // Load the main FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
             Parent root = loader.load();
 
             // Set up the scene with the loaded FXML file

@@ -7,12 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import models.*;
 
 import java.io.IOException;
@@ -58,15 +58,38 @@ public class RentalController implements Initializable {
     @FXML
     private GridPane result_gridpane1;
 
-    @FXML
-    private GridPane result_gridpane2;
-
     //returnbook
     @FXML
     private AnchorPane rental_anchorpane;
 
     @FXML
     private AnchorPane returnbook_anchorpane;
+
+    //borrowingTable
+    @FXML
+    private AnchorPane borrowingTable_anchorpane;
+
+    @FXML
+    private HBox borrowingHeader;
+
+    @FXML
+    private ScrollPane borrowingBooks;
+
+    @FXML
+    private VBox borrowingVBox;
+
+    //returnedTable
+    @FXML
+    private AnchorPane returnedTable_anchorpane;
+
+    @FXML
+    private HBox returnedHeader;
+
+    @FXML
+    private ScrollPane returnedBooks;
+
+    @FXML
+    private VBox returnedVBox;
 
     private ButtonStyleManager buttonStyleManager;
 
@@ -122,6 +145,7 @@ public class RentalController implements Initializable {
         returnbook_anchorpane.setVisible(true);
         search_pane.setVisible(false);
         setForReturnBook();
+        displayReturnedBooks();
     }
 
     private void setSearchForBorrowBook() {
@@ -142,7 +166,7 @@ public class RentalController implements Initializable {
                     protected List<HBox> call() throws Exception {
                         List<HBox> bookCards = new ArrayList<>();
 
-                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
                             preparedStatement.setString(1, "%" + queryText + "%");
@@ -152,7 +176,7 @@ public class RentalController implements Initializable {
 
                             while (resultSet.next()) {
                                 FXMLLoader fxmlLoader = new FXMLLoader();
-                                fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                                fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
                                 HBox bigCard_box = fxmlLoader.load();
 
                                 BigCardController cardController = fxmlLoader.getController();
@@ -221,102 +245,102 @@ public class RentalController implements Initializable {
             BorrowBookController borrowController = fxmlLoader.getController();
             borrowController.setData(book, member);
 
-            rental_anchorpane.getChildren().add(borrowPane);
-            borrowPane.toFront();
-
-            borrowController.saveLoan(book, member, () -> {
-                // Nếu lưu thành công, hiển thị Alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Book Borrowed");
+            if (DB.getBookQuantity(book) < 1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Borrow Failed");
                 alert.setHeaderText(null);
-                alert.setContentText("You have borrowed this book successfully.");
+                alert.setContentText("This book is currently unavailable for borrowing.");
                 alert.showAndWait();
 
-                // Sau khi mượn, bạn có thể xóa borrowPane
-                rental_anchorpane.getChildren().remove(borrowPane);
-            });
-        } catch (IOException exx) {
+            } else {
+                rental_anchorpane.getChildren().add(borrowPane);
+                borrowPane.toFront();
+
+                borrowController.saveLoan(book, member, () -> {
+                    // Nếu lưu thành công, hiển thị Alert
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Book Borrowed");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You have borrowed this book successfully.");
+                    alert.showAndWait();
+
+                    // Sau khi mượn, có thể xóa borrowPane
+                    rental_anchorpane.getChildren().remove(borrowPane);
+                });
+            }
+        } catch (IOException | SQLException exx) {
             exx.printStackTrace();
         }
     }
 
     private void setForReturnBook() {
-        Label loadingLabel = new Label("...");
+        Label loadingLabel = new Label("Loading...");
         loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
-        result_gridpane2.add(loadingLabel, 0, 0);
+        borrowingVBox.getChildren().add(loadingLabel);
 
         Task<List<HBox>> task = new Task<>() {
             @Override
             protected List<HBox> call() throws Exception {
-                List<HBox> bookCards = new ArrayList<>();
+                List<HBox> borrowingCards = new ArrayList<>();
 
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                      PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT b.id AS book_id, b.title, b.author, b.ISBN, b.published_date, " +
-                                     "b.publisher, b.page_count, b.categories, b.description, b.thumbnail_link, " +
-                                     "b.quantity, l.issue_date, l.due_date " +
+                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date " +
                                      "FROM loans l " +
                                      "JOIN books b ON l.book_id = b.id " +
-                                     "WHERE l.return_date IS NULL")) {
+                                     "WHERE l.return_date IS NULL AND l.member_id = ?")) {
+
+                    preparedStatement.setInt(1, Integer.parseInt(getMember().getMemberId()));
 
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     while (resultSet.next()) {
                         try {
                             FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
-                            HBox bigCard_box = fxmlLoader.load();
+                            fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
+                            HBox borrowingCard_box = fxmlLoader.load();
 
-                            BigCardController cardController = fxmlLoader.getController();
+                            BorrowingCardController cardController = fxmlLoader.getController();
+                            cardController.setRentalController(RentalController.this);
+
+                            int loanId = resultSet.getInt("loan_id");
+                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
+                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
 
                             Book book = new Book();
                             book.setTitle(resultSet.getString("title"));
-                            book.setAuthor(resultSet.getString("author"));
-                            book.setPublishedDate(resultSet.getString("published_date"));
-                            book.setCategories(resultSet.getString("categories"));
-                            book.setDescription(resultSet.getString("description"));
-                            book.setThumbnailLink(resultSet.getString("thumbnail_link"));
-                            book.setISBN(resultSet.getString("isbn"));
-                            book.setQuantity(resultSet.getInt("quantity"));
+                            book.setISBN (resultSet.getString("isbn"));
 
-                            cardController.setData(book);
+                            cardController.setCurrentMember(member);
+                            cardController.setData(loanId, book, member, issueDate, dueDate);
 
-                            bigCard_box.setOnMouseClicked(event -> {
-                                returnBook(book, member);
-                            });
+                            borrowingCards.add(borrowingCard_box);
 
-                            bookCards.add(bigCard_box);
                         } catch (Exception e) {
                             System.out.println("Error creating HBox for book: " + e.getMessage());
                             e.printStackTrace();
                         }
                     }
                 }
-                return bookCards;
+                return borrowingCards;
             }
         };
 
         task.setOnSucceeded(workerStateEvent -> {
-            result_gridpane2.getChildren().clear();
-            List<HBox> bookCards = task.getValue();
-            System.out.println("Number of borrowed books loaded: " + bookCards.size());
-            int column = 0, row = 1;
+            borrowingVBox.getChildren().clear();
+            List<HBox> borrowingCards = task.getValue();
+            System.out.println("Number of borrowed books loaded: " + borrowingCards.size());
 
-            for (HBox bookCard : bookCards) {
-                result_gridpane2.add(bookCard, column++, row);
-                GridPane.setMargin(bookCard, new Insets(8));
-                if (column >= 3) {
-                    column = 0;
-                    row++;
-                }
+            for (HBox borrowingCard : borrowingCards) {
+                borrowingVBox.getChildren().add(borrowingCard);
             }
         });
 
         task.setOnFailed(workerStateEvent -> {
-            result_gridpane2.getChildren().clear();
+            borrowingVBox.getChildren().clear();
             Label errorLabel = new Label("Error loading borrowed books.");
             errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
-            result_gridpane2.add(errorLabel, 0, 0);
+            borrowingVBox.getChildren().add(errorLabel);
         });
 
         Thread thread = new Thread(task);
@@ -324,66 +348,122 @@ public class RentalController implements Initializable {
         thread.start();
     }
 
-    private void returnBook(Book book, Member member) {
-        try {
+    private void displayReturnedBooks() {
+        Label loadingLabel = new Label("Loading...");
+        loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+        returnedVBox.getChildren().add(loadingLabel);
 
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setLocation(getClass().getResource("/view/ReturnForm.fxml"));
-            AnchorPane returnPane = fxmlLoader.load();
+        Task<List<HBox>> task = new Task<>() {
+            @Override
+            protected List<HBox> call() throws Exception {
+                List<HBox> returnedCards = new ArrayList<>();
 
-
-            ReturnBookController returnController = fxmlLoader.getController();
-            returnController.setData(book, member);
-            rental_anchorpane.getChildren().add(returnPane);
-            returnPane.toFront();
-
-            returnController.getCloseButton().setOnAction(event -> {
-                rental_anchorpane.getChildren().remove(returnPane);
-                rental_anchorpane.setDisable(false);
-                System.out.println("Return dialog closed.");
-            });
-
-            returnController.getReturnBookButton().setOnAction(event -> {
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                      PreparedStatement preparedStatement = connection.prepareStatement(
-                             "UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
+                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
+                                     "FROM loans l " +
+                                     "JOIN books b ON l.book_id = b.id " +
+                                     "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
 
-                    preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.now())); // Ngày trả là ngày hiện tại
-                    preparedStatement.setInt(2, getBookIdByISBN(book)); // Lấy ID của sách
-                    preparedStatement.setInt(3, Integer.parseInt(member.getMemberId())); // Lấy ID của thành viên
+                    preparedStatement.setInt(1, Integer.parseInt(getMember().getMemberId()));
 
-                    int rowsUpdated = preparedStatement.executeUpdate();
-                    if (rowsUpdated > 0) {
-                        System.out.println("Book returned successfully: " + book.getTitle());
-                        // Hiển thị thông báo thành công
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Book Returned");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Successfully returned the book: " + book.getTitle());
-                        alert.showAndWait();
-                        // Làm mới danh sách sách đã mượn
-                        refreshReturnBookList();
-                        // Xóa giao diện trả sách
-                        rental_anchorpane.getChildren().remove(returnPane);
-                    } else {
-                        System.out.println("Failed to return the book: " + book.getTitle());
+                    ResultSet resultSet = preparedStatement.executeQuery();
 
-                        // Hiển thị thông báo lỗi
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Return Failed");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Could not return the book: " + book.getTitle());
-                        alert.showAndWait();
+                    while (resultSet.next()) {
+                        try {
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
+                            HBox returnedCard_box = fxmlLoader.load();
+
+                            ReturnedCardController cardController = fxmlLoader.getController();
+
+                            int loanId = resultSet.getInt("loan_id");
+                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
+                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
+                            LocalDate returnDate = resultSet.getDate("return_date").toLocalDate();
+
+                            Book book = new Book();
+                            book.setTitle(resultSet.getString("title"));
+                            book.setISBN (resultSet.getString("isbn"));
+
+                            cardController.setCurrentMember(member);
+                            cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
+
+                            returnedCards.add(returnedCard_box);
+
+                        } catch (Exception e) {
+                            System.out.println("Error creating HBox for book: " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
-            });
-        } catch (IOException e) {
+                return returnedCards;
+            }
+        };
+
+        task.setOnSucceeded(workerStateEvent -> {
+            returnedVBox.getChildren().clear();
+            List<HBox> returnedCards = task.getValue();
+            System.out.println("Number of returned books loaded: " + returnedCards.size());
+
+            for (HBox returnedCard : returnedCards) {
+                returnedVBox.getChildren().add(returnedCard);
+            }
+        });
+
+        task.setOnFailed(workerStateEvent -> {
+            returnedVBox.getChildren().clear();
+            Label errorLabel = new Label("Error loading returned books.");
+            errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+            returnedVBox.getChildren().add(errorLabel);
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    public void returnBook(Book book, Member member) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
+
+            preparedStatement.setDate(1, java.sql.Date.valueOf(LocalDate.now())); // Ngày trả là ngày hiện tại
+            preparedStatement.setInt(2, DB.getBookIdByISBN(book)); // Lấy ID của sách
+            preparedStatement.setInt(3, Integer.parseInt(member.getMemberId())); // Lấy ID của thành viên
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated > 0) {
+                try {
+                    DB.updateQuantityAfterReturn(book);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Book returned successfully: " + book.getTitle());
+                // Hiển thị thông báo thành công
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Book Returned");
+                alert.setHeaderText(null);
+                alert.setContentText("Successfully returned the book: " + book.getTitle());
+                alert.showAndWait();
+
+                setForReturnBook();
+                displayReturnedBooks();
+
+            } else {
+                System.out.println("Failed to return the book: " + book.getTitle());
+
+                // Hiển thị thông báo lỗi
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Return Failed");
+                alert.setHeaderText(null);
+                alert.setContentText("Could not return the book: " + book.getTitle());
+                alert.showAndWait();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     private void refreshReturnBookList() {
         setForReturnBook(); // Gọi lại hàm hiển thị sách đã mượn
@@ -396,25 +476,5 @@ public class RentalController implements Initializable {
         rental_anchorpane.setDisable(false); // Bật lại giao diện cha
         System.out.println("Rental Pane refreshed.");
     }
-
-
-
-    public int getBookIdByISBN(Book book) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM books WHERE ISBN = ?")) {
-
-            preparedStatement.setString(1, book.getISBN());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-
 
 }

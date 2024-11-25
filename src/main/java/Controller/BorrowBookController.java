@@ -70,28 +70,19 @@ public class BorrowBookController {
 
         boolean isCreated = false;
 
-        try {
-            if (DB.getBookQuantity(book) < 1) {
-                return false;
-            } else {
-                try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
-                     PreparedStatement pst = con.prepareStatement("INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement pst = con.prepareStatement("INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
 
-                    pst.setString(1, member.getMemberId());
-                    pst.setString(2, String.valueOf(DB.getBookIdByISBN(book)));
-                    pst.setString(3, issue_date_text.getText());
-                    pst.setString(4, dueDate.toString());
+            pst.setString(1, member.getMemberId());
+            pst.setString(2, String.valueOf(DB.getBookIdByISBN(book)));
+            pst.setString(3, issue_date_text.getText());
+            pst.setString(4, dueDate.toString());
 
-                    int rowCount = pst.executeUpdate();
-                    isCreated = (rowCount > 0);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+            int rowCount = pst.executeUpdate();
+            isCreated = (rowCount > 0);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-
         return isCreated;
     }
 
@@ -116,13 +107,5 @@ public class BorrowBookController {
                 alert.showAndWait();
             }
         });
-    }
-
-    private void showAlert(String title, String message, AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

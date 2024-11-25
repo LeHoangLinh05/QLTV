@@ -1,22 +1,16 @@
 package Controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import models.ButtonStyleManager;
 import models.DB;
 import models.Member;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -150,7 +144,7 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/dashboardUser.fxml"));
+        FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/DashboardUser.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardUserController dashboardController = dashboardLoader.getController();
         //dashboardController.setAdminInfo(firstName, lastName, username, role, avatar_path);
@@ -165,7 +159,7 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader rentalLoader = new FXMLLoader(getClass().getResource("/view/rental.fxml"));
+        FXMLLoader rentalLoader = new FXMLLoader(getClass().getResource("/view/Rental.fxml"));
         AnchorPane rentalPane = rentalLoader.load();
         RentalController rentalController = rentalLoader.getController();
         rental_anchorpane.getChildren().clear();
@@ -195,7 +189,7 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(false);
 
         //to refresh
-        FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/library.fxml"));
+        FXMLLoader libraryLoader = new FXMLLoader(getClass().getResource("/view/Library.fxml"));
         AnchorPane libraryPane = libraryLoader.load();
         LibraryController libraryController = libraryLoader.getController();
         library_anchorpane.getChildren().clear();
@@ -209,7 +203,7 @@ public class UserPanelController implements Initializable{
         profile_anchorpane.setVisible(true);
 
         //to refresh
-        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/profile.fxml"));
+        FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
         AnchorPane profilePane = profileLoader.load();
         ProfileController profileController = profileLoader.getController();
         profileController.setUserPanelController(this);

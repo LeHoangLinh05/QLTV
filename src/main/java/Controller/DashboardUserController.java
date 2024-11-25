@@ -11,7 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Book;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> popularBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                      PreparedStatement preparedStatement = connection.prepareStatement(
                              "SELECT b.*, COUNT(l.book_id) AS borrow_count " +
                                      "FROM books b " +
@@ -67,7 +66,7 @@ public class DashboardUserController implements Initializable {
 
                     while (resultSet.next()) {
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/bigCard.fxml"));
+                        fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
                         HBox bigCard_box = fxmlLoader.load();
                         BigCardController cardController = fxmlLoader.getController();
 
@@ -122,7 +121,7 @@ public class DashboardUserController implements Initializable {
             @Override
             protected List<VBox> call() throws Exception {
                 List<VBox> newBooks = new ArrayList<>();
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
                      PreparedStatement preparedStatement = connection.prepareStatement(
                              "SELECT * FROM books ORDER BY id DESC LIMIT 10"
                      );
@@ -130,7 +129,7 @@ public class DashboardUserController implements Initializable {
 
                     while (resultSet.next()) {
                         FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/smallCard.fxml"));
+                        fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
                         VBox smallCard_box = fxmlLoader.load();
                         SmallCardController cardController = fxmlLoader.getController();
 

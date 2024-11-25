@@ -7,9 +7,8 @@ import java.util.*;
 import java.net.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import models.Book;
 
-public class searchBookAPI {
+public class SearchBookAPI {
 
     public static List<Book> searchResult = new ArrayList<Book>();
 

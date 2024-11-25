@@ -22,7 +22,7 @@
       </Label>
       <ScrollPane fx:id="stat_scrollpane" hbarPolicy="NEVER" layoutX="25.0" layoutY="92.0" prefHeight="582.0" prefWidth="602.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="25.600000000000023" AnchorPane.topAnchor="92.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1090.0" prefWidth="600.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1120.0" prefWidth="600.0">
                <children>
                   <Pane fx:id="pane_3" prefHeight="135.0" prefWidth="168.0" styleClass="dashboard_stat_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="395.0" AnchorPane.topAnchor="20.0">
                      <children>
