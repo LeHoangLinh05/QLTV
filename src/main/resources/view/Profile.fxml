@@ -29,7 +29,7 @@
             </Button>
             <TextField fx:id="last_name" prefHeight="38.0" prefWidth="155.0" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="600.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="90.0" />
             <TextField fx:id="first_name" prefHeight="38.0" prefWidth="155.0" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="90.0" />
-            <TextField fx:id="date_of_birth" prefHeight="38.0" prefWidth="155.0" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="210.0" />
+            <TextField fx:id="date_of_birth" prefHeight="38.0" prefWidth="155.0" promptText="yyyy-mm-dd" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="210.0" />
             <TextField fx:id="id_text" editable="false" prefHeight="38.0" prefWidth="155.0" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="600.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="210.0" />
             <TextField fx:id="email_text" prefHeight="38.0" prefWidth="410.0" styleClass="login_text" stylesheets="@../css/style.css" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="330.0">
                <font>

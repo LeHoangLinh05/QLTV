@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import repository.UserRepository;
+import services.UserService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,21 +41,26 @@ public class SignUpController implements Initializable {
     @FXML
     private ChoiceBox<String> choiceBox;
 
+    private UserService userService;
+    private static final UserRepository userRepository = new UserRepository();
+
     @Override
-public void initialize(URL url, ResourceBundle resourceBundle) {
-    choiceBox.getItems().addAll("User", "Admin");
-    choiceBox.setValue("User");
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.userService = new UserService(userRepository);
 
-    btn_signup.setOnAction(event -> handleSignUp(event));
+        choiceBox.getItems().addAll("Member", "Admin");
+        choiceBox.setValue("Member");
 
-    btn_login.setOnAction(event -> {
-        try {
-            DB.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    });
-}
+        btn_signup.setOnAction(event -> handleSignUp(event));
+
+        btn_login.setOnAction(event -> {
+            try {
+                userService.changeToLogIn(event);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 
     private void handleSignUp(ActionEvent event) {
         String role = choiceBox.getValue();
@@ -73,18 +80,18 @@ public void initialize(URL url, ResourceBundle resourceBundle) {
         }
 
         try {
-            if (DB.isUsernameTaken(username)) {
+            if (userService.isUsernameTaken(username)) {
                 FillIn.setText("Username already taken!");
                 return;
             }
 
             // Default avatar path
             String avatar_path = "/images/avatar_img.png";
-            DB.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
+            userService.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
             if (role.equals("Admin")) {
-                DB.changeScene(event, "/view/MainAdmin.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
-            } else if (role.equals("User")) {
-                DB.changeScene(event, "/view/MainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                userService.navigateToDashboard(event, role, username, firstName, lastName, avatar_path);
+            } else if (role.equals("Member")) {
+                userService.navigateToDashboard(event, role, username, firstName, lastName, avatar_path);
             }
 
             System.out.println("Profile created successfully.");

@@ -91,11 +91,11 @@ public class UserService {
         }
     }
 
-    private void navigateToDashboard(ActionEvent event, String role, String username, String firstName, String lastName, String avatarPath) throws IOException {
+    public void navigateToDashboard(ActionEvent event, String role, String username, String firstName, String lastName, String avatarPath) throws IOException {
         if ("Admin".equals(role)) {
             userRepository.changeScene(event, "/view/MainAdmin.fxml", "Admin Dashboard", username, firstName, lastName, role, avatarPath);
-        } else if ("User".equals(role)) {
-            userRepository.changeScene(event, "/view/MainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatarPath);
+        } else if ("Member".equals(role)) {
+            userRepository.changeScene(event, "/view/MainUser.fxml", "Member Dashboard", username, firstName, lastName, role, avatarPath);
         } else {
             System.out.println("Unknown role: " + role);
         }
@@ -107,6 +107,10 @@ public class UserService {
 
     public void changeToSignUp(ActionEvent event) throws  IOException {
         userRepository.changeScene(event, "/view/SignUp.fxml", "Library Management System", null, null, null, null, null);
+    }
+
+    public void changeToLogIn(ActionEvent event) throws  IOException {
+        userRepository.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
     }
 
     public static boolean isUsernameTaken(String username) throws SQLException {

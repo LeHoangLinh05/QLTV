@@ -146,7 +146,7 @@ public class UserRepository {
                 if (role.equals("Admin")) {
                     changeScene(event, "/view/MainAdmin.fxml", "Admin Dashboard", username, firstName, lastName, role, avatar_path);
                 } else {
-                    changeScene(event, "/view/MainUser.fxml", "User Dashboard", username, firstName, lastName, role, avatar_path);
+                    changeScene(event, "/view/MainUser.fxml", "Member Dashboard", username, firstName, lastName, role, avatar_path);
                 }
             }
         } catch (SQLException e) {
@@ -182,10 +182,10 @@ public class UserRepository {
                     String retrievedAvatarPath = resultSet.getString("avatar_path");
 
                     if (retrievedPassword.equals(password)) {
-                        if ("Admin".equals(retrievedRole)) {
+                        if (retrievedRole.equals("Admin")) {
                             changeScene(event, "/view/MainAdmin.fxml", "Admin Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
-                        } else if ("User".equals(retrievedRole)) {
-                            changeScene(event, "/view/MainUser.fxml", "User Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
+                        } else if (retrievedRole.equals("Member")) {
+                            changeScene(event, "/view/MainUser.fxml", "Member Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
                         } else {
                             System.out.println("Unknown role: " + retrievedRole);
                         }
@@ -225,7 +225,6 @@ public class UserRepository {
         return null;
     }
 
-
     public static boolean isUsernameTaken(String username) throws SQLException {
         Connection connection = null;
         PreparedStatement psCheckUserExists = null;
@@ -257,7 +256,7 @@ public class UserRepository {
 
     public static ResultSet getAllUsers() throws SQLException {
         Connection connection = DatabaseConnection.getConnection();
-        String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'User'";
+        String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'Member'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
     }
@@ -287,7 +286,7 @@ public class UserRepository {
             if ("Admin".equals(role)) {
                 AdminPanelController adminController = fxmlLoader.getController();
                 adminController.displayDashboard(firstName, lastName, userName, role, avatar_path);
-            } else if ("User".equals(role)) {
+            } else if ("Member".equals(role)) {
                 UserPanelController userController = fxmlLoader.getController();
                 userController.displayDashboard(firstName, lastName, userName, role, avatar_path);
             }
