@@ -9,6 +9,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import repository.UserRepository;
+import services.UserService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,11 +36,16 @@ public class LoginController implements Initializable {
     @FXML
     private Button btn_login_admin;
 
+    private UserService userService;
+    private static final UserRepository userRepository = new UserRepository();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         txt_username.setFocusTraversable(false);
         txt_password.setFocusTraversable(false);
+
+        this.userService = new UserService(userRepository);
 
         btn_login.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -47,11 +54,7 @@ public class LoginController implements Initializable {
                     wrongLogin.setText("Please fill in all information");
                 } else if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())){
                     wrongLogin.setText("Wrong username or password");
-                    try {
-                        DB.logInUser(event, txt_username.getText(), txt_password.getText());
-                    } catch (SQLException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    userService.logInUser(event, txt_username.getText(), txt_password.getText());
                 }
             }
         });
@@ -61,7 +64,7 @@ public class LoginController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    DB.changeScene(event, "/view/SignUp.fxml", "Library Management System", null, null, null, null, null);
+                    userService.changeToSignUp(event);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

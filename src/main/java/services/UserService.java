@@ -105,6 +105,10 @@ public class UserService {
         userRepository.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
     }
 
+    public void changeToSignUp(ActionEvent event) throws  IOException {
+        userRepository.changeScene(event, "/view/SignUp.fxml", "Library Management System", null, null, null, null, null);
+    }
+
     public static boolean isUsernameTaken(String username) throws SQLException {
         try {
             return UserRepository.isUsernameTaken(username);
