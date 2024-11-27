@@ -318,149 +318,78 @@ public class RentalController implements Initializable {
         thread.start();
     }
 
-//    private void displayReturnedBooks() {
-//        Label loadingLabel = new Label("Loading...");
-//        loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
-//        returnedVBox.getChildren().add(loadingLabel);
-//
-//        Task<List<HBox>> task = new Task<>() {
-//            @Override
-//            protected List<HBox> call() throws Exception {
-//                List<HBox> returnedCards = new ArrayList<>();
-//
-//                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-//                     PreparedStatement preparedStatement = connection.prepareStatement(
-//                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
-//                                     "FROM loans l " +
-//                                     "JOIN books b ON l.book_id = b.id " +
-//                                     "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
-//
-//                    preparedStatement.setInt(1, getMember().getId());
-//                    ResultSet resultSet = preparedStatement.executeQuery();
-//
-//                    while (resultSet.next()) {
-//                        try {
-//                            int loanId = resultSet.getInt("loan_id");
-//                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
-//                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
-//                            LocalDate returnDate = resultSet.getDate("return_date").toLocalDate();
-//
-//                            Book book = new Book();
-//                            book.setId(resultSet.getInt("book_id"));
-//                            book.setTitle(resultSet.getString("title"));
-//
-//                            FXMLLoader fxmlLoader = new FXMLLoader();
-//                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-//                            HBox returnedCard_box = fxmlLoader.load();
-//                            ReturnedCardController cardController = fxmlLoader.getController();
-//
-//                            cardController.setCurrentMember(member);
-//                            cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
-//
-//                            returnedCards.add(returnedCard_box);
-//
-//                        } catch (Exception e) {
-//                            System.out.println("Error creating HBox for returned book: " + e.getMessage());
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//                return returnedCards;
-//            }
-//        };
-//
-//        task.setOnSucceeded(workerStateEvent -> {
-//            returnedVBox.getChildren().clear();
-//            List<HBox> returnedCards = task.getValue();
-//            System.out.println("Number of returned books loaded: " + returnedCards.size());
-//
-//            for (HBox returnedCard : returnedCards) {
-//                returnedVBox.getChildren().add(returnedCard);
-//            }
-//        });
-//
-//        task.setOnFailed(workerStateEvent -> {
-//            returnedVBox.getChildren().clear();
-//            Label errorLabel = new Label("Error loading returned books.");
-//            errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
-//            returnedVBox.getChildren().add(errorLabel);
-//        });
-//
-//        Thread thread = new Thread(task);
-//        thread.setDaemon(true);
-//        thread.start();
-//    }
-private void displayReturnedBooks() {
-    Label loadingLabel = new Label("Loading...");
-    loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
-    returnedVBox.getChildren().add(loadingLabel);
 
-    Task<List<HBox>> task = new Task<>() {
-        @Override
-        protected List<HBox> call() throws Exception {
-            List<HBox> returnedCards = new ArrayList<>();
+    private void displayReturnedBooks() {
+        Label loadingLabel = new Label("Loading...");
+        loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
+        returnedVBox.getChildren().add(loadingLabel);
 
-            try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(
-                         "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
-                                 "FROM loans l " +
-                                 "JOIN books b ON l.book_id = b.id " +
-                                 "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
+        Task<List<HBox>> task = new Task<>() {
+            @Override
+            protected List<HBox> call() throws Exception {
+                List<HBox> returnedCards = new ArrayList<>();
 
-                preparedStatement.setInt(1, getMember().getId());
-                ResultSet resultSet = preparedStatement.executeQuery();
+                try (Connection connection = getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement(
+                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
+                                     "FROM loans l " +
+                                     "JOIN books b ON l.book_id = b.id " +
+                                     "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
 
-                while (resultSet.next()) {
-                    try {
-                        int loanId = resultSet.getInt("loan_id");
-                        LocalDate issueDate = resultSet.getDate("issue_date") != null ? resultSet.getDate("issue_date").toLocalDate() : null;
-                        LocalDate dueDate = resultSet.getDate("due_date") != null ? resultSet.getDate("due_date").toLocalDate() : null;
-                        LocalDate returnDate = resultSet.getDate("return_date") != null ? resultSet.getDate("return_date").toLocalDate() : null;
+                    preparedStatement.setInt(1, getMember().getId());
+                    ResultSet resultSet = preparedStatement.executeQuery();
 
-                        Book book = new Book();
-                        book.setId(resultSet.getInt("book_id"));
-                        book.setTitle(resultSet.getString("title"));
+                    while (resultSet.next()) {
+                        try {
+                            int loanId = resultSet.getInt("loan_id");
+                            LocalDate issueDate = resultSet.getDate("issue_date") != null ? resultSet.getDate("issue_date").toLocalDate() : null;
+                            LocalDate dueDate = resultSet.getDate("due_date") != null ? resultSet.getDate("due_date").toLocalDate() : null;
+                            LocalDate returnDate = resultSet.getDate("return_date") != null ? resultSet.getDate("return_date").toLocalDate() : null;
 
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-                        HBox returnedCard_box = fxmlLoader.load();
-                        ReturnedCardController cardController = fxmlLoader.getController();
+                            Book book = new Book();
+                            book.setId(resultSet.getInt("book_id"));
+                            book.setTitle(resultSet.getString("title"));
 
-                        cardController.setCurrentMember(member);
-                        cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
+                            HBox returnedCard_box = fxmlLoader.load();
+                            ReturnedCardController cardController = fxmlLoader.getController();
 
-                        returnedCards.add(returnedCard_box);
+                            cardController.setCurrentMember(member);
+                            cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
 
-                    } catch (Exception e) {
-                        System.out.println("Error creating HBox for returned book: " + e.getMessage());
-                        e.printStackTrace();
+                            returnedCards.add(returnedCard_box);
+
+                        } catch (Exception e) {
+                            System.out.println("Error creating HBox for returned book: " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
                 }
+                return returnedCards;
             }
-            return returnedCards;
-        }
-    };
+        };
 
-    task.setOnSucceeded(workerStateEvent -> {
-        returnedVBox.getChildren().clear();
-        List<HBox> returnedCards = task.getValue();
-        System.out.println("Number of returned books loaded: " + returnedCards.size());
+        task.setOnSucceeded(workerStateEvent -> {
+            returnedVBox.getChildren().clear();
+            List<HBox> returnedCards = task.getValue();
+            System.out.println("Number of returned books loaded: " + returnedCards.size());
 
-        // Use setAll to avoid repeatedly adding to the VBox
-        returnedVBox.getChildren().setAll(returnedCards);
-    });
+            // Use setAll to avoid repeatedly adding to the VBox
+            returnedVBox.getChildren().setAll(returnedCards);
+        });
 
-    task.setOnFailed(workerStateEvent -> {
-        returnedVBox.getChildren().clear();
-        Label errorLabel = new Label("Error loading returned books.");
-        errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
-        returnedVBox.getChildren().add(errorLabel);
-    });
+        task.setOnFailed(workerStateEvent -> {
+            returnedVBox.getChildren().clear();
+            Label errorLabel = new Label("Error loading returned books.");
+            errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+            returnedVBox.getChildren().add(errorLabel);
+        });
 
-    Thread thread = new Thread(task);
-    thread.setDaemon(true);
-    thread.start();
-}
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+    }
 
 
     private void showTemporaryMessage(GridPane gridPane, String message, String color) {
