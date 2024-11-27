@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import repository.BookRepository;
 import repository.LoanRepository;
+import repository.UserRepository;
 import services.BookService;
 import services.LoanService;
 
@@ -12,6 +13,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+
+import static repository.UserRepository.getLoansByMemberId;
 
 public class Member extends User {
     private static final BookRepository bookRepository = new BookRepository();
@@ -84,10 +87,6 @@ public class Member extends User {
         return new ArrayList<>(this.returnedBooks);
     }
 
-    public List<Loan> getMemberHistory() {
-        return new ArrayList<>(this.memberHistory);
-    }
-
     public List<Loan> getMemberBorrowingLoans() {
         return this.memberBorrowingLoans;
     }
@@ -96,6 +95,9 @@ public class Member extends User {
         return this.memberReturnedLoans;
     }
 
+    public List<Loan> getMemberHistory() throws SQLException {
+        return UserRepository.getLoansByMemberId(this.getId());
+    }
     public boolean setMemberHistory() {
         try {
             ObservableList<Loan> loans = loanService.getLoansByMemberId(this.getId());

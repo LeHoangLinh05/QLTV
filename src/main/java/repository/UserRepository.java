@@ -2,19 +2,20 @@ package repository;
 
 import controller.AdminPanelController;
 import controller.UserPanelController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import models.Admin;
-import models.DB;
-import models.Member;
-import models.User;
+import models.*;
 
 import java.io.IOException;
 import java.sql.*;
+
+import static repository.DatabaseConnection.getConnection;
 
 public class UserRepository {
 
@@ -22,7 +23,7 @@ public class UserRepository {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM userdetail";
 
-        try (Connection con = DatabaseConnection.getConnection();
+        try (Connection con = getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -38,7 +39,7 @@ public class UserRepository {
 
     public static void deleteUser(int userId) throws SQLException {
         String query = "DELETE FROM userdetail WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
@@ -51,7 +52,7 @@ public class UserRepository {
     public static void updateUser(User user) throws SQLException {
 
         String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, user.getFName());
@@ -69,7 +70,7 @@ public class UserRepository {
             throw new SQLException("User already exists with the given username or email.");
         }
 
-        Connection connection = DatabaseConnection.getConnection();
+        Connection connection = getConnection();
         String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -126,7 +127,7 @@ public class UserRepository {
 
     public static boolean doesUserExist(String username, String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, username);
@@ -147,7 +148,7 @@ public class UserRepository {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
         try {
-            connection = DatabaseConnection.getConnection();
+            connection = getConnection();
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -188,7 +189,7 @@ public class UserRepository {
         ResultSet resultSet = null;
 
         try {
-            connection = DatabaseConnection.getConnection();
+            connection = getConnection();
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -224,7 +225,7 @@ public class UserRepository {
     }
 
     public User getUserByUsername(String username) throws SQLException {
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
             ps.setString(1, username);
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -248,7 +249,7 @@ public class UserRepository {
     }
 
     public static Admin getAdminByUsername(String username) throws SQLException {
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
             ps.setString(1, username);
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -281,7 +282,7 @@ public class UserRepository {
         boolean usernameExists = false;
 
         try {
-            connection = DatabaseConnection.getConnection();
+            connection = getConnection();
             psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?");
             psCheckUserExists.setString(1, username);
             resultSet = psCheckUserExists.executeQuery();
@@ -297,21 +298,21 @@ public class UserRepository {
     }
 
     public static ResultSet getUserData(String username) throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
+        Connection connection = getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
     }
 
     public static ResultSet getAllUsers() throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'Member'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
     }
 
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
@@ -323,6 +324,59 @@ public class UserRepository {
             statement.setString(7, username);
             statement.executeUpdate();
         }
+    }
+
+    public static ObservableList<Loan> getLoansByMemberId(int memberId) throws SQLException {
+        ObservableList<Loan> loans = FXCollections.observableArrayList();
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, memberId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Loan object
+                System.out.println("Found loan with ID: " + rs.getInt("loanId"));
+                Loan loan = new Loan();
+                loan.setLoanId(rs.getString("loanId"));
+                java.sql.Date issueDate = rs.getDate("issue_date");
+                if (issueDate != null) {
+                    loan.setIssueDate(issueDate.toLocalDate());
+                } else {
+                    loan.setIssueDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                }
+
+                // Kiểm tra nếu due_date là null trước khi chuyển đổi
+                java.sql.Date dueDate = rs.getDate("due_date");
+                if (dueDate != null) {
+                    loan.setDueDate(dueDate.toLocalDate());
+                } else {
+                    loan.setDueDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                }
+
+                // Kiểm tra nếu return_date là null trước khi chuyển đổi
+                java.sql.Date returnDate = rs.getDate("return_date");
+                if (returnDate != null) {
+                    loan.setReturnDate(returnDate.toLocalDate());
+                } else {
+                    loan.setReturnDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                }
+
+                // Create and populate Book object
+                Book book = new Book();
+                book.setTitle(rs.getString("bookTitle"));
+                loan.setBook(book);
+
+                // Add the loan to the list
+                loans.add(loan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching loan history for member ID: " + memberId, e);
+        }
+        return loans;
     }
 
     public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {

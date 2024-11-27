@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx. scene. image. ImageView;
 import models.*;
+import repository.UserRepository;
 import services.LoanService;
 
 import java.io.File;
@@ -80,17 +82,25 @@ public class EditUserDialogController implements Initializable {
         });
     }
 
-    private void loadLoanHistory(Member user) {
+    private void loadLoanHistory(Member user) throws SQLException {
         //loanList.clear();
         //loanList.addAll(DB.getLoansByMemberId(userId));
-        List<Loan> loans = user.getMemberHistory();
-        ObservableList<Loan> observableLoans = FXCollections.observableArrayList(loans);
-        loanTable.setItems(observableLoans);
+        //List<Loan> loans = user.getMemberHistory();
+
+//        System.out.println("Loan history size: " + loans.size());
+//
+//        if (loans.isEmpty()) {
+//            System.out.println("No loans found for this member.");
+//        }
+
+        ObservableList<Loan> loans = FXCollections.observableArrayList(UserRepository.getLoansByMemberId(user.getId()));
+        loanTable.setItems(loans);
+
         loanTable.refresh();
     }
 
     // Method to set the user and populate the fields
-    public void setUser(Member user) {
+    public void setUser(Member user) throws SQLException {
         this.user = user;
         if (user != null) {
             nameField.setText(user.getFName() + " " + user.getLname());
