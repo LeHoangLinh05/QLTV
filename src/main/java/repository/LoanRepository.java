@@ -18,7 +18,7 @@ public class LoanRepository {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM loans";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -37,7 +37,7 @@ public class LoanRepository {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, memberId);
@@ -64,7 +64,7 @@ public class LoanRepository {
     }
 
     public static boolean updateLoan(int memberId, int bookId) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
 
@@ -77,7 +77,7 @@ public class LoanRepository {
     }
 
     public static boolean createLoan(int memberId, int bookId, LocalDate issueDate, LocalDate dueDate) throws SQLException {
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(
                      "INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
 
@@ -94,7 +94,7 @@ public class LoanRepository {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, id);
@@ -124,7 +124,7 @@ public class LoanRepository {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, id);
@@ -151,7 +151,7 @@ public class LoanRepository {
     }
 
     public static void updateQuantityAfterBorrow(Book book) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity - 1 WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -170,7 +170,7 @@ public class LoanRepository {
     }
 
     public static void updateQuantityAfterReturn(Book book) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity + 1 WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -191,14 +191,14 @@ public class LoanRepository {
     public static int checkBookQuantity(Book book) throws SQLException {
         int quantity = -1;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT quantity FROM books WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                quantity = resultSet.getInt("quantity"); // Lấy số lượng từ cột "quantity"
+                quantity = resultSet.getInt("quantity");
                 System.out.println("Quantity checked successfully for ISBN: " + book.getISBN() + ". Quantity: " + quantity);
             } else {
                 System.out.println("No book found with ISBN: " + book.getISBN());
@@ -230,7 +230,7 @@ public class LoanRepository {
                     END DESC;
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -277,7 +277,7 @@ public class LoanRepository {
                     GROUP BY DAYNAME(issue_date)
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -302,7 +302,7 @@ public class LoanRepository {
                     GROUP BY DAYNAME(return_date)
                 """;
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 

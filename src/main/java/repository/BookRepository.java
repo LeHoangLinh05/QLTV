@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository {
-
-    public static int countBookRecords() {
+    public static int countBookRecords() throws SQLException {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM books";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -32,7 +31,7 @@ public class BookRepository {
     public static List<Book> getAllBooks() throws SQLException {
         List<Book> books = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM books")) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,7 +61,7 @@ public class BookRepository {
                 "ORDER BY borrow_count DESC " +
                 "LIMIT 5";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -89,7 +88,7 @@ public class BookRepository {
         List<Book> books = new ArrayList<>();
         String query = "SELECT * FROM books ORDER BY id DESC LIMIT 10";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -113,7 +112,7 @@ public class BookRepository {
 
     public static boolean addBook(Book book) {
         String query = "INSERT INTO books (title, author, isbn, published_date, publisher, page_count, categories, description, thumbnail_link, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, book.getTitle());
@@ -145,7 +144,7 @@ public class BookRepository {
 
     public static boolean removeBook(Book book) {
         String query = "DELETE FROM books WHERE ISBN = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -159,7 +158,7 @@ public class BookRepository {
 
     public static boolean updateBook(Book book) {
         String query = "UPDATE books SET title = ?, author = ?, published_date = ?, publisher = ?, description = ?, categories = ?, quantity = ? WHERE ISBN = ?";
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query)) {
 
             pst.setString(1, book.getTitle());
@@ -182,7 +181,7 @@ public class BookRepository {
     public static List<Book> searchBooks(String queryText) throws SQLException {
         List<Book> books = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?")) {
 
@@ -211,7 +210,7 @@ public class BookRepository {
     public static int getBookIdByISBN(Book book) throws SQLException {
         int id = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT id FROM books WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());
@@ -234,7 +233,7 @@ public class BookRepository {
         ObservableList<Book> books = FXCollections.observableArrayList();
         String query = "SELECT b.id, b.title " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, id);
@@ -257,7 +256,7 @@ public class BookRepository {
         ObservableList<Book> books = FXCollections.observableArrayList();
         String query = "SELECT b.id, b.title " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, id);
@@ -278,7 +277,7 @@ public class BookRepository {
 
     public static boolean doesBookExists(String isbn) {
         String query = "SELECT COUNT(*) FROM books WHERE isbn = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, isbn);
@@ -296,7 +295,7 @@ public class BookRepository {
     public static int getBookQuantity(Book book) throws SQLException {
         int quantity = 0;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("SELECT quantity FROM books WHERE isbn = ?")) {
 
             preparedStatement.setString(1, book.getISBN());

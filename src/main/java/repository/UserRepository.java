@@ -22,7 +22,7 @@ public class UserRepository {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM userdetail";
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query);
              ResultSet rs = pst.executeQuery()) {
 
@@ -38,7 +38,7 @@ public class UserRepository {
 
     public static void deleteUser(int userId) throws SQLException {
         String query = "DELETE FROM userdetail WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
@@ -50,7 +50,7 @@ public class UserRepository {
 
     public static void updateUser(User user) throws SQLException {
         String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setString(1, user.getFName());
@@ -75,7 +75,7 @@ public class UserRepository {
             throw new SQLException("User already exists with the given username or email.");
         }
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DatabaseConnection.getConnection();
         String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -104,7 +104,7 @@ public class UserRepository {
 
     public static boolean doesUserExist(String username, String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, username);
@@ -125,7 +125,7 @@ public class UserRepository {
         PreparedStatement pscheckUserExists = null;
         ResultSet resultSet = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DatabaseConnection.getConnection();
             pscheckUserExists = connection.prepareStatement("SELECT * FROM userdetail WHERE username = ?");
             pscheckUserExists.setString(1, username);
             resultSet = pscheckUserExists.executeQuery();
@@ -166,7 +166,7 @@ public class UserRepository {
         ResultSet resultSet = null;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DatabaseConnection.getConnection();
             preparedStatement = connection.prepareStatement("SELECT password, fName, lName, role, avatar_path FROM userdetail WHERE username = ?");
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -202,7 +202,7 @@ public class UserRepository {
     }
 
     public User getUserByUsername(String username) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
             ps.setString(1, username);
             try (ResultSet resultSet = ps.executeQuery()) {
@@ -233,7 +233,7 @@ public class UserRepository {
         boolean usernameExists = false;
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+            connection = DatabaseConnection.getConnection();
             psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?");
             psCheckUserExists.setString(1, username);
             resultSet = psCheckUserExists.executeQuery();
@@ -249,21 +249,21 @@ public class UserRepository {
     }
 
     public static ResultSet getUserData(String username) throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DatabaseConnection.getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
         statement.setString(1, username);
         return statement.executeQuery();
     }
 
     public static ResultSet getAllUsers() throws SQLException {
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        Connection connection = DatabaseConnection.getConnection();
         String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'User'";
         PreparedStatement statement = connection.prepareStatement(query);
         return statement.executeQuery();
     }
 
     public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
             statement.setString(1, firstName);
@@ -279,7 +279,7 @@ public class UserRepository {
 
     public static void changeScene(ActionEvent event, String fxmlFile, String title, String userName, String firstName, String lastName, String role, String avatar_path) throws IOException {
         Parent root = null;
-        FXMLLoader fxmlLoader = new FXMLLoader(DB.class.getResource(fxmlFile));
+        FXMLLoader fxmlLoader = new FXMLLoader(UserRepository.class.getResource(fxmlFile));
 
         root = fxmlLoader.load();
 
