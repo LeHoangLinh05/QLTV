@@ -41,7 +41,6 @@ public class EditUserDialogController implements Initializable {
     @FXML
     private TableColumn<Loan, String> loanIdColumn;
 
-
     @FXML
     private TableColumn<Loan, String> bookIdColumn;
 
@@ -85,7 +84,8 @@ public class EditUserDialogController implements Initializable {
         //loanList.clear();
         //loanList.addAll(DB.getLoansByMemberId(userId));
         List<Loan> loans = user.getMemberHistory();
-        loanTable.setItems((ObservableList<Loan>) loans);
+        ObservableList<Loan> observableLoans = FXCollections.observableArrayList(loans);
+        loanTable.setItems(observableLoans);
         loanTable.refresh();
     }
 
@@ -136,6 +136,10 @@ public class EditUserDialogController implements Initializable {
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+
     // Method to open the edit dialog
     public static boolean openEditDialog(Member user) {
         try {
@@ -144,7 +148,7 @@ public class EditUserDialogController implements Initializable {
 
             EditUserDialogController controller = loader.getController();
             controller.setUser(user);
-
+            controller.setAdmin(admin);
             Stage stage = new Stage();
             stage.setTitle("Edit User");
             stage.setScene(new Scene(root));

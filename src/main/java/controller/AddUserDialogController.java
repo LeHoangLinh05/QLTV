@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import models.DB;
 import models.Member;
 import models.User;
+import repository.UserRepository;
 import ui_helper.AlertHelper;
 
 import java.net.URL;
@@ -51,6 +52,22 @@ public class AddUserDialogController implements Initializable {
         String email = emailField.getText();
         String password = passwordField.getText();
         String username = usernameField.getText();
+        String[] nameParts = name.split(" ");
+        String fname = "";
+        String lname = "";
+
+        if (nameParts.length > 0) {
+            fname = nameParts[0];
+            if (nameParts.length > 1) {
+                lname = nameParts[nameParts.length - 1];
+            }
+        }
+
+
+        if (nameParts.length == 1) {
+            fname = nameParts[0];
+            lname = "";  // Không có last name
+        }
 
         if (name.isEmpty() || dob.isEmpty() || email.isEmpty() || password.isEmpty() || username.isEmpty()) {
             AlertHelper.showWarning("Validation Error","All fields are required." );
@@ -59,15 +76,15 @@ public class AddUserDialogController implements Initializable {
 
         // Create a new User instance
         try {
-            if (DB.doesUserExist(username, email)) {
+            if (UserRepository.doesUserExist(username, email)) {
                 AlertHelper.showWarning("Duplicate User", "A user with the same username or email already exists.");
                 return;
             }
             // Create a User object
-            User newUser = new Member(0, name, dob, email, username, password, ""); // Assuming no avatar path is provided
+            User newUser = new Member(0, fname, lname, dob, email, username, password); // Assuming no avatar path is provided
 
             // Pass the User object to the DB.addUser method
-            int generatedId = DB.addUser(newUser);
+            int generatedId = UserRepository.addUser1(newUser);
 
             // Update the User object with the generated ID
             newUser.setId(generatedId);

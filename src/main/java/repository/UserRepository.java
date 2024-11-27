@@ -102,6 +102,34 @@ public class UserRepository {
         return false;
     }
 
+    public static int addUser1(User user) throws SQLException {
+        if (doesUserExist(user.getUsername(), user.getEmail())) {
+            throw new SQLException("User already exists with the given username or email.");
+        }
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "andrerieu");
+        String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        statement.setString(1, user.getFName());
+        statement.setString(2, user.getLname());
+        statement.setString(3, user.getDateOfBirth());
+        statement.setString(4, user.getEmail());
+        statement.setString(5, user.getUsername());
+        statement.setString(6, user.getPassword());
+        statement.setString(7, user.getImagePath());
+        statement.setString(8, "Member"); // Set role to 'Member'
+
+
+        statement.executeUpdate();
+        try (ResultSet keys = statement.getGeneratedKeys()) {
+            if (keys.next()) {
+                return keys.getInt(1); // Return the auto-generated ID
+            } else {
+                throw new SQLException("Failed to retrieve generated ID.");
+            }
+        }
+    }
+
     public static boolean doesUserExist(String username, String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
         try (Connection connection = DatabaseConnection.getConnection();

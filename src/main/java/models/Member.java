@@ -69,6 +69,8 @@ public class Member extends User {
         this.loanService = new LoanService(loanRepository);
     }
 
+
+
     @Override
     public String getRole() {
         return "Member";

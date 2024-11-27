@@ -36,7 +36,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-import static models.DB.updateUser;
+
 
 public class UserManagementController implements Initializable {
     @FXML
@@ -257,7 +257,7 @@ public class UserManagementController implements Initializable {
 
                     if (isEdited) {
                         try {
-                            updateUser(selectedUser);
+                            UserRepository.updateUser(selectedUser);
                             tableView.refresh();
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
