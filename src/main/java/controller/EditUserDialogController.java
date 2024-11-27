@@ -41,7 +41,6 @@ public class EditUserDialogController implements Initializable {
     @FXML
     private TableColumn<Loan, String> loanIdColumn;
 
-
     @FXML
     private TableColumn<Loan, String> bookIdColumn;
 

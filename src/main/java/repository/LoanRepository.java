@@ -48,11 +48,14 @@ public class LoanRepository {
                 loan.setLoanId(rs.getString("loanId"));
                 loan.setIssueDate(rs.getDate("issue_date").toLocalDate());
                 loan.setDueDate(rs.getDate("due_date").toLocalDate());
-                loan.setReturnDate(rs.getDate("return_date").toLocalDate());
 
                 Book book = new Book();
                 book.setTitle(rs.getString("bookTitle"));
                 loan.setBook(book);
+
+                if (rs.getDate("return_date") != null) {
+                    loan.setReturnDate(rs.getDate("return_date").toLocalDate());
+                }
 
                 loans.add(loan);
             }
@@ -105,7 +108,6 @@ public class LoanRepository {
                 loan.setLoanId(rs.getString("loanId"));
                 loan.setIssueDate(rs.getDate("issue_date").toLocalDate());
                 loan.setDueDate(rs.getDate("due_date").toLocalDate());
-                loan.setReturnDate(rs.getDate("return_date").toLocalDate());
 
                 Book book = new Book();
                 book.setTitle(rs.getString("bookTitle"));
@@ -242,7 +244,7 @@ public class LoanRepository {
                 if (issueDate != null) {
                     logs.add(new ActivityLog(
                             issueDate,
-                            "User " + memberName + " borrowed the book '" + bookTitle + "'."
+                            "Member " + memberName + " borrowed the book '" + bookTitle + "'."
                     ));
                 }
 
@@ -250,7 +252,7 @@ public class LoanRepository {
                 if (returnDate != null) {
                     logs.add(new ActivityLog(
                             returnDate,
-                            "User " + memberName + " returned the book '" + bookTitle + "'."
+                            "Member " + memberName + " returned the book '" + bookTitle + "'."
                     ));
                 }
             }

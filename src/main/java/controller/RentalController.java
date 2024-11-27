@@ -247,49 +247,37 @@ public class RentalController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> borrowingCards = new ArrayList<>();
+                List<Loan> loans = member.getMemberBorrowingLoans();
 
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date " +
-                                     "FROM loans l " +
-                                     "JOIN books b ON l.book_id = b.id " +
-                                     "WHERE l.return_date IS NULL AND l.member_id = ?")) {
+                for (Loan loan : loans) {
+                    try {
+                        String loanId = loan.getLoanId();
+                        LocalDate issueDate = loan.getIssueDate();
+                        LocalDate dueDate = loan.getDueDate();
+                        Book book = loan.getBook();
 
-                    preparedStatement.setInt(1, getMember().getId());
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
+                        HBox borrowingCardBox = fxmlLoader.load();
 
-                    while (resultSet.next()) {
-                        try {
-                            int loanId = resultSet.getInt("loan_id");
-                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
-                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
+                        BorrowingCardController cardController = fxmlLoader.getController();
+                        cardController.setData(Integer.parseInt(loanId), book, member, issueDate, dueDate);
 
-                            Book book = new Book();
-                            book.setId(resultSet.getInt("book_id"));
-                            book.setTitle(resultSet.getString("title"));
+                        cardController.handleReturn(book, member, () -> {
+                            AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
 
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
-                            HBox borrowingCard_box = fxmlLoader.load();
-                            BorrowingCardController cardController = fxmlLoader.getController();
-                            cardController.setData(loanId, book, member, issueDate, dueDate);
+                            setForReturnBook();
+                            displayReturnedBooks();
+                        });
 
-                            borrowingCards.add(borrowingCard_box);
+                        borrowingCards.add(borrowingCardBox);
 
-                            cardController.handleReturn(book, getMember(), () -> {
-                                AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
-
-                                //refresh
-                                setForReturnBook();
-                                displayReturnedBooks();
-                            });
-
-                        } catch (Exception e) {
-                            System.out.println("Error creating HBox for book: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+                    } catch (Exception e) {
+                        System.err.println("Error creating HBox for book: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
+
                 return borrowingCards;
             }
         };
@@ -325,44 +313,33 @@ public class RentalController implements Initializable {
             @Override
             protected List<HBox> call() throws Exception {
                 List<HBox> returnedCards = new ArrayList<>();
+                List<Loan> loans = member.getMemberReturnedLoans();
 
-                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
-                                     "FROM loans l " +
-                                     "JOIN books b ON l.book_id = b.id " +
-                                     "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
+                for (Loan loan : loans) {
+                    try {
+                        String loanId = loan.getLoanId();
+                        LocalDate issueDate = loan.getIssueDate();
+                        LocalDate dueDate = loan.getDueDate();
+                        LocalDate returnDate = loan.getReturnDate();
 
-                    preparedStatement.setInt(1, getMember().getId());
-                    ResultSet resultSet = preparedStatement.executeQuery();
+                        Book book = loan.getBook();
 
-                    while (resultSet.next()) {
-                        try {
-                            int loanId = resultSet.getInt("loan_id");
-                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
-                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
-                            LocalDate returnDate = resultSet.getDate("return_date").toLocalDate();
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
+                        HBox returnedCardBox = fxmlLoader.load();
 
-                            Book book = new Book();
-                            book.setId(resultSet.getInt("book_id"));
-                            book.setTitle(resultSet.getString("title"));
+                        ReturnedCardController cardController = fxmlLoader.getController();
+                        cardController.setCurrentMember(member);
+                        cardController.setData(Integer.parseInt(loanId), book, member, issueDate, dueDate, returnDate);
 
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-                            HBox returnedCard_box = fxmlLoader.load();
-                            ReturnedCardController cardController = fxmlLoader.getController();
+                        returnedCards.add(returnedCardBox);
 
-                            cardController.setCurrentMember(member);
-                            cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
-
-                            returnedCards.add(returnedCard_box);
-
-                        } catch (Exception e) {
-                            System.out.println("Error creating HBox for returned book: " + e.getMessage());
-                            e.printStackTrace();
-                        }
+                    } catch (Exception e) {
+                        System.err.println("Error creating HBox for returned book: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
+
                 return returnedCards;
             }
         };

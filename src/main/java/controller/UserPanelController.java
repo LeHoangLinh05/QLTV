@@ -127,7 +127,7 @@ public class UserPanelController implements Initializable{
             ResultSet resultSet = userService.getUserData(username);
             if (resultSet.next()) {
                 int id = Integer.parseInt(resultSet.getString("id"));
-                this.member = new Member(id, firstName, lastName); // Gán member
+                this.member = new Member(id, firstName, lastName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
