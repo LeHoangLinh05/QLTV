@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import models.DB;
 import models.Member;
 import models.User;
+import ui_helper.AlertHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,22 +53,14 @@ public class AddUserDialogController implements Initializable {
         String username = usernameField.getText();
 
         if (name.isEmpty() || dob.isEmpty() || email.isEmpty() || password.isEmpty() || username.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Validation Error");
-            alert.setHeaderText(null);
-            alert.setContentText("All fields are required.");
-            alert.showAndWait();
+            AlertHelper.showWarning("Validation Error","All fields are required." );
             return;
         }
 
         // Create a new User instance
         try {
             if (DB.doesUserExist(username, email)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Duplicate User");
-                alert.setHeaderText(null);
-                alert.setContentText("A user with the same username or email already exists.");
-                alert.showAndWait();
+                AlertHelper.showWarning("Duplicate User", "A user with the same username or email already exists.");
                 return;
             }
             // Create a User object
@@ -85,11 +78,7 @@ public class AddUserDialogController implements Initializable {
             closeDialog();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to save user. Please try again.");
-            alert.showAndWait();
+            AlertHelper.showError("Database Error", "Failed to save user. Please try again.");
         }
     }
 

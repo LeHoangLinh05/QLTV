@@ -158,10 +158,6 @@ public class Member extends User {
         this.memberHistory.add(loan);
     }
 
-    public void updateLoanInHistory(Loan loan) throws SQLException {
-        DB.updateLoan(loan.getBook().getId(), loan.getMember().getId());
-    }
-
     public boolean borrowBook (Book book, LocalDate dueDate) throws SQLException {
         if (!loanService.isBookAvailable(book)) return false;
         try {
