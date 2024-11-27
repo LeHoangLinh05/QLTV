@@ -49,6 +49,7 @@ public class UserRepository {
     }
 
     public static void updateUser(User user) throws SQLException {
+
         String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -61,13 +62,6 @@ public class UserRepository {
 
             stmt.executeUpdate();
         }
-    }
-
-    private static String[] splitName(String fullName) {
-        String[] parts = fullName.trim().split(" ", 2);
-        String fName = parts.length > 0 ? parts[0] : ""; // First part is the first name
-        String lName = parts.length > 1 ? parts[1] : ""; // Second part is the last name
-        return new String[]{fName, lName};
     }
 
     public static boolean addUser(User user) throws SQLException {
@@ -252,6 +246,33 @@ public class UserRepository {
         }
         return null;
     }
+
+    public static Admin getAdminByUsername(String username) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
+            ps.setString(1, username);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    String role = resultSet.getString("role");
+                    String password = resultSet.getString("password");
+                    String fName = resultSet.getString("fName");
+                    String lName = resultSet.getString("lName");
+
+                    // Kiểm tra nếu role là Admin
+                    if ("Admin".equalsIgnoreCase(role)) {
+                        // Trả về đối tượng Admin nếu là Admin
+                        return new Admin(username, password, fName, lName);
+                    } else {
+                        // Nếu không phải Admin, ném ngoại lệ hoặc trả về null
+                        throw new IllegalArgumentException("User is not an Admin");
+                    }
+                }
+            }
+        }
+        return null;  // Trả về null nếu không tìm thấy Admin
+    }
+
+
 
     public static boolean isUsernameTaken(String username) throws SQLException {
         Connection connection = null;

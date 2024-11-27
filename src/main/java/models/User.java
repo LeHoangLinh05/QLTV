@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.CheckBox;
 
+import static java.awt.SystemColor.text;
+
 public abstract class User {
     private int id;
     private String fname;
@@ -136,9 +138,6 @@ public abstract class User {
         this.fname = text;
     }
 
-    public void setLName(String text) {
-        this.lname = text;
-    }
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
@@ -157,4 +156,9 @@ public abstract class User {
     }
 
     public abstract String getRole();
+
+
+    public void setLname(String text) {
+        this.lname = text;
+    }
 }

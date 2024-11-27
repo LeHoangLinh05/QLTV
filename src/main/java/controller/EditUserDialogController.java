@@ -115,7 +115,12 @@ public class EditUserDialogController implements Initializable {
 
     @FXML
     private void handleSave() {
-        user.setFName(nameField.getText());
+        String fullName = nameField.getText();  // Giả sử bạn có một TextField cho tên đầy đủ
+        String[] nameParts = fullName.split(" ");
+        String fName = nameParts[0];  // Lấy phần đầu tiên là fName
+        String lName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+        user.setFName(fName);
+        user.setLname(lName);
         user.setDateOfBirth(dobField.getText());
         user.setEmail(emailField.getText());
         user.setImagePath(user.getImagePath());
@@ -141,7 +146,7 @@ public class EditUserDialogController implements Initializable {
     }
 
     // Method to open the edit dialog
-    public static boolean openEditDialog(Member user) {
+    public static boolean openEditDialog(Member user, Admin admin) {
         try {
             FXMLLoader loader = new FXMLLoader(EditUserDialogController.class.getResource("/view/EditUserDialog.fxml"));
             Parent root = loader.load();

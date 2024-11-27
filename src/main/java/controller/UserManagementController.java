@@ -252,8 +252,13 @@ public class UserManagementController implements Initializable {
                 editButton.getStyleClass().add("edit-button");
 
                 editButton.setOnAction(event -> {
+                    try {
+                        Admin admin = UserRepository.getAdminByUsername(username);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     Member selectedUser = (Member) getTableView().getItems().get(getIndex());
-                    boolean isEdited = EditUserDialogController.openEditDialog(selectedUser);
+                    boolean isEdited = EditUserDialogController.openEditDialog(selectedUser,admin);
 
                     if (isEdited) {
                         try {
