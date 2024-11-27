@@ -112,13 +112,13 @@ public class UserRepository {
         statement.setString(5, user.getUsername());
         statement.setString(6, user.getPassword());
         statement.setString(7, user.getImagePath());
-        statement.setString(8, "Member"); // Set role to 'Member'
+        statement.setString(8, "Member");
 
 
         statement.executeUpdate();
         try (ResultSet keys = statement.getGeneratedKeys()) {
             if (keys.next()) {
-                return keys.getInt(1); // Return the auto-generated ID
+                return keys.getInt(1);
             } else {
                 throw new SQLException("Failed to retrieve generated ID.");
             }
@@ -258,19 +258,15 @@ public class UserRepository {
                     String password = resultSet.getString("password");
                     String fName = resultSet.getString("fName");
                     String lName = resultSet.getString("lName");
-
-                    // Kiểm tra nếu role là Admin
                     if ("Admin".equalsIgnoreCase(role)) {
-                        // Trả về đối tượng Admin nếu là Admin
                         return new Admin(username, password, fName, lName);
                     } else {
-                        // Nếu không phải Admin, ném ngoại lệ hoặc trả về null
                         throw new IllegalArgumentException("User is not an Admin");
                     }
                 }
             }
         }
-        return null;  // Trả về null nếu không tìm thấy Admin
+        return null;
     }
 
 
@@ -332,12 +328,9 @@ public class UserRepository {
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
         try (Connection connection = getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-
             stmt.setInt(1, memberId);
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                // Create and populate Loan object
                 System.out.println("Found loan with ID: " + rs.getInt("loanId"));
                 Loan loan = new Loan();
                 loan.setLoanId(rs.getString("loanId"));
@@ -345,31 +338,23 @@ public class UserRepository {
                 if (issueDate != null) {
                     loan.setIssueDate(issueDate.toLocalDate());
                 } else {
-                    loan.setIssueDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                    loan.setIssueDate(null);
                 }
-
-                // Kiểm tra nếu due_date là null trước khi chuyển đổi
                 java.sql.Date dueDate = rs.getDate("due_date");
                 if (dueDate != null) {
                     loan.setDueDate(dueDate.toLocalDate());
                 } else {
-                    loan.setDueDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                    loan.setDueDate(null);
                 }
-
-                // Kiểm tra nếu return_date là null trước khi chuyển đổi
                 java.sql.Date returnDate = rs.getDate("return_date");
                 if (returnDate != null) {
                     loan.setReturnDate(returnDate.toLocalDate());
                 } else {
-                    loan.setReturnDate(null);  // Hoặc gán giá trị mặc định nếu cần
+                    loan.setReturnDate(null);
                 }
-
-                // Create and populate Book object
                 Book book = new Book();
                 book.setTitle(rs.getString("bookTitle"));
                 loan.setBook(book);
-
-                // Add the loan to the list
                 loans.add(loan);
             }
         } catch (SQLException e) {

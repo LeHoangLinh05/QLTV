@@ -58,7 +58,7 @@ public class EditUserDialogController implements Initializable {
     private AnchorPane rootPane;
 
     private User user;
-    private final ObservableList<Loan> loanList = FXCollections.observableArrayList();
+    private ObservableList<Loan> loanList = FXCollections.observableArrayList();
     private boolean isSaved = false;
     private Admin admin;
 
@@ -83,23 +83,13 @@ public class EditUserDialogController implements Initializable {
     }
 
     private void loadLoanHistory(Member user) throws SQLException {
-        //loanList.clear();
-        //loanList.addAll(DB.getLoansByMemberId(userId));
-        //List<Loan> loans = user.getMemberHistory();
-
-//        System.out.println("Loan history size: " + loans.size());
-//
-//        if (loans.isEmpty()) {
-//            System.out.println("No loans found for this member.");
-//        }
-
-        ObservableList<Loan> loans = FXCollections.observableArrayList(UserRepository.getLoansByMemberId(user.getId()));
-        loanTable.setItems(loans);
-
+//        ObservableList<Loan> loans = FXCollections.observableArrayList(UserRepository.getLoansByMemberId(user.getId()));
+        List<Loan> loans = user.getMemberHistory();
+        loanList = FXCollections.observableArrayList(loans);
+        loanTable.setItems(loanList);
         loanTable.refresh();
     }
 
-    // Method to set the user and populate the fields
     public void setUser(Member user) throws SQLException {
         this.user = user;
         if (user != null) {
@@ -125,9 +115,9 @@ public class EditUserDialogController implements Initializable {
 
     @FXML
     private void handleSave() {
-        String fullName = nameField.getText();  // Giả sử bạn có một TextField cho tên đầy đủ
+        String fullName = nameField.getText();
         String[] nameParts = fullName.split(" ");
-        String fName = nameParts[0];  // Lấy phần đầu tiên là fName
+        String fName = nameParts[0];
         String lName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
         user.setFName(fName);
         user.setLname(lName);
@@ -135,19 +125,17 @@ public class EditUserDialogController implements Initializable {
         user.setEmail(emailField.getText());
         user.setImagePath(user.getImagePath());
         try {
-            admin.editMember(user); // Update the database
+            admin.editMember(user);
             System.out.println("User updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Close the dialog
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
     @FXML
     private void handleCancel() {
-        // Close the dialog without saving
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
@@ -155,7 +143,6 @@ public class EditUserDialogController implements Initializable {
         this.admin = admin;
     }
 
-    // Method to open the edit dialog
     public static boolean openEditDialog(Member user, Admin admin) {
         try {
             FXMLLoader loader = new FXMLLoader(EditUserDialogController.class.getResource("/view/EditUserDialog.fxml"));
@@ -167,7 +154,7 @@ public class EditUserDialogController implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Edit User");
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL); // Make it a modal dialog
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
             return controller.isSaved();
