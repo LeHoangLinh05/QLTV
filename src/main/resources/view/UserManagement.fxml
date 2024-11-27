@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="usermanagement_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="library_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserManagementController">
+<AnchorPane fx:id="usermanagement_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="library_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserManagementController">
     <children>
         <ComboBox fx:id="sortByComboBox" layoutX="766.0" layoutY="155.0" prefHeight="30.0" prefWidth="119.0" promptText="Sort by" styleClass="purple_button" stylesheets="@../css/style.css" AnchorPane.leftAnchor="766.0">
             <items>

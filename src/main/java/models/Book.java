@@ -18,11 +18,9 @@ public class Book {
     public Book() {}
 
     public Book(int id, String title) {
-        //this.ISBN = String.valueOf(id); // Set ID as ISBN or another placeholder
         this.id = id;
         this.title = title;
     }
-
 
     public Book(String title, String ISBN, String author, String publishedDate, String publisher, long pageCount, String categories, String description, String thumbnailLink) {
         this.title = title;

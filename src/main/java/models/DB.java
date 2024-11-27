@@ -1,6 +1,6 @@
 package models;
-import Controller.AdminPanelController;
-import Controller.UserPanelController;
+import controller.AdminPanelController;
+import controller.UserPanelController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -327,14 +327,10 @@ public class DB {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            // Split the name field into fName and lName
-            String[] nameParts = splitName(user.getName());
-            String fName = nameParts[0];
-            String lName = nameParts[1];
 
             // Set parameters in the SQL query
-            stmt.setString(1, fName);
-            stmt.setString(2, lName);
+            stmt.setString(1, user.getFName());
+            stmt.setString(2, user.getLname());
             stmt.setString(3, user.getDateOfBirth());
             stmt.setString(4, user.getEmail());
             stmt.setInt(5, user.getId());
@@ -360,12 +356,8 @@ public class DB {
         String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-        String[] nameParts = splitName(user.getName());
-        String fName = nameParts[0];
-        String lName = nameParts[1];
-
-        statement.setString(1, fName);
-        statement.setString(2, lName);
+        statement.setString(1, user.getFName());
+        statement.setString(2, user.getLname());
         statement.setString(3, user.getDateOfBirth());
         statement.setString(4, user.getEmail());
         statement.setString(5, user.getUsername());
@@ -416,9 +408,9 @@ public class DB {
                 System.out.println("Found loan with ID: " + rs.getInt("loanId"));
                 Loan loan = new Loan();
                 loan.setLoanId(rs.getString("loanId"));
-                loan.setIssueDate(rs.getDate("issue_date"));
-                loan.setDueDate(rs.getDate("due_date"));
-                loan.setReturnDate(rs.getDate("return_date"));
+                loan.setIssueDate(rs.getDate("issue_date").toLocalDate());
+                loan.setDueDate(rs.getDate("due_date").toLocalDate());
+                loan.setReturnDate(rs.getDate("return_date").toLocalDate());
 
                 // Create and populate Book object
                 Book book = new Book();
@@ -732,7 +724,7 @@ public class DB {
         return books;
     }
 
-    public static boolean returnBook(int bookId, int memberId) throws SQLException {
+    public static boolean updateLoan(int bookId, int memberId) throws SQLException {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
@@ -757,6 +749,122 @@ public class DB {
 
             return pst.executeUpdate() > 0;
         }
+    }
+
+    public static List<Loan> getBorrowingLoansByMemberId(int id) throws SQLException {
+        ObservableList<Loan> loans = FXCollections.observableArrayList();
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Loan object
+                System.out.println("Found loan with ID: " + rs.getInt("loanId"));
+                Loan loan = new Loan();
+                loan.setLoanId(rs.getString("loanId"));
+                loan.setIssueDate(rs.getDate("issue_date").toLocalDate());
+                loan.setDueDate(rs.getDate("due_date").toLocalDate());
+                loan.setReturnDate(rs.getDate("return_date").toLocalDate());
+
+                // Create and populate Book object
+                Book book = new Book();
+                book.setTitle(rs.getString("bookTitle"));
+                loan.setBook(book);
+
+                // Add the loan to the list
+                loans.add(loan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching loan history for member ID: " + id, e);
+        }
+        return loans;
+    }
+
+    public static List<Book> getBorrowingBooksByMemberId(int id) throws SQLException {
+        ObservableList<Book> books = FXCollections.observableArrayList();
+        String query = "SELECT b.id AS bookId, b.title " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Book object
+                Book book = new Book();
+                book.setId(rs.getInt("bookId"));
+                book.setTitle(rs.getString("title"));
+                books.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching borrowing books for member ID: " + id, e);
+        }
+        return books;
+    }
+
+    public static List<Loan> getReturnedLoansByMemberId(int id) throws SQLException{
+        ObservableList<Loan> loans = FXCollections.observableArrayList();
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Loan object
+                System.out.println("Found loan with ID: " + rs.getInt("loanId"));
+                Loan loan = new Loan();
+                loan.setLoanId(rs.getString("loanId"));
+                loan.setIssueDate(rs.getDate("issue_date").toLocalDate());
+                loan.setDueDate(rs.getDate("due_date").toLocalDate());
+                loan.setReturnDate(rs.getDate("return_date").toLocalDate());
+
+                // Create and populate Book object
+                Book book = new Book();
+                book.setTitle(rs.getString("bookTitle"));
+                loan.setBook(book);
+
+                // Add the loan to the list
+                loans.add(loan);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching loan history for member ID: " + id, e);
+        }
+        return loans;
+    }
+
+    public static List<Book> getReturnedBooksByMemberId(int id) throws SQLException {
+        ObservableList<Book> books = FXCollections.observableArrayList();
+        String query = "SELECT b.id AS bookId, b.title " +
+                "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/library_management_system", "root", "");
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create and populate Book object
+                Book book = new Book();
+                book.setId(rs.getInt("bookId"));
+                book.setTitle(rs.getString("title"));
+                books.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLException("Error fetching borrowing books for member ID: " + id, e);
+        }
+        return books;
     }
 
 }

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,14 +13,22 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import models.ActivityLog;
+import models.Admin;
 import models.DB;
+import repository.BookRepository;
+import repository.LoanRepository;
+import repository.UserRepository;
+import services.BookService;
+import services.LoanService;
+import services.UserService;
+import ui_helper.CardHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.*;
 
 public class DashboardController implements Initializable {
@@ -76,30 +84,45 @@ public class DashboardController implements Initializable {
     @FXML
     private VBox logVBox;
 
+    private UserService userService;
+    private BookService bookService;
+    private LoanService loanService;
+    private static final BookRepository bookRepository = new BookRepository();
+    private static final UserRepository userRepository = new UserRepository();
+    private static final LoanRepository loanRepository = new LoanRepository();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.userService = new UserService(userRepository);
+        this.bookService = new BookService(bookRepository);
+        this.loanService = new LoanService(loanRepository);
+
         barChart();
-        setNumOfBooks();
-        setNumOfUsers();
-        setNumOfLoans();
-        loadActivityLog();
-        Circle clip = new Circle(50); // Adjust radius as needed
-        clip.setCenterX(72); // Center X coordinate
-        clip.setCenterY(70); // Center Y coordinate
+        try {
+            setNumOfBooks();
+            setNumOfUsers();
+            setNumOfLoans();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            loadActivityLog();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        Circle clip = new Circle(50);
+        clip.setCenterX(72);
+        clip.setCenterY(70);
         avatar.setClip(clip);
     }
 
+    public void setAdminInfo(Admin admin) {
+        label_adminName.setText(admin.getFName() + " " + admin.getLname());
+        label_accType.setText("Admin");
 
-    public void setAdminInfo(String firstName, String lastName, String username, String role, String avatar_path){
-        label_adminName.setText( firstName + " " + lastName );
-        if (Objects.equals(role, "Admin")) {
-            label_accType.setText("Admin");
-        }
-        if (Objects.equals(role, "User")) {
-            label_accType.setText("User");
-        }
-        if (avatar_path != null && !avatar_path.isEmpty()) {
-            File avatarFile = new File(avatar_path);
+        String avatarPath = admin.getImagePath();
+        if (avatarPath != null && !avatarPath.isEmpty()) {
+            File avatarFile = new File(avatarPath);
 
             if (avatarFile.exists()) {
                 try {
@@ -107,28 +130,29 @@ public class DashboardController implements Initializable {
                     avatar.setImage(avatarImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    System.out.println("Avatar file not found at path: " + avatar_path);
+                    System.out.println("Avatar file not found at path: " + avatarPath);
                 }
             } else {
-                System.out.println("Avatar path does not exist: " + avatar_path);
+                System.out.println("Avatar path does not exist: " + avatarPath);
             }
         } else {
             System.out.println("Avatar path is empty or null.");
         }
     }
 
-    public void setNumOfBooks() {
-        int count = DB.countRecords("books");
+
+    public void setNumOfBooks() throws SQLException {
+        int count = bookService.countBookRecords();
         numOfBooks.setText(String.valueOf(count));
     }
 
-    public void setNumOfUsers() {
-        int count = DB.countRecords("userdetail");
+    public void setNumOfUsers() throws SQLException {
+        int count = userService.countUserRecords();
         numOfUsers.setText(String.valueOf(count));
     }
 
-    public void setNumOfLoans() {
-        int count = DB.countRecords("loans");
+    public void setNumOfLoans() throws SQLException {
+        int count = loanService.countLoanRecords();
         numOfLoans.setText(String.valueOf(count));
     }
 
@@ -139,10 +163,9 @@ public class DashboardController implements Initializable {
         Series series2 = new Series<>();
         series2.setName("Returnings");
 
-        Map<String, Integer> borrowData = DB.getBorrowData();
-        Map<String, Integer> returnData = DB.getReturnData();
+        Map<String, Integer> borrowData = loanService.getBorrowData();
+        Map<String, Integer> returnData = loanService.getReturnData();
 
-        // Danh sách các ngày trong tuần
         List<String> daysOfTheWeek = Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
 
         for (String day : daysOfTheWeek) {
@@ -150,25 +173,19 @@ public class DashboardController implements Initializable {
             series2.getData().add(new XYChart.Data<>(day, returnData.getOrDefault(day, 0)));
         }
 
-        // Thêm dữ liệu vào biểu đồ
         barChart.getData().clear();
         barChart.getData().add(series1);
         barChart.getData().add(series2);
     }
 
-    public void loadActivityLog() {
-        List<ActivityLog> logs = DB.fetchActivityLog();
+    public void loadActivityLog() throws SQLException {
+        List<ActivityLog> logs = loanService.getActivityLogs();
 
         try {
             logVBox.getChildren().clear();
 
             for (ActivityLog log : logs) {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/view/LogCard.fxml"));
-                HBox logBox = fxmlLoader.load();
-                ActivityLogController logController = fxmlLoader.getController();
-                logController.setData(log);
-
+                HBox logBox = CardHelper.displayLogCard(log);
                 logVBox.getChildren().add(logBox);
             }
         } catch (IOException e) {

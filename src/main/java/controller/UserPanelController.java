@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +10,8 @@ import javafx.scene.layout.AnchorPane;
 import models.ButtonStyleManager;
 import models.DB;
 import models.Member;
+import repository.UserRepository;
+import services.UserService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,12 +81,19 @@ public class UserPanelController implements Initializable{
     private String role;
     private String avatar_path;
 
+    private Member member;
+
+    private UserService userService;
+    private static final UserRepository userRepository = new UserRepository();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dashboard_anchorpane.setVisible(true);
         rental_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
         profile_anchorpane.setVisible(false);
+
+        this.userService = new UserService(userRepository);
 
         List<Button> buttons = Arrays.asList(dashboard_button, library_button, rental_button, profile_button, logout_button);
         List<ImageView> icons = Arrays.asList(dashboard_icon, library_icon, rental_icon, profile_icon, logout_icon);
@@ -113,6 +122,17 @@ public class UserPanelController implements Initializable{
         this.username = username;
         this.role = role;
         this.avatar_path = avatar_path;
+
+        try {
+            ResultSet resultSet = userService.getUserData(username);
+            if (resultSet.next()) {
+                int id = Integer.parseInt(resultSet.getString("id"));
+                this.member = new Member(id, firstName, lastName); // Gán member
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         showRental();
         showLibrary();
         showProfile();
@@ -146,7 +166,7 @@ public class UserPanelController implements Initializable{
         //to refresh
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/DashboardUser.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
-        DashboardUserController dashboardController = dashboardLoader.getController();
+        DashboardMemberController dashboardController = dashboardLoader.getController();
         //dashboardController.setAdminInfo(firstName, lastName, username, role, avatar_path);
         dashboard_anchorpane.getChildren().clear();
         dashboard_anchorpane.getChildren().add(dashboardPane);
@@ -162,24 +182,9 @@ public class UserPanelController implements Initializable{
         FXMLLoader rentalLoader = new FXMLLoader(getClass().getResource("/view/Rental.fxml"));
         AnchorPane rentalPane = rentalLoader.load();
         RentalController rentalController = rentalLoader.getController();
+        rentalController.setMember(this.member);
         rental_anchorpane.getChildren().clear();
         rental_anchorpane.getChildren().add(rentalPane);
-
-        Member member = null;
-        try {
-            ResultSet resultSet = DB.getUserData(username);
-            if (resultSet.next()) {
-                System.out.println("User " + username + " is now borrowing");  // Debugging
-                String name = firstName + " " + lastName;
-                String id = resultSet.getString("id");
-                member = new Member(name, id);
-                rentalController.setCurrentMember(member);
-            } else {
-                System.out.println("No data found for username: " + username);  // Debugging
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     private void showLibrary() throws IOException {
@@ -215,7 +220,7 @@ public class UserPanelController implements Initializable{
 
     private void logOut(ActionEvent actionEvent) {
         try {
-            DB.changeScene(actionEvent, "/view/login.fxml", "Library Management System", null, null, null, null, null);
+            userService.logOut(actionEvent);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

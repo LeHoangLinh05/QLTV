@@ -1,5 +1,6 @@
-package Controller;
+package controller;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -7,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -15,12 +15,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import models.Admin;
 import models.DB;
+import models.Member;
 import models.User;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import repository.UserRepository;
+import services.UserService;
+import ui_helper.AlertHelper;
 
 import java.awt.*;
 import java.io.File;
@@ -61,16 +66,31 @@ public class UserManagementController implements Initializable {
     @FXML
     private ComboBox<String> sortByComboBox;
 
+    private Admin admin;
+    private UserService userService;
+    private static final UserRepository userRepository = new UserRepository();
 
     private String username;
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private FilteredList<User> filteredList;
 
+    public Admin getAdmin() {
+        return this.admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        this.userService = new UserService(userRepository);
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFName() + " " + cellData.getValue().getLname()));
+
         dobColumn.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         checkBoxColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
@@ -113,7 +133,7 @@ public class UserManagementController implements Initializable {
                 comparator = Comparator.comparing(User::getId, Comparator.nullsLast(Comparator.naturalOrder()));
                 break;
             case "Name":
-                comparator = Comparator.comparing(User::getName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
+                comparator = Comparator.comparing(User::getFName, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER));
                 break;
             case "Date of Birth":
                 comparator = Comparator.comparing(
@@ -154,22 +174,15 @@ public class UserManagementController implements Initializable {
 
         if (selectedUsers.isEmpty()) {
             // Show an alert if no users are selected
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select at least one user to delete.");
-            alert.showAndWait();
+            AlertHelper.showWarning("No Selection", "Please select at least one user to delete.");
             return;
         }
 
         // Confirm deletion with the user
-        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("Confirm Deletion");
-        confirmAlert.setHeaderText(null);
-        confirmAlert.setContentText("Are you sure you want to delete the selected user(s)?");
+        boolean isConfirmed = AlertHelper.showConfirmation("Confirm Deletion", "Are you sure you want to delete the selected user(s)?");
 
         // Proceed with deletion only if the user confirms
-        if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+        if (isConfirmed) {
             for (User user : selectedUsers) {
                 // Delete user from the database
                 deleteUserFromDatabase(user.getId());
@@ -181,30 +194,24 @@ public class UserManagementController implements Initializable {
             // Update the Delete button visibility
             updateDeleteButtonVisibility();
             // Show success message
-            Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-            successAlert.setTitle("Deletion Successful");
-            successAlert.setHeaderText(null);
-            successAlert.setContentText("Selected user(s) have been deleted successfully.");
-            successAlert.showAndWait();
+            AlertHelper.showInformation("Deletion Successful", "Selected user(s) have been deleted successfully.");
         }
     }
 
     private void deleteUserFromDatabase(int userId) {
         System.out.println("Attempting to delete user with ID: " + userId);
         try {
-            DB.deleteUser(userId);
-            System.out.println("Successfully deleted user with ID: " + userId);
+            admin.removeMember(userId);
         } catch (SQLException e) {
-            System.err.println("Failed to delete user with ID: " + userId);
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+        System.out.println("Successfully deleted user with ID: " + userId);
     }
 
     private void loadUserData() {
         refreshTable();
         try {
-
-            ResultSet rs = DB.getAllUsers();
+            ResultSet rs = userService.getAllUsers();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -214,13 +221,13 @@ public class UserManagementController implements Initializable {
                 String email = rs.getString("email");
                 String imagePath = rs.getString("avatar_path");
 
-                User user = new User(id, fName + " " + lName, dateOfBirth, email, "", "", imagePath);
+                User user = new Member(id, fName, lName, dateOfBirth, email, "", "");
                 user.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
                     updateDeleteButtonVisibility();
                 });
 
                 userList.add(user);
-                System.out.println("Loaded user: " + user.getName()); // Debugging print
+                System.out.println("Loaded user: " + user.getFName() + " " + user.getLname()); // Debugging print
             }
             rs.close();
             tableView.refresh();
@@ -245,7 +252,7 @@ public class UserManagementController implements Initializable {
                 editButton.getStyleClass().add("edit-button");
 
                 editButton.setOnAction(event -> {
-                    User selectedUser = getTableView().getItems().get(getIndex());
+                    Member selectedUser = (Member) getTableView().getItems().get(getIndex());
                     boolean isEdited = EditUserDialogController.openEditDialog(selectedUser);
 
                     if (isEdited) {
@@ -287,7 +294,7 @@ public class UserManagementController implements Initializable {
                 return true;
             }
 
-            return user.getName().toLowerCase().contains(searchQuery);
+            return user.getFName().toLowerCase().contains(searchQuery) || user.getLname().toLowerCase().contains(searchQuery);
         });
     }
 
@@ -311,7 +318,7 @@ public class UserManagementController implements Initializable {
             for (User user : userList) {
                 Row dataRow = sheet.createRow(rowIndex++);
                 dataRow.createCell(0).setCellValue(user.getId());
-                dataRow.createCell(1).setCellValue(user.getName());
+                dataRow.createCell(1).setCellValue(String.valueOf(user.getFName() + " " + user.getLname()));
                 dataRow.createCell(2).setCellValue(user.getDateOfBirth()); // Thay bằng thông tin liên lạc nếu có
                 dataRow.createCell(3).setCellValue(user.getEmail()); // Thay bằng số ID nếu có
             }
@@ -337,11 +344,7 @@ public class UserManagementController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
             // Hiển thị thông báo lỗi
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Export Failed");
-            errorAlert.setHeaderText(null);
-            errorAlert.setContentText("Failed to export user list to Excel.");
-            errorAlert.showAndWait();
+            AlertHelper.showError("Export Failed", "Failed to export user list to Excel.");
         }
     }
 

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -6,16 +6,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import models.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert.AlertType;
+import ui_helper.AlertHelper;
 
 import java.sql.*;
 import java.time.LocalDate;
 
 public class BorrowBookController {
 
-    private Library library;
     private Member member;
 
     //@FXML
@@ -61,47 +59,33 @@ public class BorrowBookController {
         Image thumbnail = new Image(book.getThumbnailLink());
         cover_img.setImage(thumbnail);
         title_text.setText(book.getTitle());
-        student_name_text.setText(member.getName());
+        student_name_text.setText(member.getFName() + " " + member.getLname());
         issue_date_text.setText(String.valueOf(issueDate));
+
     }
 
-    public boolean createLoan(Book book, Member member) {
-        LocalDate issueDate = LocalDate.now();
-        LocalDate dueDate = dueDatePicker.getValue();
-
-        boolean isCreated = false;
-
-        try {
-            int bookId = DB.getBookIdByISBN(book);
-            int memberId = Integer.parseInt(member.getMemberId());
-
-            isCreated = DB.createLoan(memberId, bookId, issueDate, dueDate);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return isCreated;
-    }
-
-    public void saveLoan(Book book, Member member, Runnable onSuccess) {
+    public void handleBorrow(Book book, Member member, Runnable onSuccess) {
         borrow_button.setOnMouseClicked(event -> {
-            boolean isBorrowed = createLoan(book, member);
+            LocalDate dueDate = dueDatePicker.getValue();
+            if (dueDate == null) {
+                AlertHelper.showError("Date Selection Error", "Please select a due date.");
+                return;
+            }
+
+            // Gọi phương thức borrowBook() từ Member
+            boolean isBorrowed = false;
+            try {
+                isBorrowed = member.borrowBook(book, dueDate);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             if (isBorrowed) {
+                // Nếu mượn thành công, gọi callback onSuccess
                 onSuccess.run();
-                try {
-                    DB.updateQuantityAfterBorrow(book);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-
             } else {
                 // Hiển thị thông báo lỗi nếu thất bại
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Borrow Failed");
-                alert.setHeaderText(null);
-                alert.setContentText("This book is currently unavailable for borrowing.");
-                alert.showAndWait();
+                AlertHelper.showError("Borrow Failed", "This book is currently unavailable for borrowing.");
             }
         });
     }

@@ -10,6 +10,6 @@ module models {
     requires java.desktop;
     exports models;
     opens models to javafx.fxml;
-    exports Controller;
-    opens Controller to javafx.fxml;
+    exports controller;
+    opens controller to javafx.fxml;
 }

@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -51,7 +51,6 @@ public class ReturnedCardController implements Initializable {
         issueDate_text.setText(issueDate.toString());
         returnDate_text.setText(returnDate.toString());
 
-        // Tính trạng thái (Overdue hoặc In Due)
         if (returnDate.isAfter(dueDate)) {
             status_text.setText("Overdue");
             status_text.setStyle("-fx-text-fill: red;");

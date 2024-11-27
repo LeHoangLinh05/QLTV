@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="bookmanagement_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="addnew_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BookManagementController">
+<AnchorPane fx:id="bookmanagement_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="addnew_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BookManagementController">
     <children>
         <AnchorPane fx:id="mainbookmanagement_anchorpane" maxHeight="700.0" maxWidth="920.0" minHeight="700.0" minWidth="670.0" prefHeight="700.0" styleClass="mainaddbook_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>

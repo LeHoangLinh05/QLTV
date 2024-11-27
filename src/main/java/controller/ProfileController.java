@@ -1,14 +1,12 @@
-package Controller;
+package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import models.DB;
 import java.io.File;
@@ -20,6 +18,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.stage.FileChooser;
+import repository.BookRepository;
+import repository.UserRepository;
+import services.UserService;
 
 public class ProfileController implements Initializable {
 
@@ -52,6 +53,8 @@ public class ProfileController implements Initializable {
 
     private AdminPanelController adminPanelController;
     private UserPanelController userPanelController;
+    private UserService userService;
+    private static final UserRepository userRepository = new UserRepository();
 
     public void setUsername(String username) {
         this.username = username;
@@ -60,22 +63,22 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Set the ImageView clip to a circular shape
-        Circle clip = new Circle(80); // Adjust radius as needed
-        clip.setCenterX(95); // Center X coordinate
-        clip.setCenterY(80); // Center Y coordinate
+        Circle clip = new Circle(80);
+        clip.setCenterX(95);
+        clip.setCenterY(80);
         avatarImageView.setClip(clip);
         this.username = username;
         loadProfileData();
-        // Initialize button actions
+
         set_avatar.setOnAction(this::handleChangeAvatar);
         save_changes.setOnAction(this::handleSaveChanges);
+
+        this.userService = new UserService(userRepository);
     }
 
-    // Method to load the user's profile data from the database
     private void loadProfileData() {
         try {
-            ResultSet resultSet = DB.getUserData(username);
+            ResultSet resultSet = userService.getUserData(username);
             if (resultSet.next()) {
                 System.out.println("Data loaded for username: " + username);  // Debugging
                 first_name.setText(resultSet.getString("fName"));
@@ -99,9 +102,7 @@ public class ProfileController implements Initializable {
         }
     }
 
-    // Method to handle avatar change
     private void handleChangeAvatar(ActionEvent event) {
-        // Code to open a file chooser dialog and select a new image
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select New Avatar");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
@@ -116,7 +117,6 @@ public class ProfileController implements Initializable {
             }
         }
     }
-
 
     public void setAdminPanelController(AdminPanelController adminPanelController) {
         this.adminPanelController = adminPanelController;
@@ -135,7 +135,7 @@ public class ProfileController implements Initializable {
         String id = id_text.getText();
 
         try {
-            DB.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
+            userService.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
             System.out.println("Profile updated successfully.");
             if (adminPanelController != null) {
                 adminPanelController.updateInfo(firstName, lastName, username, avatarPath);
@@ -152,9 +152,4 @@ public class ProfileController implements Initializable {
             throw new RuntimeException(e);
         }
     }
-
-
-
-
-
 }

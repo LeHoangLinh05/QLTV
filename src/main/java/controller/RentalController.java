@@ -1,5 +1,9 @@
-package Controller;
+package controller;
 
+import repository.BookRepository;
+import repository.LoanRepository;
+import services.BookService;
+import services.LoanService;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +18,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.*;
+import ui_helper.AlertHelper;
+import ui_helper.CardHelper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -94,12 +100,19 @@ public class RentalController implements Initializable {
     private ButtonStyleManager buttonStyleManager;
 
     private Member member;
+    private BookService bookService;
+    private LoanService loanService;
 
-    public void setCurrentMember(Member member) {
+    public Member getMember() {
+        return this.member;
+    }
+
+    public void setMember(Member member) {
         this.member = member;
     }
 
-    public Member getMember() {return member;}
+    private static final BookRepository bookRepository = new BookRepository();
+    private static final LoanRepository loanRepository = new LoanRepository();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -108,10 +121,11 @@ public class RentalController implements Initializable {
         List<Button> buttons = Arrays.asList(borrowbook_button, returnbook_button);
         List<ImageView> icons = Arrays.asList(borrowbook_icon, returnbook_icon);
 
-        // Khởi tạo ButtonStyleManager với buttons và icons
+        this.loanService = new LoanService(loanRepository);
+        this.bookService = new BookService(bookRepository);
+
         buttonStyleManager = new ButtonStyleManager(buttons, icons);
 
-        // Đặt sự kiện cho các button
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             ImageView icon = icons.get(i);
@@ -151,73 +165,54 @@ public class RentalController implements Initializable {
     private void setSearchForBorrowBook() {
         search_text.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                String queryText = search_text.getText();
+                String queryText = search_text.getText().trim();
 
                 result_gridpane1.getChildren().clear();
 
-                // Hiển thị giao diện tạm thời
-                Label loadingLabel = new Label("Loading...");
-                loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
-                result_gridpane1.add(loadingLabel, 0, 0);
+                showTemporaryMessage(result_gridpane1, "Loading...", "gray");
+                Task<List<HBox>> searchTask = createSearchTask(queryText);
 
-                // Tạo background task
-                Task<List<HBox>> task = new Task<>() {
-                    @Override
-                    protected List<HBox> call() throws Exception {
-                        List<HBox> bookCards = new ArrayList<>();
-                        List<Book> books = DB.searchBooks(queryText);
+                searchTask.setOnSucceeded(workerStateEvent -> updateResultGrid(result_gridpane1, searchTask.getValue()));
+                searchTask.setOnFailed(workerStateEvent -> showTemporaryMessage(result_gridpane1, "Error loading data.", "red"));
 
-                        for (Book book : books) {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
-                            HBox bigCard_box = fxmlLoader.load();
-
-                            BigCardController cardController = fxmlLoader.getController();
-                            cardController.setData(book);
-
-                            bigCard_box.setOnMouseClicked(event -> {
-                                borrowBook(book, getMember());
-                            });
-
-                            bookCards.add(bigCard_box);
-                        }
-                        return bookCards;
-                    }
-                };
-
-                // Xử lý khi hoàn thành
-                task.setOnSucceeded(workerStateEvent -> {
-                    result_gridpane1.getChildren().clear();
-                    List<HBox> bookCards = task.getValue();
-                    int column = 0, row = 1;
-
-                    for (HBox bookCard : bookCards) {
-                        result_gridpane1.add(bookCard, column++, row);
-                        GridPane.setMargin(bookCard, new Insets(8));
-                        if (column >= 3) {
-                            column = 0;
-                            row++;
-                        }
-                    }
-                });
-
-                // Khi Task thất bại
-                task.setOnFailed(workerStateEvent -> {
-                    result_gridpane1.getChildren().clear();
-                    Label errorLabel = new Label("Error loading data.");
-                    errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
-                    result_gridpane1.add(errorLabel, 0, 0);
-                });
-
-                // Chạy background thread
-                Thread thread = new Thread(task);
-                thread.setDaemon(true);
-                thread.start();
+                startBackgroundTask(searchTask);
             }
         });
     }
 
-    private void borrowBook(Book book, Member member) {
+    private Task<List<HBox>> createSearchTask(String queryText) {
+        return new Task<>() {
+            @Override
+            protected List<HBox> call() throws Exception {
+                List<HBox> bookCards = new ArrayList<>();
+                List<Book> books = bookService.searchBooks(queryText);
+
+                for (Book book : books) {
+                    HBox bigCardBox = CardHelper.displayBigCard(book);
+
+                    bigCardBox.setOnMouseClicked(event -> showBorrowForm(book, getMember()));
+                    bookCards.add(bigCardBox);
+                }
+                return bookCards;
+            }
+        };
+    }
+
+    private void updateResultGrid(GridPane gridPane, List<HBox> bookCards) {
+        gridPane.getChildren().clear();
+        int column = 0, row = 1;
+
+        for (HBox bookCard : bookCards) {
+            gridPane.add(bookCard, column++, row);
+            GridPane.setMargin(bookCard, new Insets(8));
+            if (column >= 3) {
+                column = 0;
+                row++;
+            }
+        }
+    }
+
+    private void showBorrowForm(Book book, Member member) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/view/BorrowForm.fxml"));
@@ -226,26 +221,15 @@ public class RentalController implements Initializable {
             BorrowBookController borrowController = fxmlLoader.getController();
             borrowController.setData(book, member);
 
-            if (DB.getBookQuantity(book) < 1) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Borrow Failed");
-                alert.setHeaderText(null);
-                alert.setContentText("This book is currently unavailable for borrowing.");
-                alert.showAndWait();
+            if (!loanService.isBookAvailable(book)) {
+                AlertHelper.showError("Borrow Failed", "This book is currently unavailable for borrowing.");
 
             } else {
                 rental_anchorpane.getChildren().add(borrowPane);
                 borrowPane.toFront();
 
-                borrowController.saveLoan(book, member, () -> {
-                    // Nếu lưu thành công, hiển thị Alert
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Book Borrowed");
-                    alert.setHeaderText(null);
-                    alert.setContentText("You have borrowed this book successfully.");
-                    alert.showAndWait();
-
-                    // Sau khi mượn, có thể xóa borrowPane
+                borrowController.handleBorrow(book, member, () -> {
+                    AlertHelper.showInformation("Book Borrowed", "You have borrowed this book successfully.");
                     rental_anchorpane.getChildren().remove(borrowPane);
                 });
             }
@@ -271,31 +255,34 @@ public class RentalController implements Initializable {
                                      "JOIN books b ON l.book_id = b.id " +
                                      "WHERE l.return_date IS NULL AND l.member_id = ?")) {
 
-                    preparedStatement.setInt(1, Integer.parseInt(getMember().getMemberId()));
-
+                    preparedStatement.setInt(1, getMember().getId());
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     while (resultSet.next()) {
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
-                            HBox borrowingCard_box = fxmlLoader.load();
-
-                            BorrowingCardController cardController = fxmlLoader.getController();
-                            cardController.setRentalController(RentalController.this);
-
                             int loanId = resultSet.getInt("loan_id");
                             LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
                             LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
 
                             Book book = new Book();
+                            book.setId(resultSet.getInt("book_id"));
                             book.setTitle(resultSet.getString("title"));
-                            book.setISBN (resultSet.getString("isbn"));
 
-                            cardController.setCurrentMember(member);
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
+                            HBox borrowingCard_box = fxmlLoader.load();
+                            BorrowingCardController cardController = fxmlLoader.getController();
                             cardController.setData(loanId, book, member, issueDate, dueDate);
 
                             borrowingCards.add(borrowingCard_box);
+
+                            cardController.handleReturn(book, getMember(), () -> {
+                                AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
+
+                                //refresh
+                                setForReturnBook();
+                                displayReturnedBooks();
+                            });
 
                         } catch (Exception e) {
                             System.out.println("Error creating HBox for book: " + e.getMessage());
@@ -319,7 +306,7 @@ public class RentalController implements Initializable {
 
         task.setOnFailed(workerStateEvent -> {
             borrowingVBox.getChildren().clear();
-            Label errorLabel = new Label("Error loading borrowed books.");
+            Label errorLabel = new Label("Error loading borrowing books.");
             errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
             borrowingVBox.getChildren().add(errorLabel);
         });
@@ -346,26 +333,24 @@ public class RentalController implements Initializable {
                                      "JOIN books b ON l.book_id = b.id " +
                                      "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
 
-                    preparedStatement.setInt(1, Integer.parseInt(getMember().getMemberId()));
-
+                    preparedStatement.setInt(1, getMember().getId());
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     while (resultSet.next()) {
                         try {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-                            HBox returnedCard_box = fxmlLoader.load();
-
-                            ReturnedCardController cardController = fxmlLoader.getController();
-
                             int loanId = resultSet.getInt("loan_id");
                             LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
                             LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
                             LocalDate returnDate = resultSet.getDate("return_date").toLocalDate();
 
                             Book book = new Book();
+                            book.setId(resultSet.getInt("book_id"));
                             book.setTitle(resultSet.getString("title"));
-                            book.setISBN (resultSet.getString("isbn"));
+
+                            FXMLLoader fxmlLoader = new FXMLLoader();
+                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
+                            HBox returnedCard_box = fxmlLoader.load();
+                            ReturnedCardController cardController = fxmlLoader.getController();
 
                             cardController.setCurrentMember(member);
                             cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
@@ -373,7 +358,7 @@ public class RentalController implements Initializable {
                             returnedCards.add(returnedCard_box);
 
                         } catch (Exception e) {
-                            System.out.println("Error creating HBox for book: " + e.getMessage());
+                            System.out.println("Error creating HBox for returned book: " + e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -404,48 +389,15 @@ public class RentalController implements Initializable {
         thread.start();
     }
 
-    public void returnBook(Book book, Member member) {
-        try {
-            boolean isReturned = DB.returnBook(DB.getBookIdByISBN(book), Integer.parseInt(member.getMemberId()));
-            if (isReturned) {
-                DB.updateQuantityAfterReturn(book);
-
-                System.out.println("Book returned successfully: " + book.getTitle());
-                // Hiển thị thông báo thành công
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Book Returned");
-                alert.setHeaderText(null);
-                alert.setContentText("Successfully returned the book: " + book.getTitle());
-                alert.showAndWait();
-
-                setForReturnBook();
-                displayReturnedBooks();
-
-            } else {
-                System.out.println("Failed to return the book: " + book.getTitle());
-
-                // Hiển thị thông báo lỗi
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Return Failed");
-                alert.setHeaderText(null);
-                alert.setContentText("Could not return the book: " + book.getTitle());
-                alert.showAndWait();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private void showTemporaryMessage(GridPane gridPane, String message, String color) {
+        Label label = new Label(message);
+        label.setStyle("-fx-font-size: 16px; -fx-text-fill: " + color + ";");
+        gridPane.add(label, 0, 0);
     }
 
-    private void refreshReturnBookList() {
-        setForReturnBook(); // Gọi lại hàm hiển thị sách đã mượn
+    private void startBackgroundTask(Task<?> task) {
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
-
-    @FXML
-    void refreshRentalPane() {
-        // Đảm bảo chỉ loại bỏ các phần tử con cụ thể
-        rental_anchorpane.getChildren().removeIf(node -> node.getId() != null && node.getId().equals("returnFormPane"));
-        rental_anchorpane.setDisable(false); // Bật lại giao diện cha
-        System.out.println("Rental Pane refreshed.");
-    }
-
 }

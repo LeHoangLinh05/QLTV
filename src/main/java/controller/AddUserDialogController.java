@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -6,20 +6,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.DB;
+import models.Member;
 import models.User;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
-
-import static models.DB.addUser;
 
 public class AddUserDialogController implements Initializable {
 
@@ -75,7 +71,7 @@ public class AddUserDialogController implements Initializable {
                 return;
             }
             // Create a User object
-            User newUser = new User(0, name, dob, email, username, password, ""); // Assuming no avatar path is provided
+            User newUser = new Member(0, name, dob, email, username, password, ""); // Assuming no avatar path is provided
 
             // Pass the User object to the DB.addUser method
             int generatedId = DB.addUser(newUser);

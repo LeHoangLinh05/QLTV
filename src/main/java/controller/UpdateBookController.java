@@ -1,9 +1,8 @@
-package Controller;
+package controller;
 
+import models.Admin;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -12,12 +11,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import models.Book;
-import models.DB;
+import ui_helper.AlertHelper;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -63,7 +59,6 @@ public class UpdateBookController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
     }
 
     public void setData(Book book) {
@@ -90,20 +85,20 @@ public class UpdateBookController implements Initializable {
         book.setQuantity(Integer.parseInt(quantity_text.getText()));
     }
 
-    public void saveChanges(Book book, Runnable onSuccess) {
+    public void handleUpdate(Book book, Admin admin, Runnable onSuccess) {
         save_button.setOnMouseClicked(event -> {
             getChanges(book);
-            boolean isSaved = DB.updateBook(book);
+            boolean isSaved = false;
+            try {
+                isSaved = admin.updateBook(book);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             if (isSaved) {
                 onSuccess.run();
             } else {
-                // Hiển thị thông báo lỗi nếu lưu thất bại
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Update Failed");
-                alert.setHeaderText(null);
-                alert.setContentText("Failed to update the book.");
-                alert.showAndWait();
+                AlertHelper.showError("Update Failed", "Failed to update the book.");
             }
         });
     }

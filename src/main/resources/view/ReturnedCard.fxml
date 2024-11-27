@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="returnedBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="830.0" styleClass="logCard" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ReturnedCardController">
+<HBox fx:id="returnedBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="830.0" styleClass="logCard" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReturnedCardController">
     <children>
         <Label fx:id="loanID_text" alignment="CENTER" prefHeight="18.0" prefWidth="80.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Loan ID" textAlignment="CENTER" textFill="#6a6be6">
             <font>

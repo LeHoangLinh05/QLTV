@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditUserDialogController">
+<AnchorPane fx:id="rootPane" prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditUserDialogController">
     <children>
 
         <Label layoutX="105.0" layoutY="202.0" text="Name:" />

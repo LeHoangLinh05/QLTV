@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="logBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="526.0" spacing="40.0" styleClass="logCard" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ActivityLogController">
+<HBox fx:id="logBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="36.0" prefWidth="526.0" spacing="40.0" styleClass="logCard" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ActivityLogController">
    <children>
       <Label fx:id="date_text" prefHeight="18.0" prefWidth="100.0" styleClass="regular_text" stylesheets="@../css/style.css" text="dd-mm-yyyy" textFill="#6a6be6">
          <font>

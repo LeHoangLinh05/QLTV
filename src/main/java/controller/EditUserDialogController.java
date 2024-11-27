@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -12,19 +12,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx. scene. image. ImageView;
-import models.DB;
-import models.Loan;
-import models.User;
+import models.*;
+import services.LoanService;
 
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class EditUserDialogController implements Initializable {
@@ -60,6 +59,7 @@ public class EditUserDialogController implements Initializable {
     private User user;
     private final ObservableList<Loan> loanList = FXCollections.observableArrayList();
     private boolean isSaved = false;
+    private Admin admin;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,31 +81,22 @@ public class EditUserDialogController implements Initializable {
         });
     }
 
-    private void loadLoanHistory(int userId) {
+    private void loadLoanHistory(Member user) {
         //loanList.clear();
-        try {
-            //loanList.addAll(DB.getLoansByMemberId(userId));
-            ObservableList<Loan> loans = DB.getLoansByMemberId(userId);
-            loanTable.setItems(loans);
-            loanTable.refresh();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to load loan history. Please try again.");
-            alert.showAndWait();
-        }
+        //loanList.addAll(DB.getLoansByMemberId(userId));
+        List<Loan> loans = user.getMemberHistory();
+        loanTable.setItems((ObservableList<Loan>) loans);
+        loanTable.refresh();
     }
 
     // Method to set the user and populate the fields
-    public void setUser(User user) {
+    public void setUser(Member user) {
         this.user = user;
         if (user != null) {
-            nameField.setText(user.getName());
+            nameField.setText(user.getFName() + " " + user.getLname());
             dobField.setText(user.getDateOfBirth());
             emailField.setText(user.getEmail());
-            loadLoanHistory(user.getId());
+            loadLoanHistory(user);
             if (user.imagePathProperty() != null && user.imagePathProperty().get() != null && !user.imagePathProperty().get().isEmpty()) {
                 File imageFile = new File(user.imagePathProperty().get()); // Use .get() to get the String value
                 if (imageFile.exists()) {
@@ -124,12 +115,12 @@ public class EditUserDialogController implements Initializable {
 
     @FXML
     private void handleSave() {
-        user.setName(nameField.getText());
+        user.setFName(nameField.getText());
         user.setDateOfBirth(dobField.getText());
         user.setEmail(emailField.getText());
         user.setImagePath(user.getImagePath());
         try {
-            DB.updateUser(user); // Update the database
+            admin.editMember(user); // Update the database
             System.out.println("User updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,7 +137,7 @@ public class EditUserDialogController implements Initializable {
     }
 
     // Method to open the edit dialog
-    public static boolean openEditDialog(User user) {
+    public static boolean openEditDialog(Member user) {
         try {
             FXMLLoader loader = new FXMLLoader(EditUserDialogController.class.getResource("/view/EditUserDialog.fxml"));
             Parent root = loader.load();

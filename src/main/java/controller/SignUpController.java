@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 import javafx.scene.control.ChoiceBox;
 import models.DB;

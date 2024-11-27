@@ -1,5 +1,7 @@
-package Controller;
+package controller;
 
+import models.*;
+import repository.BookRepository;
 import javafx.animation.TranslateTransition;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -16,14 +18,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import models.Book;
-import models.ButtonStyleManager;
-import models.DB;
-import models.SearchBookAPI;
+import services.BookService;
+import ui_helper.AlertHelper;
+import ui_helper.CardHelper;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -115,7 +116,18 @@ public class BookManagementController implements Initializable {
     @FXML
     private Button update_button;
 
+    private Admin admin;
     private ButtonStyleManager buttonStyleManager;
+    private BookService bookService;
+    private static final BookRepository bookRepository = new BookRepository();
+
+    public Admin getAdmin() {
+        return this.admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -130,10 +142,8 @@ public class BookManagementController implements Initializable {
         List<Button> buttons = Arrays.asList(addbook_button, managebook_button);
         List<ImageView> icons = Arrays.asList(addbook_icon, managebook_icon);
 
-        // Khởi tạo ButtonStyleManager với buttons và icons
         buttonStyleManager = new ButtonStyleManager(buttons, icons);
 
-        // Đặt sự kiện cho các button
         for (int i = 0; i < buttons.size(); i++) {
             Button button = buttons.get(i);
             ImageView icon = icons.get(i);
@@ -141,6 +151,7 @@ public class BookManagementController implements Initializable {
             button.setOnAction(actionEvent -> selectionControl(actionEvent, icon));
         }
 
+        this.bookService = new BookService(bookRepository);
     };
 
     public void selectionControl(ActionEvent actionEvent, ImageView icon) {
@@ -173,13 +184,11 @@ public class BookManagementController implements Initializable {
             if (e.getCode() == KeyCode.ENTER) {
                 String queryText = search_text.getText();
 
-                // Hiển thị giao diện tạm thời
                 result_gridpane.getChildren().clear();
                 Label loadingLabel = new Label("Searching for books...");
                 loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
                 result_gridpane.add(loadingLabel, 0, 0);
 
-                // Tạo background task
                 Task<List<HBox>> searchTask = new Task<>() {
                     @Override
                     protected List<HBox> call() throws Exception {
@@ -191,16 +200,12 @@ public class BookManagementController implements Initializable {
                         int row = 1;
 
                         for (Book book : SearchBookAPI.searchResult) {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/BigCard.fxml"));
-                            HBox bigCard_box = fxmlLoader.load();
-                            BigCardController cardController = fxmlLoader.getController();
-                            cardController.setData(book);
+                            HBox bigCard_box = CardHelper.displayBigCard(book);
 
                             bigCard_box.setOnMouseClicked(event -> {
                                 showBookDetail(book, "Add");
                                 restoreFormat();
-                                addBookToDb(book);
+                                handleAddBook(book);
                             });
 
                             if (column >= 3) {
@@ -213,7 +218,6 @@ public class BookManagementController implements Initializable {
                     }
                 };
 
-                // Xử lý khi hoàn thành
                 searchTask.setOnSucceeded(event -> {
                     result_gridpane.getChildren().clear();
                     List<HBox> searchResults = searchTask.getValue();
@@ -230,7 +234,6 @@ public class BookManagementController implements Initializable {
                     }
                 });
 
-                // Xử lý lỗi
                 searchTask.setOnFailed(event -> {
                     result_gridpane.getChildren().clear();
                     Label errorLabel = new Label("Failed to load search results.");
@@ -238,7 +241,6 @@ public class BookManagementController implements Initializable {
                     result_gridpane.add(errorLabel, 0, 0);
                 });
 
-                // Chạy background thread
                 Thread thread = new Thread(searchTask);
                 thread.setDaemon(true);
                 thread.start();
@@ -268,7 +270,6 @@ public class BookManagementController implements Initializable {
             update_button.setVisible(true);
             remove_button.setVisible(true);
         }
-
     }
 
     private void changeFormatToShowDetail() {
@@ -303,29 +304,20 @@ public class BookManagementController implements Initializable {
         });
     }
 
-    private void addBookToDb(Book book) {
+    private void handleAddBook(Book book) {
         add_button.setOnMouseClicked(event -> {
-
-            if (DB.doesBookExists(book.getISBN())) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Duplicate Book");
-                alert.setHeaderText(null);
-                alert.setContentText("This book already exists in the database.");
-                alert.showAndWait();
-            } else {
-                if (DB.addBook(book)) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Book Added");
-                    alert.setHeaderText(null);
-                    alert.setContentText("This book has been added successfully.");
-                    alert.showAndWait();
+            try {
+                if (bookService.doesBookExist(book.getISBN())) {
+                    AlertHelper.showWarning("Duplicate book","This book already exists in the database.");
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Failed to add the book. Please try again.");
-                    alert.showAndWait();
+                    if (admin.addBook(book)) {
+                        AlertHelper.showInformation("Book Added", "This book has been added successfully.");
+                    } else {
+                        AlertHelper.showError( "Add Process Error","Failed to add the book. Please try again.");
+                    }
                 }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         });
     }
@@ -335,7 +327,6 @@ public class BookManagementController implements Initializable {
             if (e.getCode() == KeyCode.ENTER) {
                 String queryText = search_text.getText();
 
-                // Hiển thị giao diện tạm thời
                 result_gridpane1.getChildren().clear();
                 Label loadingLabel = new Label("Searching for books...");
                 loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
@@ -346,24 +337,19 @@ public class BookManagementController implements Initializable {
                     @Override
                     protected List<VBox> call() throws Exception {
                         List<VBox> searchResults = new ArrayList<>();
-                        List<Book> books = DB.searchBooks(queryText);
+                        List<Book> books = bookService.searchBooks(queryText);
 
                         int column = 0;
                         int row = 1;
 
                         for (Book book : books) {
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/SmallCard.fxml"));
-                            VBox smallCard_box = fxmlLoader.load();
-
-                            SmallCardController cardController = fxmlLoader.getController();
-                            cardController.setData(book);
+                            VBox smallCard_box = CardHelper.displaySmallCard(book);
 
                             smallCard_box.setOnMouseClicked(event -> {
                                 showBookDetail(book, "Manage");
                                 restoreFormat();
-                                removeBook(book);
-                                updateBook(book);
+                                handleRemoveBook(book);
+                                showUpdateForm(book);
                             });
 
                             if (column >= 6) {
@@ -376,7 +362,6 @@ public class BookManagementController implements Initializable {
                     }
                 };
 
-                // Xử lý khi hoàn thành
                 searchTask.setOnSucceeded(event -> {
                     result_gridpane1.getChildren().clear();
                     List<VBox> searchResults = searchTask.getValue();
@@ -393,7 +378,6 @@ public class BookManagementController implements Initializable {
                     }
                 });
 
-                // Xử lý lỗi
                 searchTask.setOnFailed(event -> {
                     result_gridpane1.getChildren().clear();
                     Label errorLabel = new Label("Failed to load search results.");
@@ -401,7 +385,6 @@ public class BookManagementController implements Initializable {
                     result_gridpane1.add(errorLabel, 0, 0);
                 });
 
-                // Chạy background thread
                 Thread thread = new Thread(searchTask);
                 thread.setDaemon(true);
                 thread.start();
@@ -409,21 +392,22 @@ public class BookManagementController implements Initializable {
         });
     }
 
-    private void removeBook(Book book){
+    private void handleRemoveBook(Book book){
         remove_button.setOnMouseClicked(event -> {
-            boolean isDeleted = DB.removeBook(book);
+            boolean isDeleted = false;
+            try {
+                isDeleted = admin.removeBook(book);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             if (isDeleted) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Book Removed");
-                alert.setHeaderText(null);
-                alert.setContentText("This book has been removed successfully");
-                alert.showAndWait();
+                AlertHelper.showInformation("Book Removed","This book has been removed successfully");
             }
         });
     }
 
-    private void updateBook(Book book) {
+    private void showUpdateForm(Book book) {
         update_button.setOnMouseClicked(event -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -436,15 +420,8 @@ public class BookManagementController implements Initializable {
                 bookmanagement_anchorpane.getChildren().add(updatePane);
                 updatePane.toFront();
 
-                updateController.saveChanges(book, () -> {
-                    // Nếu lưu thành công, hiển thị Alert
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Book Updated");
-                    alert.setHeaderText(null);
-                    alert.setContentText("This book has been updated successfully.");
-                    alert.showAndWait();
-
-                    // Sau khi lưu, bạn có thể xóa updatePane
+                updateController.handleUpdate(book, admin, () -> {
+                    AlertHelper.showInformation("Book Updated","This book has been updated successfully.");
                     bookmanagement_anchorpane.getChildren().remove(updatePane);
                 });
             } catch (IOException exx) {
