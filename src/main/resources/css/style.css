@@ -434,6 +434,96 @@
 }
 
 
+/*table*/
 
+
+/* Style for search */
+.search {
+    -fx-padding: 5 12; /* Padding */
+    -fx-font-size: 14px; /* Font size */
+    -fx-pref-height: 20px; /* Line height */
+    -fx-text-fill: #24292e; /* Text color */
+    -fx-background-color: #ffffff; /* Background color */
+    -fx-background-repeat: no-repeat; /* No repeat for background */
+    -fx-background-position: right 8px center; /* Background position */
+    -fx-border-color: #e1e4e8; /* Border color */
+    -fx-border-radius: 6; /* Rounded corners for the border */
+    -fx-background-radius: 6; /* Rounded corners for the background */
+    -fx-effect: innershadow(two-pass-box, rgba(225, 228, 232, 0.2), 1, 0, 0, 1); /* Shadow effect */
+}
+
+/* Focused state for the button */
+.search:focused {
+    -fx-border-color: #0366d6; /* Border color when focused */
+    -fx-effect: dropshadow(three-pass-box, rgba(3, 102, 214, 0.3), 3, 0, 0, 0); /* Shadow effect when focused */
+    -fx-background-color: #ffffff; /* Keep background white */
+    -fx-text-fill: #24292e; /* Text color remains same */
+}
+
+/* Style for the edit button */
+.edit-button {
+    -fx-background-color: transparent; /* Transparent background */
+    -fx-padding: 0; /* No padding */
+    -fx-cursor: hand; /* Pointer cursor on hover */
+}
+
+/* Hover effect for the icon button */
+.edit-button:hover {
+    -fx-background-color: #e0e0e0; /* Light gray background on hover */
+    -fx-border-radius: 6; /* Rounded border for hover */
+    -fx-background-radius: 6; /* Match rounded corners */
+}
+
+/* Table*/
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #ffffff; /* Màu nền tiêu đề cột */
+    -fx-text-fill: #ffffff; /* Màu chữ trắng */
+    -fx-font-size: 14px;
+}
+
+.table-view .table-cell {
+    -fx-background-color: white; /* Nền trắng cho các hàng */
+    -fx-text-fill: black; /* Chữ đen */
+    -fx-alignment: center; /* Căn chữ giữa */
+    -fx-font-size: 13px;
+    -fx-border-color: transparent; /* Loại bỏ border */
+}
+
+.table-row-cell {
+    -fx-cell-size: 40px; /* Độ cao hàng */
+    -fx-background-color: white; /* Nền trắng mặc định */
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #609cd4; /* Nền xanh khi được chọn */
+    -fx-text-fill: white; /* Chữ trắng khi được chọn */
+    -fx-background-radius: 5px;
+    -fx-background-insets: 2px;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: #f6f7f9;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+    -fx-cell-size: 40px;
+
+}
+
+.table-row-cell:even{
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+    -fx-cell-size: 40px;
+
+}
 
 

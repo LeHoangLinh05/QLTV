@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SignUpController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: ffffff;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SignUpController">
     <children>
         <AnchorPane prefHeight="400.0" prefWidth="300.0" styleClass="login_background" stylesheets="@../css/style.css">
          <children>
@@ -41,7 +41,7 @@
                <font>
                   <Font size="11.0" />
                </font></Label>
-            <ChoiceBox fx:id="choiceBox" layoutX="197.6" layoutY="260.79999999999995" prefHeight="30.0" prefWidth="75.0" stylesheets="@../css/style.css" AnchorPane.leftAnchor="195.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="255.0" />
+            <ChoiceBox fx:id="choiceBox" layoutX="182.4" layoutY="263.2" prefHeight="30.0" prefWidth="85.0" stylesheets="@../css/style.css" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="261.0" />
             </children></AnchorPane>
     </children>
 </HBox>

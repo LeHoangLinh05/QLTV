@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="521.0" prefWidth="628.0" styleClass="main_root" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditUserDialogController">
+    <children>
+
+        <Label layoutX="105.0" layoutY="202.0" text="Name:" />
+        <TextField fx:id="nameField" layoutX="221.0" layoutY="195.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
+
+        <Label layoutX="103.0" layoutY="237.0" text="Date of Birth:" />
+        <TextField fx:id="dobField" layoutX="221.0" layoutY="230.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
+
+        <Label layoutX="103.0" layoutY="277.0" text="Email:" />
+        <TextField fx:id="emailField" layoutX="221.0" layoutY="270.0" prefHeight="30.0" prefWidth="178.0" styleClass="login_text" stylesheets="@../css/style.css" />
+
+        <Button layoutX="152.0" layoutY="459.0" onAction="#handleSave" prefHeight="26.0" prefWidth="54.0" styleClass="purple_button" stylesheets="@../css/style.css" text="Save" />
+        <Button layoutX="372.0" layoutY="459.0" onAction="#handleCancel" styleClass="purple_button" stylesheets="@../css/style.css" text="Cancel" />
+
+        <TableView fx:id="loanTable" layoutX="9.0" layoutY="320.0" prefHeight="126.0" prefWidth="609.0">
+            <columns>
+                <TableColumn fx:id="loanIdColumn" prefWidth="60.79998588562012" text="Loan ID" />
+                <TableColumn fx:id="bookIdColumn" prefWidth="199.20001983642578" text="Book ID" />
+                <TableColumn fx:id="issueDateColumn" prefWidth="95.199951171875" text="Issue Date" />
+                <TableColumn fx:id="dueDateColumn" prefWidth="141.60003662109375" text="Due Date" />
+                <TableColumn fx:id="returnDateColumn" prefWidth="113.59994506835938" text="Return Date" />
+            </columns>
+        </TableView>
+      <ImageView fx:id="profileImageView" fitHeight="150.0" fitWidth="200.0" layoutX="240.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/avatar_img.png" />
+         </image></ImageView>
+    </children>
+</AnchorPane>
