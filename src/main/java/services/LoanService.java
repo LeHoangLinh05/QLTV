@@ -35,11 +35,11 @@ public class LoanService {
         return loanRepository.createLoan(loan.getMember().getId(), loan.getBook().getId(), LocalDate.now(), loan.getDueDate());
     }
 
-    public List<Loan> getBorrowingLoans(int memberId) throws SQLException {
+    public ObservableList<Loan> getBorrowingLoans(int memberId) throws SQLException {
         return loanRepository.getBorrowingLoansByMemberId(memberId);
     }
 
-    public List<Loan> getReturnedLoans(int memberId) throws SQLException {
+    public ObservableList<Loan> getReturnedLoans(int memberId) throws SQLException {
         return loanRepository.getReturnedLoansByMemberId(memberId);
     }
 

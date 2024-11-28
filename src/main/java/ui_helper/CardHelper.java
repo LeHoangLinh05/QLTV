@@ -54,6 +54,8 @@ public class CardHelper {
         fxmlLoader.setLocation(CardHelper.class.getResource("/view/BorrowingCard.fxml"));
         HBox borrowingCard_box = fxmlLoader.load();
 
+        //System.out.println(book.getTitle() + " " + book.getId());
+
         BorrowingCardController cardController = fxmlLoader.getController();
         cardController.setData(loanId, book, member, issueDate, dueDate);
 

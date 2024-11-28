@@ -158,11 +158,11 @@ public class Admin extends User {
     /**
      * Updates a member in the repository.
      *
-     * @param user the user to update
+     * @param user the member to update
      * @return true if the member was updated successfully, false otherwise
      * @throws SQLException if a database access error occurs
      */
-    public boolean editMember(User user) throws SQLException {
+    public boolean editMember(Member user) throws SQLException {
         boolean success = userService.updateUser(user);
         if (success) {
             System.out.println("Member updated successfully!");

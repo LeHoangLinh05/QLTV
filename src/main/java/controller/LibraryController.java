@@ -2,7 +2,6 @@ package controller;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -11,7 +10,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import models.Book;
-import models.DB;
 import repository.BookRepository;
 import services.BookService;
 import ui_helper.CardHelper;

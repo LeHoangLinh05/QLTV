@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.scene.control.ChoiceBox;
-import models.DB;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

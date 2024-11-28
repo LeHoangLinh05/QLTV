@@ -93,9 +93,9 @@ public class LoanRepository {
         }
     }
 
-    public static List<Loan> getBorrowingLoansByMemberId(int id) throws SQLException {
+    public static ObservableList<Loan> getBorrowingLoansByMemberId(int id) throws SQLException {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
-        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle, b.id AS bookId " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -110,6 +110,7 @@ public class LoanRepository {
                 loan.setDueDate(rs.getDate("due_date").toLocalDate());
 
                 Book book = new Book();
+                book.setId(rs.getInt("bookId"));
                 book.setTitle(rs.getString("bookTitle"));
                 loan.setBook(book);
 
@@ -122,9 +123,9 @@ public class LoanRepository {
         return loans;
     }
 
-    public static List<Loan> getReturnedLoansByMemberId(int id) throws SQLException{
+    public static ObservableList<Loan> getReturnedLoansByMemberId(int id) throws SQLException{
         ObservableList<Loan> loans = FXCollections.observableArrayList();
-        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
+        String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle, b.id AS bookId " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -140,6 +141,7 @@ public class LoanRepository {
                 loan.setReturnDate(rs.getDate("return_date").toLocalDate());
 
                 Book book = new Book();
+                book.setId(rs.getInt("bookId"));
                 book.setTitle(rs.getString("bookTitle"));
                 loan.setBook(book);
 

@@ -45,6 +45,7 @@ public class BorrowingCardController implements Initializable {
     public void setData(int loanId, Book book, Member member, LocalDate issueDate, LocalDate dueDate) {
         loanID_text.setText(String.valueOf(loanId));
         title_text.setText(book.getTitle());
+        //System.out.println(book.getId());
         issueDate_text.setText(issueDate.toString());
         dueDate_text.setText(dueDate.toString());
 

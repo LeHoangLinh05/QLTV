@@ -9,7 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.Admin;
-import models.DB;
 import models.Member;
 import models.User;
 
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.sql.*;
 
 public class UserRepository {
-
     public static int countUserRecords() {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM userdetail";
@@ -100,6 +98,36 @@ public class UserRepository {
         }
 
         return false;
+    }
+
+    public static int addUser1(User user) throws SQLException {
+        if (doesUserExist(user.getUsername(), user.getEmail())) {
+            throw new SQLException("User already exists with the given username or email.");
+        }
+
+        Connection connection = DatabaseConnection.getConnection();
+        String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+        statement.setString(1, user.getFName());
+        statement.setString(2, user.getLname());
+        statement.setString(3, user.getDateOfBirth());
+        statement.setString(4, user.getEmail());
+        statement.setString(5, user.getUsername());
+        statement.setString(6, user.getPassword());
+        statement.setString(7, user.getImagePath());
+        statement.setString(8, "Member");
+
+        statement.executeUpdate();
+
+        try (ResultSet keys = statement.getGeneratedKeys()) {
+            if (keys.next()) {
+                return keys.getInt(1);
+            } else {
+                throw new SQLException("Failed to retrieve generated ID.");
+            }
+        }
     }
 
     public static boolean doesUserExist(String username, String email) throws SQLException {
@@ -218,6 +246,28 @@ public class UserRepository {
                         return new Admin(username, password, fName, lName);
                     } else {
                         throw new IllegalArgumentException("Unsupported user role: " + role);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Admin getAdminByUsername(String username) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
+            ps.setString(1, username);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    String role = resultSet.getString("role");
+                    String password = resultSet.getString("password");
+                    String fName = resultSet.getString("fName");
+                    String lName = resultSet.getString("lName");
+
+                    if ("Admin".equalsIgnoreCase(role)) {
+                        return new Admin(username, password, fName, lName);
+                    } else {
+                        throw new IllegalArgumentException("User is not an Admin");
                     }
                 }
             }

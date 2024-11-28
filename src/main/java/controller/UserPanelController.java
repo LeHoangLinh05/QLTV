@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import models.ButtonStyleManager;
-import models.DB;
 import models.Member;
 import repository.UserRepository;
 import services.UserService;

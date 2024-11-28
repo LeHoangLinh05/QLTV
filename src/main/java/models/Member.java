@@ -198,7 +198,7 @@ public class Member extends User {
      */
     public boolean setMemberBorrowingLoans() {
         try {
-            List<Loan> loans = loanService.getBorrowingLoans(this.getId());
+            ObservableList<Loan> loans = loanService.getBorrowingLoans(this.getId());
             this.memberBorrowingLoans = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
@@ -215,7 +215,7 @@ public class Member extends User {
      */
     public boolean setMemberReturnedLoans() {
         try {
-            List<Loan> loans = loanService.getReturnedLoans(this.getId());
+            ObservableList<Loan> loans = loanService.getReturnedLoans(this.getId());
             this.memberReturnedLoans = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
@@ -306,6 +306,7 @@ public class Member extends User {
     public boolean returnBook (Book book) throws SQLException {
         try {
             boolean success = loanService.updateLoanAfterReturned(this.getId(), book.getId()); // Đánh dấu hoàn thành trong LoanService
+            System.out.println (this.getId() + " " + book.getId() + " " + book.getISBN() + " ");
             if (success) {
                 borrowingBooks.remove(book); // Xóa sách khỏi danh sách đang mượn
                 returnedBooks.add(book); // Thêm sách vào danh sách đã trả

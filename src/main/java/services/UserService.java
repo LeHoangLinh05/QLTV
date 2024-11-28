@@ -43,7 +43,7 @@ public class UserService {
         return false;
     }
 
-    public static boolean updateUser(User user) throws SQLException {
+    public static boolean updateUser(Member user) throws SQLException {
         try {
             UserRepository.updateUser(user);
         } catch (SQLException e) {

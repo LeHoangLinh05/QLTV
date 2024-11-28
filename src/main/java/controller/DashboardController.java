@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
@@ -14,7 +13,6 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import models.ActivityLog;
 import models.Admin;
-import models.DB;
 import repository.BookRepository;
 import repository.LoanRepository;
 import repository.UserRepository;
