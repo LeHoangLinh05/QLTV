@@ -98,7 +98,7 @@ public class UserRepository {
         return false;
     }
 
-    public static int addUser1(User user) throws DatabaseException, SQLException {
+    public static int addUserWithGeneratedId(User user) throws DatabaseException, SQLException {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
             throw new DatabaseException("User already exists with the given username or email.");
         }
@@ -255,7 +255,7 @@ public class UserRepository {
 
     public User getUserByUsername(String username) throws DatabaseException {
         try (Connection connection = getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
+             PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName, avatar_path FROM userdetail WHERE username = ?")) {
             ps.setString(1, username);
             try (ResultSet resultSet = ps.executeQuery()) {
                 if (resultSet.next()) {
@@ -263,11 +263,12 @@ public class UserRepository {
                     String password = resultSet.getString("password");
                     String fName = resultSet.getString("fName");
                     String lName = resultSet.getString("lName");
+                    String avatarPath = resultSet.getString("avatar_path");
 
                     if ("Member".equalsIgnoreCase(role)) {
-                        return new Member(username, password, fName, lName);
+                        return new Member(username, password, fName, lName, avatarPath);
                     } else if ("Admin".equalsIgnoreCase(role)) {
-                        return new Admin(username, password, fName, lName);
+                        return new Admin(username, password, fName, lName, avatarPath);
                     } else {
                         throw new IllegalArgumentException("Unsupported user role: " + role);
                     }

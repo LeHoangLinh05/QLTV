@@ -84,7 +84,6 @@ public class EditUserDialogController implements Initializable {
     }
 
     private void loadLoanHistory(Member user) throws SQLException {
-//        ObservableList<Loan> loans = FXCollections.observableArrayList(UserRepository.getLoansByMemberId(user.getId()));
         List<Loan> loans = user.getMemberHistory();
         loanList = FXCollections.observableArrayList(loans);
         loanTable.setItems(loanList);
@@ -98,8 +97,8 @@ public class EditUserDialogController implements Initializable {
             dobField.setText(user.getDateOfBirth());
             emailField.setText(user.getEmail());
             loadLoanHistory(user);
-            if (user.imagePathProperty() != null && user.imagePathProperty().get() != null && !user.imagePathProperty().get().isEmpty()) {
-                File imageFile = new File(user.imagePathProperty().get()); // Use .get() to get the String value
+            if (user.getImagePath() != null && !user.getImagePath().isEmpty()) {
+                File imageFile = new File(user.getImagePath());
                 if (imageFile.exists()) {
                     profileImageView.setImage(new Image(imageFile.toURI().toString()));
                 } else {
@@ -109,7 +108,6 @@ public class EditUserDialogController implements Initializable {
         }
     }
 
-    // Returns whether the changes were saved
     public boolean isSaved() {
         return isSaved;
     }

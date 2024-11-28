@@ -69,6 +69,22 @@ public class Admin extends User {
     }
 
     /**
+     * Constructs an Admin with the specified username, password, first name, last name and avatar path.
+     *
+     * @param username the username
+     * @param password the password
+     * @param fname the first name
+     * @param lname the last name
+     * @param imagePath the avatar path
+     */
+    public Admin(String username, String password, String fname, String lname, String imagePath) {
+        super(username, password, fname, lname, imagePath);
+        this.bookService = new BookService(bookRepository);
+        this.userService = new UserService(userRepository);
+        this.loanService = new LoanService(loanRepository);
+    }
+
+    /**
      * Constructs an Admin with the specified username and password.
      *
      * @param username the username

@@ -71,24 +71,18 @@ public class AddUserDialogController implements Initializable {
             return;
         }
 
-        // Create a new User instance
         try {
             if (UserRepository.doesUserExist(username, email)) {
                 AlertHelper.showWarning("Duplicate User", "A user with the same username or email already exists.");
                 return;
             }
-            // Create a User object
-            User newUser = new Member(0, fname, lname, dob, email, username, password); // Assuming no avatar path is provided
+            User newUser = new Member(0, fname, lname, dob, email, username, password);
 
-            // Pass the User object to the DB.addUser method
-            int generatedId = UserRepository.addUser1(newUser);
+            int generatedId = UserRepository.addUserWithGeneratedId(newUser);
 
-            // Update the User object with the generated ID
             newUser.setId(generatedId);
-            // Assign the user to the class field
             user = newUser;
 
-            // Close the dialog
             closeDialog();
         } catch (Exception e) {
             e.printStackTrace();

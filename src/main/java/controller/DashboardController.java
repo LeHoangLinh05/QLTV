@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import models.ActivityLog;
 import models.Admin;
@@ -34,8 +35,8 @@ public class DashboardController implements Initializable {
     @FXML
     private AnchorPane dashboard_anchorpane;
 
-    @FXML
-    private Circle avatar_circle;
+    //@FXML
+    //private Circle avatar_circle;
 
     @FXML
     private AnchorPane main_pane;
@@ -118,6 +119,7 @@ public class DashboardController implements Initializable {
         label_adminName.setText(admin.getFName() + " " + admin.getLname());
         label_accType.setText("Admin");
         String avatarPath = admin.getImagePath();
+        System.out.println(avatarPath);
         if (avatarPath != null && !avatarPath.isEmpty()) {
             File avatarFile = new File(avatarPath);
 

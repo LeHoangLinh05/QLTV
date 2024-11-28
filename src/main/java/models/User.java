@@ -83,6 +83,24 @@ public abstract class User {
     }
 
     /**
+     * Constructs a User with the specified username, password, first name, and last name.
+     *
+     * @param username the username of the user
+     * @param password the password of the user
+     * @param fname the first name of the user
+     * @param lname the last name of the user
+     * @param imagePath the avatar path of the user
+     */
+    public User(String username, String password, String fname, String lname, String imagePath) {
+        this.username = username;
+        this.password = password;
+        this.fname = fname;
+        this.lname = lname;
+        this.selected = new CheckBox();
+        this.imagePath = new SimpleStringProperty(imagePath);
+    }
+
+    /**
      * Constructs a User with the specified ID, first name, and last name.
      *
      * @param id the ID of the user

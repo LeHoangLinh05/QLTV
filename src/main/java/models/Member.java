@@ -9,6 +9,7 @@ import repository.LoanRepository;
 import repository.UserRepository;
 import services.BookService;
 import services.LoanService;
+import services.UserService;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class Member extends User {
     private static final BookRepository bookRepository = new BookRepository();
     private static final LoanRepository loanRepository = new LoanRepository();
+    private static final UserRepository userRepository = new UserRepository();
 
     private List<Book> borrowingBooks;
     private List<Book> returnedBooks;
@@ -29,6 +31,7 @@ public class Member extends User {
     private List<Loan> memberReturnedLoans;
     private BookService bookService;
     private LoanService loanService;
+    private UserService userService;
 
     /**
      * Constructs a Member with the specified ID, first name, and last name.
@@ -46,6 +49,7 @@ public class Member extends User {
         this.memberReturnedLoans = new ArrayList<>();
         this.bookService = new BookService(bookRepository);
         this.loanService = new LoanService(loanRepository);
+        this.userService = new UserService(userRepository);
         initializeMemberData();
     }
 
@@ -69,6 +73,7 @@ public class Member extends User {
         this.memberReturnedLoans = new ArrayList<>();
         this.bookService = new BookService(bookRepository);
         this.loanService = new LoanService(loanRepository);
+        this.userService = new UserService(userRepository);
         initializeMemberData();
     }
 
@@ -89,6 +94,29 @@ public class Member extends User {
         this.memberReturnedLoans = new ArrayList<>();
         this.bookService = new BookService(bookRepository);
         this.loanService = new LoanService(loanRepository);
+        this.userService = new UserService(userRepository);
+        initializeMemberData();
+    }
+
+    /**
+     * Constructs a Member with the specified username, password, first name, and last name.
+     *
+     * @param username the username of the member
+     * @param password the password of the member
+     * @param fname the first name of the member
+     * @param lname the last name of the member
+     * @param imagePath the avatar path of the member
+     */
+    public Member(String username, String password, String fname, String lname, String imagePath) {
+        super(username, password, fname, lname, imagePath);
+        this.borrowingBooks = new ArrayList<>();
+        this.returnedBooks = new ArrayList<>();
+        this.memberHistory = new ArrayList<>();
+        this.memberBorrowingLoans = new ArrayList<>();
+        this.memberReturnedLoans = new ArrayList<>();
+        this.bookService = new BookService(bookRepository);
+        this.loanService = new LoanService(loanRepository);
+        this.userService = new UserService(userRepository);
         initializeMemberData();
     }
 
@@ -107,6 +135,7 @@ public class Member extends User {
         this.memberReturnedLoans = new ArrayList<>();
         this.bookService = new BookService(bookRepository);
         this.loanService = new LoanService(loanRepository);
+        this.userService = new UserService(userRepository);
         initializeMemberData();
     }
 
@@ -325,7 +354,6 @@ public class Member extends User {
             throw new Exception("An error occurs in book returning process.", e);
         }
     }
-
 
     public boolean isBookLoanedByMember(Book book) {
         boolean isBookInBorrowingBooks = borrowingBooks.stream()
