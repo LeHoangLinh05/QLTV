@@ -30,6 +30,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the book management view.
+ */
 public class BookManagementController implements Initializable {
 
     @FXML
@@ -121,14 +124,30 @@ public class BookManagementController implements Initializable {
     private BookService bookService;
     private static final BookRepository bookRepository = new BookRepository();
 
+    /**
+     * Gets the admin.
+     *
+     * @return the admin.
+     */
     public Admin getAdmin() {
         return this.admin;
     }
 
+    /**
+     * Sets the admin.
+     *
+     * @param admin the admin to set.
+     */
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -154,6 +173,12 @@ public class BookManagementController implements Initializable {
         this.bookService = new BookService(bookRepository);
     };
 
+    /**
+     * Handles the selection control actions.
+     *
+     * @param actionEvent the action event.
+     * @param icon the icon associated with the button.
+     */
     public void selectionControl(ActionEvent actionEvent, ImageView icon) {
         Button selectedButton = (Button) actionEvent.getSource();
 
@@ -167,18 +192,27 @@ public class BookManagementController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
+    /**
+     * Shows the add book result pane.
+     */
     private void showAddBookResultPane() {
         addbook_anchorpane.setVisible(true);
         managebook_anchorpane.setVisible(false);
         setSearchForAddBook();
     }
 
+    /**
+     * Shows the manage book result pane.
+     */
     private void showManageBookResultPane() {
         addbook_anchorpane.setVisible(false);
         managebook_anchorpane.setVisible(true);
         setSearchForManageBook();
     }
 
+    /**
+     * Sets the search functionality for adding a book.
+     */
     private void setSearchForAddBook() {
         search_text.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -248,6 +282,12 @@ public class BookManagementController implements Initializable {
         });
     }
 
+    /**
+     * Shows the book detail view.
+     *
+     * @param book the book to be displayed.
+     * @param mode the mode (Add or Manage).
+     */
     private void showBookDetail(Book book, String mode) {
         changeFormatToShowDetail();
 
@@ -272,8 +312,10 @@ public class BookManagementController implements Initializable {
         }
     }
 
+    /**
+     * Changes the format to show the book detail view.
+     */
     private void changeFormatToShowDetail() {
-
         double ogWidth =  mainbookmanagement_anchorpane.getWidth();
         mainbookmanagement_anchorpane.setPrefWidth(ogWidth - 230);
 
@@ -287,6 +329,9 @@ public class BookManagementController implements Initializable {
         slideBookDetail.play();
     }
 
+    /**
+     * Restores the format to the original view.
+     */
     private void restoreFormat() {
         back_button.setOnMouseClicked(event -> {
 
@@ -304,6 +349,11 @@ public class BookManagementController implements Initializable {
         });
     }
 
+    /**
+     * Handles the add book action.
+     *
+     * @param book the book to be added.
+     */
     private void handleAddBook(Book book) {
         add_button.setOnMouseClicked(event -> {
             try {
@@ -322,6 +372,9 @@ public class BookManagementController implements Initializable {
         });
     }
 
+    /**
+     * Sets the search functionality for managing books.
+     */
     private void setSearchForManageBook() {
         search_text.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -332,7 +385,6 @@ public class BookManagementController implements Initializable {
                 loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
                 result_gridpane1.add(loadingLabel, 0, 0);
 
-                // Tạo background task
                 Task<List<VBox>> searchTask = new Task<>() {
                     @Override
                     protected List<VBox> call() throws Exception {
@@ -392,6 +444,11 @@ public class BookManagementController implements Initializable {
         });
     }
 
+    /**
+     * Handles the remove book action.
+     *
+     * @param book the book to be removed.
+     */
     private void handleRemoveBook(Book book){
         remove_button.setOnMouseClicked(event -> {
             boolean isDeleted = false;
@@ -407,6 +464,11 @@ public class BookManagementController implements Initializable {
         });
     }
 
+    /**
+     * Shows the update form for a book.
+     *
+     * @param book the book to be updated.
+     */
     private void showUpdateForm(Book book) {
         update_button.setOnMouseClicked(event -> {
             try {

@@ -36,8 +36,9 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-
-
+/**
+ * Controller class for managing user data in the user management view.
+ */
 public class UserManagementController implements Initializable {
     @FXML
     private TableView<User> tableView;
@@ -74,17 +75,32 @@ public class UserManagementController implements Initializable {
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private FilteredList<User> filteredList;
 
+    /**
+     * Gets the admin.
+     *
+     * @return the admin
+     */
     public Admin getAdmin() {
         return this.admin;
     }
 
+    /**
+     * Sets the admin.
+     *
+     * @param admin the admin to set
+     */
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         this.userService = new UserService(userRepository);
 
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -125,6 +141,11 @@ public class UserManagementController implements Initializable {
         });
     }
 
+    /**
+     * Sorts the table by the specified criteria.
+     *
+     * @param criteria the criteria to sort by
+     */
     private void sortTableByCriteria(String criteria) {
         Comparator<User> comparator = null;
 
@@ -157,11 +178,19 @@ public class UserManagementController implements Initializable {
         }
     }
 
+    /**
+     * Updates the visibility of the delete button based on whether any users are selected.
+     */
     private void updateDeleteButtonVisibility() {
         boolean anySelected = userList.stream().anyMatch(User::isSelected);
         deleteButton.setVisible(anySelected);
     }
 
+    /**
+     * Handles the delete button action.
+     *
+     * @param event the action event
+     */
     @FXML
     private void handleDeleteButton(ActionEvent event) {
         ObservableList<User> selectedUsers = FXCollections.observableArrayList();
@@ -172,7 +201,6 @@ public class UserManagementController implements Initializable {
         }
 
         if (selectedUsers.isEmpty()) {
-            // Show an alert if no users are selected
             AlertHelper.showWarning("No Selection", "Please select at least one user to delete.");
             return;
         }
@@ -191,6 +219,11 @@ public class UserManagementController implements Initializable {
         }
     }
 
+    /**
+     * Deletes a user from the database.
+     *
+     * @param userId the ID of the user to delete
+     */
     private void deleteUserFromDatabase(int userId) {
         System.out.println("Attempting to delete user with ID: " + userId);
         try {
@@ -201,6 +234,9 @@ public class UserManagementController implements Initializable {
         System.out.println("Successfully deleted user with ID: " + userId);
     }
 
+    /**
+     * Loads user data from the database.
+     */
     private void loadUserData() {
         refreshTable();
         try {
@@ -231,6 +267,9 @@ public class UserManagementController implements Initializable {
 
     }
 
+    /**
+     * Adds an edit button to the table.
+     */
     private void addEditButtonToTable() {
         editColumn.setCellFactory(param -> new TableCell<>() {
             private final Button editButton = new Button();
@@ -274,10 +313,16 @@ public class UserManagementController implements Initializable {
         });
     }
 
+    /**
+     * Refreshes the table by clearing the user list.
+     */
     private void refreshTable() {
         userList.clear();
     }
 
+    /**
+     * Filters the user list based on the search query.
+     */
     private void filterUserList() {
         String searchQuery = searchBar.getText().toLowerCase();
 
@@ -290,7 +335,9 @@ public class UserManagementController implements Initializable {
         });
     }
 
-
+    /**
+     * Handles the print button action.
+     */
     @FXML
     private void handlePrintButton() {
         try {
@@ -333,6 +380,9 @@ public class UserManagementController implements Initializable {
         }
     }
 
+    /**
+     * Handles the add user button action.
+     */
     @FXML
     private void handleAddUserButton() {
         User newUser = AddUserDialogController.openAddDialog();

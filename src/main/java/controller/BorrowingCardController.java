@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the borrowing card view.
+ */
 public class BorrowingCardController implements Initializable {
     @FXML
     private HBox borrowingBox;
@@ -37,15 +40,29 @@ public class BorrowingCardController implements Initializable {
     @FXML
     private Button return_button;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
+    /**
+     * Sets the data for the borrowing card view.
+     *
+     * @param loanId the loan ID.
+     * @param book the book being borrowed.
+     * @param member the member borrowing the book.
+     * @param issueDate the issue date of the loan.
+     * @param dueDate the due date of the loan.
+     */
     public void setData(int loanId, Book book, Member member, LocalDate issueDate, LocalDate dueDate) {
         loanID_text.setText(String.valueOf(loanId));
         title_text.setText(book.getTitle());
-        //System.out.println(book.getId());
         issueDate_text.setText(issueDate.toString());
         dueDate_text.setText(dueDate.toString());
 
@@ -58,6 +75,13 @@ public class BorrowingCardController implements Initializable {
         }
     }
 
+    /**
+     * Handles the return book action.
+     *
+     * @param book the book being returned.
+     * @param member the member returning the book.
+     * @param onSuccess the callback to be executed on successful return.
+     */
     public void handleReturn(Book book, Member member, Runnable onSuccess) {
         return_button.setOnMouseClicked(event -> {
             boolean isReturned = false;

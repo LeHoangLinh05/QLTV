@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the dashboard view for members.
+ */
 public class DashboardMemberController implements Initializable {
 
     @FXML
@@ -38,6 +41,12 @@ public class DashboardMemberController implements Initializable {
     private BookService bookService;
     private static final BookRepository bookRepository = new BookRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.bookService = new BookService(bookRepository);
@@ -45,6 +54,9 @@ public class DashboardMemberController implements Initializable {
         displayNewBooks();
     }
 
+    /**
+     * Displays the most popular books in the dashboard.
+     */
     public void displayMostPopularBooks() {
         mostpopular_HBox.getChildren().clear();
         Label loadingLabel = new Label("Loading most popular books...");
@@ -83,6 +95,9 @@ public class DashboardMemberController implements Initializable {
         thread.start();
     }
 
+    /**
+     * Displays the new books in the dashboard.
+     */
     public void displayNewBooks() {
         newbooks_HBox.getChildren().clear();
         Label loadingLabel = new Label("Loading new books...");

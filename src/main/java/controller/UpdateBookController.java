@@ -17,6 +17,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the update book view.
+ */
 public class UpdateBookController implements Initializable {
     @FXML
     private TextField author_text;
@@ -57,10 +60,21 @@ public class UpdateBookController implements Initializable {
     @FXML
     private TextArea title_text;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * Sets the data for the book to be updated.
+     *
+     * @param book the book to be updated.
+     */
     public void setData(Book book) {
         Image thumbnail = new Image(book.getThumbnailLink());
         cover_img.setImage(thumbnail);
@@ -74,6 +88,11 @@ public class UpdateBookController implements Initializable {
         quantity_text.setText(String.valueOf(book.getQuantity()));
     }
 
+    /**
+     * Gets the changes made to the book.
+     *
+     * @param book the book to get changes from.
+     */
     public void getChanges(Book book) {
         book.setTitle(title_text.getText());
         book.setAuthor(author_text.getText());
@@ -85,6 +104,13 @@ public class UpdateBookController implements Initializable {
         book.setQuantity(Integer.parseInt(quantity_text.getText()));
     }
 
+    /**
+     * Handles the update of the book.
+     *
+     * @param book the book to be updated.
+     * @param admin the admin performing the update.
+     * @param onSuccess the runnable to execute on successful update.
+     */
     public void handleUpdate(Book book, Admin admin, Runnable onSuccess) {
         save_button.setOnMouseClicked(event -> {
             getChanges(book);

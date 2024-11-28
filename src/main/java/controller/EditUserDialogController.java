@@ -29,6 +29,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the edit user dialog.
+ */
 public class EditUserDialogController implements Initializable {
     @FXML
     private TextField nameField;
@@ -63,6 +66,12 @@ public class EditUserDialogController implements Initializable {
     private boolean isSaved = false;
     private Admin admin;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loanIdColumn.setCellValueFactory(data -> data.getValue().loanIdProperty());
@@ -83,6 +92,12 @@ public class EditUserDialogController implements Initializable {
         });
     }
 
+    /**
+     * Loads the loan history of the user.
+     *
+     * @param user the user whose loan history is to be loaded.
+     * @throws SQLException if a database access error occurs.
+     */
     private void loadLoanHistory(Member user) throws SQLException {
         List<Loan> loans = user.getMemberHistory();
         loanList = FXCollections.observableArrayList(loans);
@@ -90,6 +105,12 @@ public class EditUserDialogController implements Initializable {
         loanTable.refresh();
     }
 
+    /**
+     * Sets the user data in the dialog.
+     *
+     * @param user the user whose data is to be set.
+     * @throws SQLException if a database access error occurs.
+     */
     public void setUser(Member user) throws SQLException {
         this.user = user;
         if (user != null) {
@@ -108,10 +129,18 @@ public class EditUserDialogController implements Initializable {
         }
     }
 
+    /**
+     * Checks if the user data is saved.
+     *
+     * @return true if the user data is saved, false otherwise.
+     */
     public boolean isSaved() {
         return isSaved;
     }
 
+    /**
+     * Handles the save action.
+     */
     @FXML
     private void handleSave() {
         String fullName = nameField.getText();
@@ -133,15 +162,30 @@ public class EditUserDialogController implements Initializable {
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
+    /**
+     * Handles the cancel action.
+     */
     @FXML
     private void handleCancel() {
         ((Stage) nameField.getScene().getWindow()).close();
     }
 
+    /**
+     * Sets the admin data in the dialog.
+     *
+     * @param admin the admin whose data is to be set.
+     */
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
 
+    /**
+     * Opens the edit user dialog.
+     *
+     * @param user the user to be edited.
+     * @param admin the admin performing the edit.
+     * @return true if the user data is saved, false otherwise.
+     */
     public static boolean openEditDialog(Member user, Admin admin) {
         try {
             FXMLLoader loader = new FXMLLoader(EditUserDialogController.class.getResource("/view/EditUserDialog.fxml"));

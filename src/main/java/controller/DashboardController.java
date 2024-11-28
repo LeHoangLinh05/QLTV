@@ -30,13 +30,13 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Controller class for managing the dashboard view.
+ */
 public class DashboardController implements Initializable {
 
     @FXML
     private AnchorPane dashboard_anchorpane;
-
-    //@FXML
-    //private Circle avatar_circle;
 
     @FXML
     private AnchorPane main_pane;
@@ -90,6 +90,12 @@ public class DashboardController implements Initializable {
     private static final UserRepository userRepository = new UserRepository();
     private static final LoanRepository loanRepository = new LoanRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.userService = new UserService(userRepository);
@@ -115,6 +121,11 @@ public class DashboardController implements Initializable {
         avatar.setClip(clip);
     }
 
+    /**
+     * Sets the admin information on the dashboard.
+     *
+     * @param admin the admin whose information is to be displayed.
+     */
     public void setAdminInfo(Admin admin) {
         label_adminName.setText(admin.getFName() + " " + admin.getLname());
         label_accType.setText("Admin");
@@ -139,22 +150,39 @@ public class DashboardController implements Initializable {
         }
     }
 
-
+    /**
+     * Sets the number of books on the dashboard.
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public void setNumOfBooks() throws SQLException {
         int count = bookService.countBookRecords();
         numOfBooks.setText(String.valueOf(count));
     }
 
+    /**
+     * Sets the number of users on the dashboard.
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public void setNumOfUsers() throws SQLException {
         int count = userService.countUserRecords();
         numOfUsers.setText(String.valueOf(count));
     }
 
+    /**
+     * Sets the number of loans on the dashboard.
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public void setNumOfLoans() throws SQLException {
         int count = loanService.countLoanRecords();
         numOfLoans.setText(String.valueOf(count));
     }
 
+    /**
+     * Configures the bar chart with borrowing and returning data.
+     */
     public void barChart() {
         Series series1 = new Series<>();
         series1.setName("Borrowings");
@@ -177,6 +205,11 @@ public class DashboardController implements Initializable {
         barChart.getData().add(series2);
     }
 
+    /**
+     * Loads the activity log into the dashboard.
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     public void loadActivityLog() throws SQLException {
         List<ActivityLog> logs = loanService.getActivityLogs();
 

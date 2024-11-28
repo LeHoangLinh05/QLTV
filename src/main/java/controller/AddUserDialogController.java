@@ -17,6 +17,9 @@ import ui_helper.AlertHelper;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the Add User dialog.
+ */
 public class AddUserDialogController implements Initializable {
 
     @FXML
@@ -34,6 +37,12 @@ public class AddUserDialogController implements Initializable {
 
     private User user;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         rootPane.setOnMouseClicked(event -> {
@@ -43,6 +52,9 @@ public class AddUserDialogController implements Initializable {
         });
     }
 
+    /**
+     * Handles the save action. Validates input fields and saves the new user.
+     */
     @FXML
     private void handleSave() {
         String name = nameField.getText();
@@ -90,12 +102,20 @@ public class AddUserDialogController implements Initializable {
         }
     }
 
+    /**
+     * Handles the cancel action.
+     */
     @FXML
     private void handleCancel() {
         user = null;
         closeDialog();
     }
 
+    /**
+     * Opens the Add User dialog.
+     *
+     * @return the newly added user, or null if the operation was cancelled.
+     */
     public static User openAddDialog() {
         try {
             FXMLLoader loader = new FXMLLoader(AddUserDialogController.class.getResource("/view/AddUserDialog.fxml"));
@@ -116,10 +136,18 @@ public class AddUserDialogController implements Initializable {
         }
     }
 
+    /**
+     * Gets the user that was added.
+     *
+     * @return the newly added user.
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Closes the dialog.
+     */
     private void closeDialog() {
         Stage stage = (Stage) nameField.getScene().getWindow();
         stage.close();

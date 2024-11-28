@@ -21,6 +21,9 @@ import javafx.stage.FileChooser;
 import repository.UserRepository;
 import services.UserService;
 
+/**
+ * Controller class for managing the profile view.
+ */
 public class ProfileController implements Initializable {
 
     @FXML
@@ -55,11 +58,22 @@ public class ProfileController implements Initializable {
     private UserService userService;
     private static final UserRepository userRepository = new UserRepository();
 
+    /**
+     * Sets the username and loads the profile data.
+     *
+     * @param username the username of the user.
+     */
     public void setUsername(String username) {
         this.username = username;
         loadProfileData();
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param location the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resources the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Circle clip = new Circle(80);
@@ -75,6 +89,9 @@ public class ProfileController implements Initializable {
         this.userService = new UserService(userRepository);
     }
 
+    /**
+     * Loads the profile data for the user.
+     */
     private void loadProfileData() {
         try {
             ResultSet resultSet = userService.getUserData(username);
@@ -101,6 +118,11 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Handles the action of changing the avatar.
+     *
+     * @param event the action event.
+     */
     private void handleChangeAvatar(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select New Avatar");
@@ -117,14 +139,29 @@ public class ProfileController implements Initializable {
         }
     }
 
+    /**
+     * Sets the admin panel controller.
+     *
+     * @param adminPanelController the admin panel controller.
+     */
     public void setAdminPanelController(AdminPanelController adminPanelController) {
         this.adminPanelController = adminPanelController;
     }
 
+    /**
+     * Sets the user panel controller.
+     *
+     * @param userPanelController the user panel controller.
+     */
     public void setUserPanelController(UserPanelController userPanelController) {
         this.userPanelController = userPanelController;
     }
 
+    /**
+     * Handles the action of saving changes to the profile.
+     *
+     * @param event the action event.
+     */
     private void handleSaveChanges(ActionEvent event) {
         String firstName = first_name.getText();
         String lastName = last_name.getText();

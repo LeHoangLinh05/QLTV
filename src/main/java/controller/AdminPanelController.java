@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the Admin Panel.
+ */
 public class AdminPanelController implements Initializable {
 
     @FXML
@@ -95,6 +98,12 @@ public class AdminPanelController implements Initializable {
     private UserService userService;
     private static final UserRepository userRepository = new UserRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dashboard_anchorpane.setVisible(true);
@@ -126,6 +135,16 @@ public class AdminPanelController implements Initializable {
         }
     };
 
+    /**
+     * Displays the dashboard with the given user information.
+     *
+     * @param firstName the first name of the user.
+     * @param lastName the last name of the user.
+     * @param username the username of the user.
+     * @param role the role of the user.
+     * @param avatar_path the path to the user's avatar image.
+     * @throws IOException if an I/O error occurs.
+     */
     public void displayDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -137,7 +156,7 @@ public class AdminPanelController implements Initializable {
             ResultSet resultSet = userService.getUserData(username);
             if (resultSet.next()) {
                 int id = Integer.parseInt(resultSet.getString("id"));
-                this.admin = new Admin(id, firstName, lastName, avatar_path); // Gán admin
+                this.admin = new Admin(id, firstName, lastName, avatar_path);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -149,6 +168,13 @@ public class AdminPanelController implements Initializable {
         showDashboard(this.admin);
     }
 
+    /**
+     * Handles menu control actions.
+     *
+     * @param actionEvent the action event.
+     * @param icon the icon associated with the button.
+     * @throws IOException if an I/O error occurs.
+     */
     public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
@@ -169,8 +195,12 @@ public class AdminPanelController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
-
-
+    /**
+     * Shows the dashboard view.
+     *
+     * @param admin the admin user.
+     * @throws IOException if an I/O error occurs.
+     */
     private void showDashboard(Admin admin) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
@@ -183,7 +213,7 @@ public class AdminPanelController implements Initializable {
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
         if (this.admin != null) {
-            this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar trong admin
+            this.admin.setImagePath(avatar_path);
         }
         dashboardController.setAdminInfo(this.admin);
 
@@ -191,6 +221,11 @@ public class AdminPanelController implements Initializable {
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
+    /**
+     * Shows the book management view.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
     private void showBookManagement() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(true);
@@ -207,6 +242,11 @@ public class AdminPanelController implements Initializable {
         bookmanagement_anchorpane.getChildren().add(bookManagementPane);
     }
 
+    /**
+     * Shows the user management view.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
     private void showUserManagement() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
@@ -223,6 +263,11 @@ public class AdminPanelController implements Initializable {
         usermanagement_anchorpane.getChildren().add(userManagementPane);
     }
 
+    /**
+     * Shows the library view.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
     private void showLibrary() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
@@ -238,6 +283,11 @@ public class AdminPanelController implements Initializable {
         library_anchorpane.getChildren().add(libraryPane);
     }
 
+    /**
+     * Shows the profile view.
+     *
+     * @throws IOException if an I/O error occurs.
+     */
     private void showProfile() throws IOException {
         dashboard_anchorpane.setVisible(false);
         bookmanagement_anchorpane.setVisible(false);
@@ -256,6 +306,11 @@ public class AdminPanelController implements Initializable {
 
     }
 
+    /**
+     * Logs out the user.
+     *
+     * @param actionEvent the action event.
+     */
     private void logOut(ActionEvent actionEvent) {
         try {
             userService.logOut(actionEvent);
@@ -263,21 +318,26 @@ public class AdminPanelController implements Initializable {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Updates the user information.
+     *
+     * @param firstName the first name of the user.
+     * @param lastName the last name of the user.
+     * @param username the username of the user.
+     * @param avatar_path the path to the user's avatar image.
+     * @throws IOException if an I/O error occurs.
+     */
     public void updateInfo(String firstName, String lastName, String username, String avatar_path) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.avatar_path = avatar_path;
-        // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
         if (this.admin != null) {
-            this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar của admin
+            this.admin.setImagePath(avatar_path);
         }
         if (dashboard_anchorpane.isVisible()) {
-            showDashboard(this.admin);  // Gọi lại showDashboard để cập nhật thông tin
+            showDashboard(this.admin);
         }
     }
-
-
-
-
 }

@@ -11,6 +11,9 @@ import models.Book;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the big card view.
+ */
 public class BigCardController implements Initializable {
 
     @FXML
@@ -25,10 +28,21 @@ public class BigCardController implements Initializable {
     @FXML
     private Label title_label;
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+    /**
+     * Sets the data for the card.
+     *
+     * @param book the book to be displayed.
+     */
     public void setData(Book book) {
         Image thumbnail = new Image(book.getThumbnailLink());
         thumbnail_view.setImage(thumbnail);

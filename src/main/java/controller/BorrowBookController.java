@@ -12,15 +12,12 @@ import ui_helper.AlertHelper;
 import java.sql.*;
 import java.time.LocalDate;
 
+/**
+ * Controller class for managing the borrow book view.
+ */
 public class BorrowBookController {
 
     private Member member;
-
-    //@FXML
-    //private ComboBox<Book> bookComboBox;
-
-    //@FXML
-    //private Label messageLabel;
 
     @FXML
     private AnchorPane background_anchorpane;
@@ -49,10 +46,19 @@ public class BorrowBookController {
     @FXML
     private TextArea title_text;
 
+    /**
+     * Initializes the controller class.
+     */
     @FXML
     public void initialize() {
     }
 
+    /**
+     * Sets the data for the borrow book view.
+     *
+     * @param book the book to be borrowed.
+     * @param member the member borrowing the book.
+     */
     public void setData(Book book, Member member) {
         LocalDate issueDate = LocalDate.now();
 
@@ -61,9 +67,15 @@ public class BorrowBookController {
         title_text.setText(book.getTitle());
         student_name_text.setText(member.getFName() + " " + member.getLname());
         issue_date_text.setText(String.valueOf(issueDate));
-
     }
 
+    /**
+     * Handles the borrow book action.
+     *
+     * @param book the book to be borrowed.
+     * @param member the member borrowing the book.
+     * @param onSuccess the callback to be executed on successful borrowing.
+     */
     public void handleBorrow(Book book, Member member, Runnable onSuccess) {
         borrow_button.setOnMouseClicked(event -> {
             LocalDate dueDate = dueDatePicker.getValue();
@@ -72,7 +84,6 @@ public class BorrowBookController {
                 return;
             }
 
-            // Gọi phương thức borrowBook() từ Member
             boolean isBorrowed = false;
             try {
                 isBorrowed = member.borrowBook(book, dueDate);
@@ -81,10 +92,8 @@ public class BorrowBookController {
             }
 
             if (isBorrowed) {
-                // Nếu mượn thành công, gọi callback onSuccess
                 onSuccess.run();
             } else {
-                // Hiển thị thông báo lỗi nếu thất bại
                 AlertHelper.showError("Borrow Failed", "This book is currently unavailable for borrowing.");
             }
         });

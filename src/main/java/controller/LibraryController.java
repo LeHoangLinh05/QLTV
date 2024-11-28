@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the library view.
+ */
 public class LibraryController implements Initializable {
 
     @FXML
@@ -34,12 +37,21 @@ public class LibraryController implements Initializable {
 
     private static final BookRepository bookRepository = new BookRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.bookService = new BookService(bookRepository);
         displayLibrary();
     }
 
+    /**
+     * Displays the library books in a grid layout.
+     */
     public void displayLibrary() {
         library_gridpane.getChildren().clear();
 

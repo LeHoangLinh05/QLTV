@@ -11,6 +11,9 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the returned card view.
+ */
 public class ReturnedCardController implements Initializable {
     @FXML
     private Label issueDate_text;
@@ -32,17 +35,43 @@ public class ReturnedCardController implements Initializable {
     private Book book;
     private Member member;
 
+    /**
+     * Sets the current member.
+     *
+     * @param member the member to set.
+     */
     public void setCurrentMember(Member member) {
         this.member = member;
     }
 
+    /**
+     * Gets the current member.
+     *
+     * @return the current member.
+     */
     public Member getMember() {return member;}
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
     }
 
+    /**
+     * Sets the data for the returned card.
+     *
+     * @param loanId the loan ID.
+     * @param book the book.
+     * @param member the member.
+     * @param issueDate the issue date.
+     * @param dueDate the due date.
+     * @param returnDate the return date.
+     */
     public void setData(int loanId, Book book, Member member, LocalDate issueDate, LocalDate dueDate, LocalDate returnDate) {
         this.book = book;
 

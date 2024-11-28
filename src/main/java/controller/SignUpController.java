@@ -15,6 +15,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the sign-up view.
+ */
 public class SignUpController implements Initializable {
     @FXML
     private Button btn_signup;
@@ -43,6 +46,12 @@ public class SignUpController implements Initializable {
     private UserService userService;
     private static final UserRepository userRepository = new UserRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.userService = new UserService(userRepository);
@@ -61,6 +70,11 @@ public class SignUpController implements Initializable {
         });
     }
 
+    /**
+     * Handles the sign-up action.
+     *
+     * @param event the action event.
+     */
     private void handleSignUp(ActionEvent event) {
         String role = choiceBox.getValue();
         System.out.println("Selected role: " + role);

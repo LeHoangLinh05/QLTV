@@ -32,7 +32,9 @@ import java.util.ResourceBundle;
 
 import static repository.DatabaseConnection.getConnection;
 
-
+/**
+ * Controller class for managing the rental view.
+ */
 public class RentalController implements Initializable {
 
     @FXML
@@ -116,6 +118,12 @@ public class RentalController implements Initializable {
     private static final BookRepository bookRepository = new BookRepository();
     private static final LoanRepository loanRepository = new LoanRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         borrowbook_anchorpane.setVisible(true);
@@ -136,6 +144,12 @@ public class RentalController implements Initializable {
         }
     }
 
+    /**
+     * Handles the selection control for borrow and return book buttons.
+     *
+     * @param actionEvent the action event.
+     * @param icon the icon associated with the button.
+     */
     public void selectionControl(ActionEvent actionEvent, ImageView icon) {
         Button selectedButton = (Button) actionEvent.getSource();
 
@@ -149,6 +163,9 @@ public class RentalController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
+    /**
+     * Sets the search functionality for borrowing books.
+     */
     private void showBorrowBookResultPane() {
         borrowbook_anchorpane.setVisible(true);
         returnbook_anchorpane.setVisible(false);
@@ -156,6 +173,9 @@ public class RentalController implements Initializable {
         setSearchForBorrowBook();
     }
 
+    /**
+     * Shows the return book result pane.
+     */
     private void showReturnBookResultPane() {
         borrowbook_anchorpane.setVisible(false);
         returnbook_anchorpane.setVisible(true);
@@ -164,6 +184,9 @@ public class RentalController implements Initializable {
         displayReturnedBooks();
     }
 
+    /**
+     * Sets the search functionality for borrowing books.
+     */
     private void setSearchForBorrowBook() {
         search_text.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
@@ -182,6 +205,12 @@ public class RentalController implements Initializable {
         });
     }
 
+    /**
+     * Creates a search task for borrowing books.
+     *
+     * @param queryText the query text.
+     * @return the task.
+     */
     private Task<List<HBox>> createSearchTask(String queryText) {
         return new Task<>() {
             @Override
@@ -200,6 +229,12 @@ public class RentalController implements Initializable {
         };
     }
 
+    /**
+     * Updates the result grid with book cards.
+     *
+     * @param gridPane the grid pane.
+     * @param bookCards the book cards.
+     */
     private void updateResultGrid(GridPane gridPane, List<HBox> bookCards) {
         gridPane.getChildren().clear();
         int column = 0, row = 1;
@@ -214,6 +249,12 @@ public class RentalController implements Initializable {
         }
     }
 
+    /**
+     * Shows the borrow form for a book.
+     *
+     * @param book the book.
+     * @param member the member.
+     */
     private void showBorrowForm(Book book, Member member) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
@@ -242,6 +283,9 @@ public class RentalController implements Initializable {
         }
     }
 
+    /**
+     * Sets the functionality for returning books.
+     */
     private void setForReturnBook() {
         Label loadingLabel = new Label("Loading...");
         loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
@@ -278,7 +322,9 @@ public class RentalController implements Initializable {
         startBackgroundTask(task);
     }
 
-
+    /**
+     * Displays the returned books.
+     */
     private void displayReturnedBooks() {
         Label loadingLabel = new Label("Loading...");
         loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
@@ -303,13 +349,24 @@ public class RentalController implements Initializable {
         startBackgroundTask(task);
     }
 
-
+    /**
+     * Shows a temporary message in the grid pane.
+     *
+     * @param gridPane the grid pane.
+     * @param message the message.
+     * @param color the color of the message.
+     */
     private void showTemporaryMessage(GridPane gridPane, String message, String color) {
         Label label = new Label(message);
         label.setStyle("-fx-font-size: 16px; -fx-text-fill: " + color + ";");
         gridPane.add(label, 0, 0);
     }
 
+    /**
+     * Starts a background task.
+     *
+     * @param task the task.
+     */
     private void startBackgroundTask(Task<?> task) {
         Thread thread = new Thread(task);
         thread.setDaemon(true);

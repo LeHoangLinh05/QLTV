@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the login view.
+ */
 public class LoginController implements Initializable {
     @FXML
     private Button btn_login;
@@ -38,7 +41,12 @@ public class LoginController implements Initializable {
     private UserService userService;
     private static final UserRepository userRepository = new UserRepository();
 
-
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         txt_username.setFocusTraversable(false);

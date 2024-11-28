@@ -20,6 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller class for managing the user panel view.
+ */
 public class UserPanelController implements Initializable{
     @FXML
     private Button dashboard_button;
@@ -85,6 +88,12 @@ public class UserPanelController implements Initializable{
     private UserService userService;
     private static final UserRepository userRepository = new UserRepository();
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url the location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle the resources used to localize the root object, or null if the root object was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dashboard_anchorpane.setVisible(true);
@@ -115,6 +124,16 @@ public class UserPanelController implements Initializable{
         }
     };
 
+    /**
+     * Displays the dashboard with the provided user information.
+     *
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param username the username of the user
+     * @param role the role of the user
+     * @param avatar_path the avatar path of the user
+     * @throws IOException if an I/O error occurs
+     */
     public void displayDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -138,6 +157,13 @@ public class UserPanelController implements Initializable{
         showDashboard(firstName,lastName, username, role, avatar_path);
     }
 
+    /**
+     * Handles menu control actions.
+     *
+     * @param actionEvent the action event
+     * @param icon the icon associated with the button
+     * @throws IOException if an I/O error occurs
+     */
     public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
@@ -156,6 +182,16 @@ public class UserPanelController implements Initializable{
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
+    /**
+     * Shows the dashboard view.
+     *
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param username the username of the user
+     * @param role the role of the user
+     * @param avatar_path the avatar path of the user
+     * @throws IOException if an I/O error occurs
+     */
     private void showDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         dashboard_anchorpane.setVisible(true);
         rental_anchorpane.setVisible(false);
@@ -171,6 +207,11 @@ public class UserPanelController implements Initializable{
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
 
+    /**
+     * Shows the rental view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void showRental() throws IOException {
         dashboard_anchorpane.setVisible(false);
         rental_anchorpane.setVisible(true);
@@ -186,6 +227,11 @@ public class UserPanelController implements Initializable{
         rental_anchorpane.getChildren().add(rentalPane);
     }
 
+    /**
+     * Shows the library view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void showLibrary() throws IOException {
         dashboard_anchorpane.setVisible(false);
         rental_anchorpane.setVisible(false);
@@ -200,6 +246,11 @@ public class UserPanelController implements Initializable{
         library_anchorpane.getChildren().add(libraryPane);
     }
 
+    /**
+     * Shows the profile view.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void showProfile() throws IOException {
         dashboard_anchorpane.setVisible(false);
         rental_anchorpane.setVisible(false);
@@ -217,6 +268,11 @@ public class UserPanelController implements Initializable{
 
     }
 
+    /**
+     * Logs out the user.
+     *
+     * @param actionEvent the action event
+     */
     private void logOut(ActionEvent actionEvent) {
         try {
             userService.logOut(actionEvent);
@@ -224,12 +280,21 @@ public class UserPanelController implements Initializable{
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Updates the user information.
+     *
+     * @param firstName the first name of the user
+     * @param lastName the last name of the user
+     * @param username the username of the user
+     * @param avatar_path the avatar path of the user
+     * @throws IOException if an I/O error occurs
+     */
     public void updateInfo(String firstName, String lastName, String username, String avatar_path) throws IOException {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.avatar_path = avatar_path;
-        // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
         if (dashboard_anchorpane.isVisible()) {
             showDashboard(firstName, lastName, username, role, avatar_path);  // Gọi lại showDashboard để cập nhật thông tin
         }
