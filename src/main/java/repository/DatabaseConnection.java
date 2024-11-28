@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/library_management_system";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; // Change your database password here
+    private static final String PASSWORD = "andrerieu"; // Change your database password here
 
     /**
      * Get a connection to the database.

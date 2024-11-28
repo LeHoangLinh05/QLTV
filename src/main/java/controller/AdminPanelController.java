@@ -169,6 +169,8 @@ public class AdminPanelController implements Initializable {
         buttonStyleManager.updateSelectedButton(selectedButton);
     }
 
+
+
     private void showDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
@@ -180,7 +182,11 @@ public class AdminPanelController implements Initializable {
         FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml"));
         AnchorPane dashboardPane = dashboardLoader.load();
         DashboardController dashboardController = dashboardLoader.getController();
+        if (this.admin != null) {
+            this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar trong admin
+        }
         dashboardController.setAdminInfo(this.admin);
+
         dashboard_anchorpane.getChildren().clear();
         dashboard_anchorpane.getChildren().add(dashboardPane);
     }
@@ -263,6 +269,9 @@ public class AdminPanelController implements Initializable {
         this.username = username;
         this.avatar_path = avatar_path;
         // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
+        if (this.admin != null) {
+            this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar của admin
+        }
         if (dashboard_anchorpane.isVisible()) {
             showDashboard(firstName, lastName, username, role, avatar_path);  // Gọi lại showDashboard để cập nhật thông tin
         }

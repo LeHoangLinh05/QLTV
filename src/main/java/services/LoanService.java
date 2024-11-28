@@ -24,19 +24,19 @@ public class LoanService {
         return loanRepository.countLoanRecords();
     }
 
-    public ObservableList<Loan> getLoansByMemberId(int memberId) throws DatabaseException {
+    public ObservableList<Loan> getLoansByMemberId(int memberId) throws DatabaseException, SQLException {
         return loanRepository.getLoansByMemberId(memberId);
     }
 
-    public boolean updateLoanAfterReturned(int memberId, int bookId) throws DatabaseException {
+    public boolean updateLoanAfterReturned(int memberId, int bookId) throws DatabaseException, SQLException {
         return loanRepository.updateLoan(memberId, bookId);
     }
 
-    public boolean createNewLoan(Loan loan) throws DatabaseException {
+    public boolean createNewLoan(Loan loan) throws DatabaseException, SQLException {
         return loanRepository.createLoan(loan.getMember().getId(), loan.getBook().getId(), LocalDate.now(), loan.getDueDate());
     }
 
-    public ObservableList<Loan> getBorrowingLoans(int memberId) throws DatabaseException {
+    public ObservableList<Loan> getBorrowingLoans(int memberId) throws DatabaseException, SQLException {
         ObservableList<Loan> loans = loanRepository.getBorrowingLoansByMemberId(memberId);
         if (loans == null) {
             throw new DatabaseException("No borrowing loans found for member with ID: " + memberId);
@@ -44,7 +44,7 @@ public class LoanService {
         return loans;
     }
 
-    public ObservableList<Loan> getReturnedLoans(int memberId) throws DatabaseException {
+    public ObservableList<Loan> getReturnedLoans(int memberId) throws DatabaseException, SQLException {
         ObservableList<Loan> loans = loanRepository.getReturnedLoansByMemberId(memberId);
         if (loans == null) {
             throw new DatabaseException("No returned loans found for member with ID: " + memberId);
@@ -52,15 +52,15 @@ public class LoanService {
         return loans;
     }
 
-    public void updateBookQuantityAfterBorrow(Book book) throws DatabaseException {
+    public void updateBookQuantityAfterBorrow(Book book) throws DatabaseException, SQLException {
         loanRepository.updateQuantityAfterBorrow(book);
     }
 
-    public void updateBookQuantityAfterReturn(Book book) throws DatabaseException {
+    public void updateBookQuantityAfterReturn(Book book) throws DatabaseException, SQLException {
         loanRepository.updateQuantityAfterReturn(book);
     }
 
-    public boolean isBookAvailable(Book book) throws DatabaseException {
+    public boolean isBookAvailable(Book book) throws DatabaseException, SQLException {
         int quantity = loanRepository.checkBookQuantity(book);
         if (quantity < 1) return false;
         return true;

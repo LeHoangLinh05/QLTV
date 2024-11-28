@@ -116,7 +116,7 @@
       </ScrollPane>
       <AnchorPane fx:id="profile_anchorpane" layoutX="638.0" layoutY="70.0" prefHeight="601.0" prefWidth="235.0" styleClass="dashboard_stat_pane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="28.399999999999977" AnchorPane.leftAnchor="638.0" AnchorPane.topAnchor="70.39999999999998">
          <children>
-            <ImageView fx:id="avatar" fitHeight="160.0" fitWidth="194.0" layoutX="18.0" layoutY="26.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="25.0" />
+            <ImageView fx:id="avatar" fitHeight="160.0" fitWidth="194.0" layoutX="66.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="27.0" />
             <Label fx:id="label_adminName" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="159.0" prefHeight="26.0" prefWidth="210.0" styleClass="body_label" stylesheets="@../css/style.css" text="Username" textAlignment="CENTER" AnchorPane.topAnchor="158.0">
                <font>
                   <Font name="EuclidCircularA-SemiBold" size="20.0" />

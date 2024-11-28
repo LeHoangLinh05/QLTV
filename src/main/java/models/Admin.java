@@ -37,6 +37,13 @@ public class Admin extends User {
         this.loanService = new LoanService(loanRepository);
     }
 
+//    public Admin(int userId, String firstName, String lastName, String imagePath) {
+//        super(userId, firstName, lastName, imagePath);
+//        this.bookService = new BookService(bookRepository);
+//        this.userService = new UserService(userRepository);
+//        this.loanService = new LoanService(loanRepository);
+//    }
+
     /**
      * Constructs an Admin with the specified username, password, first name, and last name.
      *
