@@ -270,7 +270,9 @@ public class AdminPanelController implements Initializable {
         this.avatar_path = avatar_path;
         // Cập nhật thông tin trên Dashboard nếu nó đang hiển thị
         if (this.admin != null) {
-            this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar của admin
+            this.admin.setImagePath(avatar_path);
+            this.admin.setFName(firstName);
+            this.admin.setLname(lastName);// Cập nhật lại avatar của admin
         }
         if (dashboard_anchorpane.isVisible()) {
             showDashboard(this.admin);  // Gọi lại showDashboard để cập nhật thông tin
