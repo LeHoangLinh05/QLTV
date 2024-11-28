@@ -16,7 +16,7 @@ public abstract class User {
     private String username;
     private String password;
     private CheckBox selected;
-    private StringProperty imagePath;
+    private StringProperty imagePath = new SimpleStringProperty();;
 
     /**
      * Constructs a User with the specified details.
@@ -102,6 +102,26 @@ public abstract class User {
     }
 
     /**
+     * Constructs a User with the specified ID, first name, last name and imagePath.
+     *
+     * @param id the ID of the user
+     * @param fname the first name of the user
+     * @param lname the last name of the user
+     * @param imagePath the image path of the user
+     */
+    public User(int id, String fname, String lname, String imagePath) {
+        this.id = id;
+        this.fname = fname;
+        this.lname = lname;
+        this.dateOfBirth = "";
+        this.email = "";
+        this.username = "";
+        this.password = "";
+        this.selected = new CheckBox();
+        this.imagePath = new SimpleStringProperty(imagePath);
+    }
+
+    /**
      * Constructs a User with the specified username and password.
      *
      * @param username the username of the user
@@ -134,6 +154,7 @@ public abstract class User {
      * @param imagePath the image path to set
      */
     public void setImagePath(String imagePath) {
+        System.out.println("Setting imagePath: " + imagePath);
         this.imagePath.set(imagePath);
     }
 
@@ -264,15 +285,6 @@ public abstract class User {
     }
 
     /**
-     * Sets the last name of the user.
-     *
-     * @param text the last name to set
-     */
-    public void setLName(String text) {
-        this.lname = text;
-    }
-
-    /**
      * Sets the date of birth of the user.
      *
      * @param dateOfBirth the date of birth to set
@@ -314,4 +326,13 @@ public abstract class User {
      * @return the role
      */
     public abstract String getRole();
+
+    /**
+     * Sets the last name of the user.
+     *
+     * @param text the last name to set
+     */
+    public void setLname(String text) {
+        this.lname = text;
+    }
 }

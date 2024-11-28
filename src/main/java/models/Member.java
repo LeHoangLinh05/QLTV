@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import repository.BookRepository;
 import repository.LoanRepository;
+import repository.UserRepository;
 import services.BookService;
 import services.LoanService;
 
@@ -153,10 +154,9 @@ public class Member extends User {
      *
      * @return the loan history
      */
-    public List<Loan> getMemberHistory() {
-        return new ArrayList<>(this.memberHistory);
+    public List<Loan> getMemberHistory() throws SQLException {
+        return UserRepository.getLoansByMemberId(this.getId());
     }
-
     /**
      * Gets the list of loans currently being borrowed by the member.
      *
@@ -182,8 +182,7 @@ public class Member extends User {
      */
     public boolean setMemberHistory() throws DatabaseException {
         try {
-            ObservableList<Loan> loans = loanService.getLoansByMemberId(this.getId());
-            this.memberHistory = new ArrayList<>(loans);
+            List<Loan> loans = loanService.getBorrowingLoans(this.getId());            this.memberHistory = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting rental history for member ID " + this.getId() + ": " + e.getMessage());

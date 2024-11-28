@@ -137,7 +137,7 @@ public class AdminPanelController implements Initializable {
             ResultSet resultSet = userService.getUserData(username);
             if (resultSet.next()) {
                 int id = Integer.parseInt(resultSet.getString("id"));
-                this.admin = new Admin(id, firstName, lastName); // Gán admin
+                this.admin = new Admin(id, firstName, lastName, avatar_path); // Gán admin
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,14 +146,14 @@ public class AdminPanelController implements Initializable {
         showBookManagement();
         showLibrary();
         showProfile();
-        showDashboard(firstName,lastName, username, role, avatar_path);
+        showDashboard(this.admin);
     }
 
     public void menuControl(ActionEvent actionEvent, ImageView icon) throws IOException {
         Button selectedButton = (Button) actionEvent.getSource();
 
         if (selectedButton == dashboard_button) {
-            showDashboard(firstName, lastName, username, role, avatar_path);
+            showDashboard(this.admin);
         } else if (selectedButton == book_management_button) {
             showBookManagement();
         } else if (selectedButton == logout_button) {
@@ -171,7 +171,7 @@ public class AdminPanelController implements Initializable {
 
 
 
-    private void showDashboard(String firstName, String lastName, String username, String role, String avatar_path) throws IOException {
+    private void showDashboard(Admin admin) throws IOException {
         dashboard_anchorpane.setVisible(true);
         bookmanagement_anchorpane.setVisible(false);
         library_anchorpane.setVisible(false);
@@ -273,7 +273,7 @@ public class AdminPanelController implements Initializable {
             this.admin.setImagePath(avatar_path);  // Cập nhật lại avatar của admin
         }
         if (dashboard_anchorpane.isVisible()) {
-            showDashboard(firstName, lastName, username, role, avatar_path);  // Gọi lại showDashboard để cập nhật thông tin
+            showDashboard(this.admin);  // Gọi lại showDashboard để cập nhật thông tin
         }
     }
 

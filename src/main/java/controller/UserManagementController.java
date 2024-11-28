@@ -36,6 +36,8 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+
+
 public class UserManagementController implements Initializable {
     @FXML
     private TableView<User> tableView;
@@ -136,17 +138,17 @@ public class UserManagementController implements Initializable {
             case "Date of Birth":
                 comparator = Comparator.comparing(
                         User::getDateOfBirth,
-                        Comparator.nullsLast(Comparator.naturalOrder())
+                        Comparator.nullsLast(Comparator.naturalOrder()) // Sắp xếp null ở cuối
                 );
                 break;
             case "Email":
                 comparator = Comparator.comparing(
                         User::getEmail,
-                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER) // Sắp xếp email null ở cuối
                 );
                 break;
             default:
-                return;
+                return; // Không làm gì nếu tiêu chí không hợp lệ
         }
 
         if (comparator != null) {
@@ -162,27 +164,36 @@ public class UserManagementController implements Initializable {
 
     @FXML
     private void handleDeleteButton(ActionEvent event) {
+        // Filter the list to get selected users
         ObservableList<User> selectedUsers = FXCollections.observableArrayList();
         for (User user : userList) {
-            if (user.isSelected()) {
+            if (user.isSelected()) { // Check if the user is selected
                 selectedUsers.add(user);
             }
         }
 
         if (selectedUsers.isEmpty()) {
+            // Show an alert if no users are selected
             AlertHelper.showWarning("No Selection", "Please select at least one user to delete.");
             return;
         }
 
+        // Confirm deletion with the user
         boolean isConfirmed = AlertHelper.showConfirmation("Confirm Deletion", "Are you sure you want to delete the selected user(s)?");
 
+        // Proceed with deletion only if the user confirms
         if (isConfirmed) {
             for (User user : selectedUsers) {
+                // Delete user from the database
                 deleteUserFromDatabase(user.getId());
             }
+            // Remove the selected users from the ObservableList
             userList.removeAll(selectedUsers);
+            // Refresh the TableView
             tableView.refresh();
+            // Update the Delete button visibility
             updateDeleteButtonVisibility();
+            // Show success message
             AlertHelper.showInformation("Deletion Successful", "Selected user(s) have been deleted successfully.");
         }
     }
@@ -216,7 +227,7 @@ public class UserManagementController implements Initializable {
                 });
 
                 userList.add(user);
-                System.out.println("Loaded user: " + user.getFName() + " " + user.getLname());
+                System.out.println("Loaded user: " + user.getFName() + " " + user.getLname()); // Debugging print
             }
             rs.close();
             tableView.refresh();
@@ -234,8 +245,8 @@ public class UserManagementController implements Initializable {
             {
                 Image pencilImage = new Image(getClass().getResourceAsStream("/images/managebook_button.png"));
                 ImageView pencilIcon = new ImageView(pencilImage);
-                pencilIcon.setFitWidth(19);
-                pencilIcon.setFitHeight(19);
+                pencilIcon.setFitWidth(19);  // Adjust the width of the icon
+                pencilIcon.setFitHeight(19); // Adjust the height of the icon
                 pencilIcon.setPreserveRatio(true);
                 editButton.setGraphic(pencilIcon);
                 editButton.getStyleClass().add("edit-button");
@@ -273,6 +284,7 @@ public class UserManagementController implements Initializable {
 
     private void refreshTable() {
         userList.clear();
+
     }
 
     private void filterUserList() {
@@ -291,34 +303,40 @@ public class UserManagementController implements Initializable {
     @FXML
     private void handlePrintButton() {
         try {
+            // Tạo Workbook và Sheet
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("User List");
 
+            // Tạo hàng tiêu đề
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("ID Number");
             headerRow.createCell(1).setCellValue("Name");
             headerRow.createCell(2).setCellValue("Date of Birth");
             headerRow.createCell(3).setCellValue("Email");
 
+            // Ghi dữ liệu từ userList vào Sheet
             int rowIndex = 1;
             for (User user : userList) {
                 Row dataRow = sheet.createRow(rowIndex++);
                 dataRow.createCell(0).setCellValue(user.getId());
                 dataRow.createCell(1).setCellValue(String.valueOf(user.getFName() + " " + user.getLname()));
-                dataRow.createCell(2).setCellValue(user.getDateOfBirth());
-                dataRow.createCell(3).setCellValue(user.getEmail());
+                dataRow.createCell(2).setCellValue(user.getDateOfBirth()); // Thay bằng thông tin liên lạc nếu có
+                dataRow.createCell(3).setCellValue(user.getEmail()); // Thay bằng số ID nếu có
             }
 
+            // Tự động căn chỉnh cột
             for (int i = 0; i < 4; i++) {
                 sheet.autoSizeColumn(i);
             }
 
-            File tempFile = File.createTempFile("MemberList", ".xlsx");
+            // Tạo file tạm để lưu workbook
+            File tempFile = File.createTempFile("UserList", ".xlsx");
             try (FileOutputStream fileOut = new FileOutputStream(tempFile)) {
                 workbook.write(fileOut);
             }
             workbook.close();
 
+            // Mở file Excel vừa tạo bằng ứng dụng mặc định (Microsoft Excel)
             if (Desktop.isDesktopSupported()) {
                 Desktop desktop = Desktop.getDesktop();
                 desktop.open(tempFile);
@@ -326,6 +344,7 @@ public class UserManagementController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            // Hiển thị thông báo lỗi
             AlertHelper.showError("Export Failed", "Failed to export user list to Excel.");
         }
     }
@@ -337,6 +356,7 @@ public class UserManagementController implements Initializable {
         User newUser = AddUserDialogController.openAddDialog();
 
         if (newUser != null) {
+
             userList.add(newUser);
 
             newUser.getSelected().selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -348,4 +368,5 @@ public class UserManagementController implements Initializable {
         }
         tableView.refresh();
     }
+
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import exceptions.InvalidDataException;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx. scene. image. ImageView;
 import models.*;
+import repository.UserRepository;
 import services.LoanService;
 
 import java.io.File;
@@ -56,7 +58,7 @@ public class EditUserDialogController implements Initializable {
     @FXML
     private AnchorPane rootPane;
 
-    private Member user;
+    private User user;
     private ObservableList<Loan> loanList = FXCollections.observableArrayList();
     private boolean isSaved = false;
     private Admin admin;
@@ -119,15 +121,15 @@ public class EditUserDialogController implements Initializable {
         String fName = nameParts[0];
         String lName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
         user.setFName(fName);
-        user.setLName(lName);
+        user.setLname(lName);
         user.setDateOfBirth(dobField.getText());
         user.setEmail(emailField.getText());
         user.setImagePath(user.getImagePath());
         try {
-            admin.editMember(user);
+            admin.editMember((Member) user);
             System.out.println("User updated successfully!");
         } catch (InvalidDataException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         ((Stage) nameField.getScene().getWindow()).close();

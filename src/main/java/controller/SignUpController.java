@@ -1,6 +1,5 @@
 package controller;
 
-import exceptions.BusinessLogicException;
 import javafx.scene.control.ChoiceBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +63,7 @@ public class SignUpController implements Initializable {
 
     private void handleSignUp(ActionEvent event) {
         String role = choiceBox.getValue();
+        System.out.println("Selected role: " + role);
         String username = txt_username.getText().trim();
         String password = txt_password.getText().trim();
         String firstName = txt_fname.getText().trim();
@@ -87,7 +87,7 @@ public class SignUpController implements Initializable {
 
             // Default avatar path
             String avatar_path = "/images/avatar_img.png";
-            userService.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
+            UserRepository.signUpUser(event, username, password, firstName, lastName, role, avatar_path);
             if (role.equals("Admin")) {
                 userService.navigateToDashboard(event, role, username, firstName, lastName, avatar_path);
             } else if (role.equals("Member")) {
@@ -95,9 +95,11 @@ public class SignUpController implements Initializable {
             }
 
             System.out.println("Profile created successfully.");
-        } catch (IOException | BusinessLogicException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             FillIn.setText("Error loading the scene");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
