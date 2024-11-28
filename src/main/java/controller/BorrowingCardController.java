@@ -63,7 +63,7 @@ public class BorrowingCardController implements Initializable {
             boolean isReturned = false;
             try {
                 isReturned = member.returnBook(book);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 

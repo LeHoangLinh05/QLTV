@@ -1,6 +1,7 @@
 package controller;
 
 
+import exceptions.AuthenticationException;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -52,7 +53,11 @@ public class LoginController implements Initializable {
                     wrongLogin.setText("Please fill in all information");
                 } else if (!txt_username.getText().trim().isEmpty() && (!txt_password.getText().trim().isEmpty())){
                     wrongLogin.setText("Wrong username or password");
-                    userService.logInUser(event, txt_username.getText(), txt_password.getText());
+                    try {
+                        userService.logInUser(event, txt_username.getText(), txt_password.getText());
+                    } catch (AuthenticationException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });

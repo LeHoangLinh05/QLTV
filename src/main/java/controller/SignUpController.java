@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.BusinessLogicException;
 import javafx.scene.control.ChoiceBox;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -94,10 +95,7 @@ public class SignUpController implements Initializable {
             }
 
             System.out.println("Profile created successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            FillIn.setText("Username already taken");
-        } catch (IOException e) {
+        } catch (IOException | BusinessLogicException e) {
             e.printStackTrace();
             FillIn.setText("Error loading the scene");
         }

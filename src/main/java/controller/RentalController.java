@@ -235,7 +235,7 @@ public class RentalController implements Initializable {
                     rental_anchorpane.getChildren().remove(borrowPane);
                 });
             }
-        } catch (IOException | SQLException exx) {
+        } catch (IOException exx) {
             exx.printStackTrace();
         }
     }

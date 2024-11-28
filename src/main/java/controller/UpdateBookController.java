@@ -91,7 +91,7 @@ public class UpdateBookController implements Initializable {
             boolean isSaved = false;
             try {
                 isSaved = admin.updateBook(book);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 

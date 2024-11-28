@@ -1,6 +1,9 @@
 package models;
 
 
+import exceptions.DatabaseException;
+import exceptions.DuplicateDataException;
+import exceptions.InvalidDataException;
 import repository.BookRepository;
 import repository.LoanRepository;
 import repository.UserRepository;
@@ -74,16 +77,15 @@ public class Admin extends User {
      *
      * @param book the book to add
      * @return true if the book was added successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if there is a general error
      */
-    public boolean addBook(Book book) throws SQLException {
-        boolean success = bookService.addBook(book);
-        if (success) {
-            System.out.println("Book added successfully!");
-        } else {
-            System.out.println("Failed to add the book.");
+    public boolean addBook(Book book) throws Exception {
+        try {
+            bookService.addBook(book);
+            return true;
+        } catch (Exception e) {
+            throw e;
         }
-        return success;
     }
 
     /**
@@ -91,17 +93,15 @@ public class Admin extends User {
      *
      * @param book the book to remove
      * @return true if the book was removed successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if a database access error occurs
      */
-    public boolean removeBook(Book book) throws SQLException {
-        boolean success = bookService.removeBook(book);
-        if (success) {
-            System.out.println("Book removed successfully!");
-        } else {
-            System.out.println("Failed to remove the book.");
+    public boolean removeBook(Book book) throws Exception {
+        try {
+            bookService.removeBook(book);
+            return true;
+        } catch (Exception e) {
+            throw e;
         }
-
-        return success;
     }
 
     /**
@@ -109,16 +109,15 @@ public class Admin extends User {
      *
      * @param book the book to update
      * @return true if the book was updated successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if an error occurs
      */
-    public boolean updateBook(Book book) throws SQLException {
-        boolean success = bookService.updateBook(book);
-        if (success) {
-            System.out.println("Book updated successfully!");
-        } else {
-            System.out.println("Failed to update the book.");
+    public boolean updateBook(Book book) throws Exception {
+        try {
+            bookService.updateBook(book);
+            return true;
+        } catch (Exception e) {
+            throw e;
         }
-        return success;
     }
 
     /**
@@ -126,16 +125,21 @@ public class Admin extends User {
      *
      * @param user the user to add
      * @return true if the member was added successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws DatabaseException if a database error occurs
+     * @throws DuplicateDataException if the user data is duplicated
      */
-    public boolean addMember(User user) throws SQLException {
-        boolean success = userService.addUser((Member) user);
-        if (success) {
-            System.out.println("Member added successfully!");
-        } else {
-            System.out.println("Failed to add the member.");
+    public boolean addMember(User user) throws DatabaseException, DuplicateDataException {
+        try {
+            boolean success = userService.addUser((Member) user);
+            if (success) {
+                System.out.println("Member added successfully!");
+            } else {
+                System.out.println("Failed to add the member.");
+            }
+            return success;
+        } catch (DatabaseException | DuplicateDataException e) {
+            throw e;
         }
-        return success;
     }
 
     /**
@@ -143,16 +147,22 @@ public class Admin extends User {
      *
      * @param userId the ID of the user to remove
      * @return true if the member was removed successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws DatabaseException if a database error occurs
+     * @throws InvalidDataException if the user data is invalid
      */
-    public boolean removeMember(int userId) throws SQLException {
-        boolean success = userService.deleteUser(userId);
-        if (success) {
-            System.out.println("Member removed successfully!");
-        } else {
-            System.out.println("Failed to remove the member.");
+    public boolean removeMember(int userId) throws DatabaseException, InvalidDataException {
+        try {
+            boolean success = userService.deleteUser(userId);
+            if (success) {
+                System.out.println("Member removed successfully!");
+            } else {
+                System.out.println("Failed to remove the member.");
+            }
+            return success;
+        } catch (DatabaseException | InvalidDataException e) {
+            System.out.println("Error removing member: " + e.getMessage());
+            throw e;
         }
-        return success;
     }
 
     /**
@@ -160,15 +170,21 @@ public class Admin extends User {
      *
      * @param user the member to update
      * @return true if the member was updated successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws DatabaseException if a database access error occurs
+     * @throws InvalidDataException if the user data is invalid
      */
-    public boolean editMember(Member user) throws SQLException {
-        boolean success = userService.updateUser(user);
-        if (success) {
-            System.out.println("Member updated successfully!");
-        } else {
-            System.out.println("Failed to update the member.");
+    public boolean editMember(Member user) throws DatabaseException, InvalidDataException {
+        try {
+            boolean success = userService.updateUser(user);
+            if (success) {
+                System.out.println("Member updated successfully!");
+            } else {
+                System.out.println("Failed to update the member.");
+            }
+            return success;
+        } catch (InvalidDataException e) {
+            System.out.println("Error updating member: " + e.getMessage());
+            throw e;
         }
-        return success;
     }
 }

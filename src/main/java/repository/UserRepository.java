@@ -2,6 +2,7 @@ package repository;
 
 import controller.AdminPanelController;
 import controller.UserPanelController;
+import exceptions.DatabaseException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,7 +17,7 @@ import java.io.IOException;
 import java.sql.*;
 
 public class UserRepository {
-    public static int countUserRecords() {
+    public static int countUserRecords() throws DatabaseException {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM userdetail";
 
@@ -28,25 +29,23 @@ public class UserRepository {
                 count = rs.getInt("total");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error counting user records", e);
         }
-
         return count;
     }
 
-    public static void deleteUser(int userId) throws SQLException {
+    public static void deleteUser(int userId) throws DatabaseException {
         String query = "DELETE FROM userdetail WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+            throw new DatabaseException("Error deleting user with ID: " + userId, e);
         }
     }
 
-    public static void updateUser(User user) throws SQLException {
+    public static void updateUser(User user) throws DatabaseException {
         String query = "UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, email = ? WHERE id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -58,51 +57,48 @@ public class UserRepository {
             stmt.setInt(5, user.getId());
 
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error updating user with ID: " + user.getId(), e);
         }
     }
 
-    private static String[] splitName(String fullName) {
-        String[] parts = fullName.trim().split(" ", 2);
-        String fName = parts.length > 0 ? parts[0] : ""; // First part is the first name
-        String lName = parts.length > 1 ? parts[1] : ""; // Second part is the last name
-        return new String[]{fName, lName};
-    }
-
-    public static boolean addUser(User user) throws SQLException {
+    public static boolean addUser(User user) throws DatabaseException, SQLException {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
-            throw new SQLException("User already exists with the given username or email.");
+            throw new DatabaseException("User already exists with the given username or email.");
         }
 
-        Connection connection = DatabaseConnection.getConnection();
         String query = "INSERT INTO userdetail (fName, lName, date_of_birth, email, username, password, avatar_path, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-        statement.setString(1, user.getFName());
-        statement.setString(2, user.getLname());
-        statement.setString(3, user.getDateOfBirth());
-        statement.setString(4, user.getEmail());
-        statement.setString(5, user.getUsername());
-        statement.setString(6, user.getPassword());
-        statement.setString(7, user.getImagePath());
-        statement.setString(8, "Member");
+            statement.setString(1, user.getFName());
+            statement.setString(2, user.getLname());
+            statement.setString(3, user.getDateOfBirth());
+            statement.setString(4, user.getEmail());
+            statement.setString(5, user.getUsername());
+            statement.setString(6, user.getPassword());
+            statement.setString(7, user.getImagePath());
+            statement.setString(8, "Member");
 
-        int rowsAffected = statement.executeUpdate();
+            int rowsAffected = statement.executeUpdate();
 
-        if (rowsAffected > 0) {
-            try (ResultSet keys = statement.getGeneratedKeys()) {
-                if (keys.next()) {
-                    return true;
+            if (rowsAffected > 0) {
+                try (ResultSet keys = statement.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        return true;
+                    }
                 }
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error adding user", e);
         }
-
         return false;
     }
 
-    public static int addUser1(User user) throws SQLException {
+    public static int addUser1(User user) throws DatabaseException, SQLException {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
-            throw new SQLException("User already exists with the given username or email.");
+            throw new DatabaseException("User already exists with the given username or email.");
         }
 
         Connection connection = DatabaseConnection.getConnection();
@@ -125,12 +121,12 @@ public class UserRepository {
             if (keys.next()) {
                 return keys.getInt(1);
             } else {
-                throw new SQLException("Failed to retrieve generated ID.");
+                throw new DatabaseException("Failed to retrieve generated ID.");
             }
         }
     }
 
-    public static boolean doesUserExist(String username, String email) throws SQLException {
+    public static boolean doesUserExist(String username, String email) throws DatabaseException {
         String query = "SELECT COUNT(*) FROM userdetail WHERE username = ? OR email = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -143,11 +139,30 @@ public class UserRepository {
                     return resultSet.getInt(1) > 0;
                 }
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to check if user exists before", e);
         }
         return false;
     }
 
-    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatar_path) throws SQLException, IOException {
+    public static boolean doesUserExistById(int userId) {
+        String query = "SELECT COUNT(*) FROM userdetail WHERE id = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, String.valueOf(userId));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Failed to check if user exists before", e);
+        }
+        return false;
+    }
+
+    public static void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatar_path) throws DatabaseException {
         Connection connection = null;
         PreparedStatement psinsert = null;
         PreparedStatement pscheckUserExists = null;
@@ -160,7 +175,7 @@ public class UserRepository {
 
             if (resultSet.isBeforeFirst()) {
                 System.out.println("Username already taken.");
-                throw new SQLException("Username already taken");
+                throw new DatabaseException("Username already taken");
             } else {
                 psinsert = connection.prepareStatement("INSERT INTO userdetail (username, password, fName, lName, role, avatar_path) VALUES (?, ?, ?, ?, ?, ?)");
                 psinsert.setString(1, username);
@@ -177,18 +192,22 @@ public class UserRepository {
                     changeScene(event, "/view/MainUser.fxml", "Member Dashboard", username, firstName, lastName, role, avatar_path);
                 }
             }
-        } catch (SQLException e) {
-            // e.printStackTrace();
+        } catch (SQLException | IOException e) {
+            throw new DatabaseException("Error during user sign-up process", e);
         } finally {
-            if (resultSet != null) resultSet.close();
-            if (pscheckUserExists != null) pscheckUserExists.close();
-            if (psinsert != null) psinsert.close();
-            if (connection != null) connection.close();
+            try {
+                if (resultSet != null) resultSet.close();
+                if (pscheckUserExists != null) pscheckUserExists.close();
+                if (psinsert != null) psinsert.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                throw new DatabaseException("Error closing resources", e);
+            }
         }
     }
 
 
-    public static void logInUser(ActionEvent event, String username, String password) throws SQLException, IOException {
+    public static void logInUser(ActionEvent event, String username, String password) throws DatabaseException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -201,6 +220,7 @@ public class UserRepository {
 
             if (!resultSet.isBeforeFirst()) {
                 System.out.println("User not found in the database!");
+                throw new DatabaseException("User not found in the database!");
             } else {
                 while (resultSet.next()) {
                     String retrievedPassword = resultSet.getString("password");
@@ -215,21 +235,27 @@ public class UserRepository {
                         } else if (retrievedRole.equals("Member")) {
                             changeScene(event, "/view/MainUser.fxml", "Member Dashboard", username, retrievedFname, retrievedLname, retrievedRole, retrievedAvatarPath);
                         } else {
-                            System.out.println("Unknown role: " + retrievedRole);
+                            throw new DatabaseException("Unknown role: " + retrievedRole);
                         }
                     } else {
-                        System.out.println("Incorrect password!");
+                        throw new DatabaseException("Incorrect password!");
                     }
                 }
             }
+        } catch (SQLException | IOException e) {
+            throw new DatabaseException("Error during user login", e);
         } finally {
-            if (resultSet != null) resultSet.close();
-            if (preparedStatement != null) preparedStatement.close();
-            if (connection != null) connection.close();
+            try {
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null) preparedStatement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                throw new DatabaseException("Error closing resources", e);
+            }
         }
     }
 
-    public User getUserByUsername(String username) throws SQLException {
+    public User getUserByUsername(String username) throws DatabaseException {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement("SELECT password, role, fName, lName FROM userdetail WHERE username = ?")) {
             ps.setString(1, username);
@@ -249,6 +275,8 @@ public class UserRepository {
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieving user by username", e);
         }
         return null;
     }
@@ -271,47 +299,47 @@ public class UserRepository {
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieving admin by username", e);
         }
         return null;
     }
 
-    public static boolean isUsernameTaken(String username) throws SQLException {
-        Connection connection = null;
-        PreparedStatement psCheckUserExists = null;
-        ResultSet resultSet = null;
-        boolean usernameExists = false;
-
-        try {
-            connection = DatabaseConnection.getConnection();
-            psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?");
+    public static boolean isUsernameTaken(String username) throws DatabaseException {
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement psCheckUserExists = connection.prepareStatement("SELECT 1 FROM userdetail WHERE username = ?")) {
             psCheckUserExists.setString(1, username);
-            resultSet = psCheckUserExists.executeQuery();
-
-            usernameExists = resultSet.isBeforeFirst();
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (psCheckUserExists != null) psCheckUserExists.close();
-            if (connection != null) connection.close();
+            try (ResultSet resultSet = psCheckUserExists.executeQuery()) {
+                return resultSet.isBeforeFirst();
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error checking if username is taken", e);
         }
-
-        return usernameExists;
     }
 
-    public static ResultSet getUserData(String username) throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
-        statement.setString(1, username);
-        return statement.executeQuery();
+    public static ResultSet getUserData(String username) throws DatabaseException {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT fName, lName, date_of_birth, avatar_path, email, id FROM userdetail WHERE username = ?");
+            statement.setString(1, username);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieving user data", e);
+        }
     }
 
-    public static ResultSet getAllUsers() throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
-        String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'Member'";
-        PreparedStatement statement = connection.prepareStatement(query);
-        return statement.executeQuery();
+    public static ResultSet getAllUsers() throws DatabaseException {
+        try {
+            Connection connection = DatabaseConnection.getConnection();
+            String query = "SELECT id, fName, lName, date_of_birth, email, avatar_path FROM userdetail WHERE role = 'Member'";
+            PreparedStatement statement = connection.prepareStatement(query);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieving all users", e);
+        }
     }
 
-    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws DatabaseException {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement("UPDATE userdetail SET fName = ?, lName = ?, date_of_birth = ?, avatar_path = ?, email = ?, id = ? WHERE username = ?")) {
 
@@ -323,6 +351,8 @@ public class UserRepository {
             statement.setString(6, id);
             statement.setString(7, username);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error updating user data", e);
         }
     }
 

@@ -1,5 +1,6 @@
 package repository;
 
+import exceptions.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.ActivityLog;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LoanRepository {
-    public static int countLoanRecords() {
+    public static int countLoanRecords() throws DatabaseException {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM loans";
 
@@ -27,13 +28,13 @@ public class LoanRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching loan records.", e);
         }
 
         return count;
     }
 
-    public static ObservableList<Loan> getLoansByMemberId(int memberId) throws SQLException {
+    public static ObservableList<Loan> getLoansByMemberId(int memberId) throws DatabaseException {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ?";
@@ -60,13 +61,12 @@ public class LoanRepository {
                 loans.add(loan);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Error fetching loan history for member ID: " + memberId, e);
+            throw new DatabaseException("Error fetching loan history for member ID: " + memberId, e);
         }
         return loans;
     }
 
-    public static boolean updateLoan(int memberId, int bookId) throws SQLException {
+    public static boolean updateLoan(int memberId, int bookId) throws DatabaseException {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE loans SET return_date = ? WHERE book_id = ? AND member_id = ? AND return_date IS NULL")) {
@@ -76,10 +76,12 @@ public class LoanRepository {
             preparedStatement.setInt(3, memberId);
 
             return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException("Error updating loan for member ID: " + memberId + " and book ID: " + bookId, e);
         }
     }
 
-    public static boolean createLoan(int memberId, int bookId, LocalDate issueDate, LocalDate dueDate) throws SQLException {
+    public static boolean createLoan(int memberId, int bookId, LocalDate issueDate, LocalDate dueDate) throws DatabaseException {
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(
                      "INSERT INTO loans (member_id, book_id, issue_date, due_date) VALUES (?, ?, ?, ?)")) {
@@ -90,10 +92,12 @@ public class LoanRepository {
             pst.setDate(4, java.sql.Date.valueOf(dueDate));
 
             return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DatabaseException("Error creating a new loan for member ID: " + memberId + " and book ID: " + bookId, e);
         }
     }
 
-    public static ObservableList<Loan> getBorrowingLoansByMemberId(int id) throws SQLException {
+    public static ObservableList<Loan> getBorrowingLoansByMemberId(int id) throws DatabaseException {
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle, b.id AS bookId " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
@@ -117,13 +121,12 @@ public class LoanRepository {
                 loans.add(loan);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Error fetching loan history for member ID: " + id, e);
+            throw new DatabaseException("Error fetching borrowing loans for member ID: " + id, e);
         }
         return loans;
     }
 
-    public static ObservableList<Loan> getReturnedLoansByMemberId(int id) throws SQLException{
+    public static ObservableList<Loan> getReturnedLoansByMemberId(int id) throws DatabaseException{
         ObservableList<Loan> loans = FXCollections.observableArrayList();
         String query = "SELECT l.id AS loanId, l.issue_date, l.due_date, l.return_date, b.title AS bookTitle, b.id AS bookId " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
@@ -148,13 +151,12 @@ public class LoanRepository {
                 loans.add(loan);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Error fetching loan history for member ID: " + id, e);
+            throw new DatabaseException("Error fetching returned loans for member ID: " + id, e);
         }
         return loans;
     }
 
-    public static void updateQuantityAfterBorrow(Book book) throws SQLException {
+    public static void updateQuantityAfterBorrow(Book book) throws DatabaseException {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity - 1 WHERE isbn = ?")) {
 
@@ -168,12 +170,11 @@ public class LoanRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+            throw new DatabaseException("Error updating quantity for ISBN: " + book.getISBN(), e);
         }
     }
 
-    public static void updateQuantityAfterReturn(Book book) throws SQLException {
+    public static void updateQuantityAfterReturn(Book book) throws DatabaseException {
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("UPDATE books SET quantity = quantity + 1 WHERE isbn = ?")) {
 
@@ -187,12 +188,11 @@ public class LoanRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+            throw new DatabaseException("Error updating quantity for ISBN: " + book.getISBN(), e);
         }
     }
 
-    public static int checkBookQuantity(Book book) throws SQLException {
+    public static int checkBookQuantity(Book book) throws DatabaseException {
         int quantity = -1;
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -208,14 +208,13 @@ public class LoanRepository {
                 System.out.println("No book found with ISBN: " + book.getISBN());
             }
         } catch (SQLException e) {
-            System.err.println("Error checking book quantity: " + e.getMessage());
-            throw e;
+            throw new DatabaseException("Error checking quantity for ISBN: " + book.getISBN(), e);
         }
 
         return quantity;
     }
 
-    public static List<ActivityLog> fetchActivityLog() {
+    public static List<ActivityLog> fetchActivityLog() throws DatabaseException {
         List<ActivityLog> logs = new ArrayList<>();
 
         String query = """
@@ -260,7 +259,7 @@ public class LoanRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching activity logs.", e);
         }
 
         logs.sort((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
@@ -273,7 +272,7 @@ public class LoanRepository {
         return logs;
     }
 
-    public static Map<String, Integer> getBorrowData() {
+    public static Map<String, Integer> getBorrowData() throws DatabaseException {
         Map<String, Integer> borrowData = new HashMap<>();
         String query = """
                     SELECT DAYNAME(issue_date) AS day_of_week, COUNT(*) AS borrow_count
@@ -291,13 +290,13 @@ public class LoanRepository {
                 borrowData.put(day, count);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching borrow data.", e);
         }
         System.out.println("Get data successful.");
         return borrowData;
     }
 
-    public static Map<String, Integer> getReturnData() {
+    public static Map<String, Integer> getReturnData() throws DatabaseException {
         Map<String, Integer> returnData = new HashMap<>();
         String query = """
                     SELECT DAYNAME(return_date) AS day_of_week, COUNT(*) AS return_count
@@ -316,7 +315,7 @@ public class LoanRepository {
                 returnData.put(day, count);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching return data.", e);
         }
         System.out.println("Get data2 successful.");
         return returnData;

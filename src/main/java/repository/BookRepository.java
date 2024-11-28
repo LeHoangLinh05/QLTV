@@ -1,5 +1,6 @@
 package repository;
 
+import exceptions.DatabaseException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Book;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookRepository {
-    public static int countBookRecords() throws SQLException {
+    public static int countBookRecords() throws DatabaseException {
         int count = 0;
         String query = "SELECT COUNT(*) AS total FROM books";
 
@@ -22,13 +23,13 @@ public class BookRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error counting book records", e);
         }
 
         return count;
     }
 
-    public static List<Book> getAllBooks() throws SQLException {
+    public static List<Book> getAllBooks() throws DatabaseException {
         List<Book> books = new ArrayList<>();
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -47,12 +48,14 @@ public class BookRepository {
                 book.setQuantity(resultSet.getInt("quantity"));
                 books.add(book);
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error fetching all books", e);
         }
 
         return books;
     }
 
-    public static List<Book> getMostPopularBooks() {
+    public static List<Book> getMostPopularBooks() throws DatabaseException {
         List<Book> books = new ArrayList<>();
         String query = "SELECT b.*, COUNT(l.book_id) AS borrow_count " +
                 "FROM books b " +
@@ -78,13 +81,13 @@ public class BookRepository {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching most popular books", e);
         }
 
         return books;
     }
 
-    public static List<Book> getNewBooks() {
+    public static List<Book> getNewBooks() throws DatabaseException {
         List<Book> books = new ArrayList<>();
         String query = "SELECT * FROM books ORDER BY id DESC LIMIT 10";
 
@@ -105,12 +108,12 @@ public class BookRepository {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error fetching newest books", e);
         }
         return books;
     }
 
-    public static boolean addBook(Book book) {
+    public static boolean addBook(Book book) throws DatabaseException {
         String query = "INSERT INTO books (title, author, isbn, published_date, publisher, page_count, categories, description, thumbnail_link, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -137,12 +140,11 @@ public class BookRepository {
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error adding book", e);
         }
-        return false;
     }
 
-    public static boolean removeBook(Book book) {
+    public static boolean removeBook(Book book) throws DatabaseException {
         String query = "DELETE FROM books WHERE ISBN = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -151,12 +153,11 @@ public class BookRepository {
             int rowCount = preparedStatement.executeUpdate();
             return rowCount > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error removing book", e);
         }
-        return false;
     }
 
-    public static boolean updateBook(Book book) {
+    public static boolean updateBook(Book book) throws DatabaseException {
         String query = "UPDATE books SET title = ?, author = ?, published_date = ?, publisher = ?, description = ?, categories = ?, quantity = ? WHERE ISBN = ?";
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement pst = con.prepareStatement(query)) {
@@ -173,12 +174,11 @@ public class BookRepository {
             int rowCount = pst.executeUpdate();
             return rowCount > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error updating book information", e);
         }
-        return false;
     }
 
-    public static List<Book> searchBooks(String queryText) throws SQLException {
+    public static List<Book> searchBooks(String queryText) throws DatabaseException {
         List<Book> books = new ArrayList<>();
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -202,12 +202,13 @@ public class BookRepository {
                 book.setQuantity(resultSet.getInt("quantity"));
                 books.add(book);
             }
+        } catch (SQLException e) {
+            throw new DatabaseException("Error searching for books", e);
         }
-
         return books;
     }
 
-    public static int getBookIdByISBN(Book book) throws SQLException {
+    public static int getBookIdByISBN(Book book) throws DatabaseException {
         int id = 0;
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -223,13 +224,12 @@ public class BookRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+            throw new DatabaseException("Error fetching book ID by ISBN", e);
         }
         return id;
     }
 
-    public static List<Book> getBorrowingBooksByMemberId(int id) throws SQLException {
+    public static List<Book> getBorrowingBooksByMemberId(int id) throws DatabaseException {
         ObservableList<Book> books = FXCollections.observableArrayList();
         String query = "SELECT b.id, b.title " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NULL";
@@ -246,13 +246,12 @@ public class BookRepository {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Error fetching borrowing books for member ID: " + id, e);
+            throw new DatabaseException("Error fetching borrowing books for member ID: " + id, e);
         }
         return books;
     }
 
-    public static List<Book> getReturnedBooksByMemberId(int id) throws SQLException {
+    public static List<Book> getReturnedBooksByMemberId(int id) throws DatabaseException {
         ObservableList<Book> books = FXCollections.observableArrayList();
         String query = "SELECT b.id, b.title " +
                 "FROM loans l JOIN books b ON l.book_id = b.id WHERE l.member_id = ? AND l.return_date IS NOT NULL";
@@ -269,13 +268,12 @@ public class BookRepository {
                 books.add(book);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw new SQLException("Error fetching borrowing books for member ID: " + id, e);
+            throw new DatabaseException("Error fetching returned books for member ID: " + id, e);
         }
         return books;
     }
 
-    public static boolean doesBookExists(String isbn) {
+    public static boolean doesBookExists(String isbn) throws DatabaseException {
         String query = "SELECT COUNT(*) FROM books WHERE isbn = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -287,12 +285,12 @@ public class BookRepository {
                 return resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseException("Error checking existence of book by ISBN", e);
         }
         return false;
     }
 
-    public static int getBookQuantity(Book book) throws SQLException {
+    public static int getBookQuantity(Book book) throws DatabaseException {
         int quantity = 0;
 
         try (Connection connection = DatabaseConnection.getConnection();
@@ -308,8 +306,7 @@ public class BookRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
+            throw new DatabaseException("Error fetching quantity for book by ISBN", e);
         }
 
         return quantity;

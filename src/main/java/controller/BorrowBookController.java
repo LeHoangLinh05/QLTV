@@ -76,7 +76,7 @@ public class BorrowBookController {
             boolean isBorrowed = false;
             try {
                 isBorrowed = member.borrowBook(book, dueDate);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 

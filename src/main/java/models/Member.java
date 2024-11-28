@@ -1,5 +1,6 @@
 package models;
 
+import exceptions.DatabaseException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
@@ -179,15 +180,14 @@ public class Member extends User {
      *
      * @return true if the loan history was set successfully, false otherwise
      */
-    public boolean setMemberHistory() {
+    public boolean setMemberHistory() throws DatabaseException {
         try {
             ObservableList<Loan> loans = loanService.getLoansByMemberId(this.getId());
             this.memberHistory = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting rental history for member ID " + this.getId() + ": " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new DatabaseException("Failed to set member history.", e);
         }
     }
 
@@ -196,15 +196,14 @@ public class Member extends User {
      *
      * @return true if the list was set successfully, false otherwise
      */
-    public boolean setMemberBorrowingLoans() {
+    public boolean setMemberBorrowingLoans() throws DatabaseException {
         try {
             ObservableList<Loan> loans = loanService.getBorrowingLoans(this.getId());
             this.memberBorrowingLoans = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting borrowing loans for member ID " + this.getId() + ": " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new DatabaseException("Failed to set member's borrowing loans", e);
         }
     }
 
@@ -213,15 +212,14 @@ public class Member extends User {
      *
      * @return true if the list was set successfully, false otherwise
      */
-    public boolean setMemberReturnedLoans() {
+    public boolean setMemberReturnedLoans() throws DatabaseException {
         try {
             ObservableList<Loan> loans = loanService.getReturnedLoans(this.getId());
             this.memberReturnedLoans = new ArrayList<>(loans);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting returned loans for member ID " + this.getId() + ": " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new DatabaseException("Failed to set member's returned loans", e);
         }
     }
 
@@ -230,15 +228,14 @@ public class Member extends User {
      *
      * @return true if the list was set successfully, false otherwise
      */
-    public boolean setBorrowingBooks() {
+    public boolean setBorrowingBooks() throws DatabaseException {
         try {
             List<Book> books = bookService.getBorrowingBooksByMemberId(this.getId());
             this.borrowingBooks = new ArrayList<>(books);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting borrowing books for member ID " + this.getId() + ": " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new DatabaseException("Failed to set member's borrowing books", e);
         }
     }
 
@@ -247,15 +244,14 @@ public class Member extends User {
      *
      * @return true if the list was set successfully, false otherwise
      */
-    public boolean setReturnedBooks() {
+    public boolean setReturnedBooks() throws DatabaseException {
         try {
             List<Book> books = bookService.getReturnedBooksByMemberId(this.getId());
             this.borrowingBooks = new ArrayList<>(books);
             return true;
         } catch (Exception e) {
             System.err.println("Error setting returned books for member ID " + this.getId() + ": " + e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new DatabaseException("Failed to set member's returned books", e);
         }
     }
 
@@ -274,25 +270,30 @@ public class Member extends User {
      * @param book the book to borrow
      * @param dueDate the due date for returning the book
      * @return true if the book was borrowed successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if an error occurs
      */
-    public boolean borrowBook (Book book, LocalDate dueDate) throws SQLException {
-        if (!loanService.isBookAvailable(book)) return false;
+    public boolean borrowBook(Book book, LocalDate dueDate) throws Exception {
+        if (!loanService.isBookAvailable(book)) {
+            throw new DatabaseException("This book is currently unavailable");
+        }
+        if (isBookLoanedByMember(book)) {
+            throw new DatabaseException("You haven't returned this book yet, please return before borrowing again");
+        }
         try {
-            Loan loan = new Loan(this, book, LocalDate.now(), dueDate); // Tạo bản ghi mượn sách
-            boolean success = loanService.createNewLoan(loan); // Ghi lại thông tin mượn sách trong LoanService
+            Loan loan = new Loan(this, book, LocalDate.now(), dueDate);
+            boolean success = loanService.createNewLoan(loan);
+
             if (success) {
-                borrowingBooks.add(book);// Thêm sách vào danh sách đang mượn
-                memberHistory.add(loan);// Thêm bản ghi vào lịch sử
-                loanService.updateBookQuantityAfterBorrow(book); //cập nhật quantity của sách được trả
+                borrowingBooks.add(book);
+                memberHistory.add(loan);
+                loanService.updateBookQuantityAfterBorrow(book);
+                System.out.println("Borrow book successfully!");
                 return true;
             } else {
-                return false;
+                throw new SQLException("Borrow book unsuccessfully, please try again!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println ("An error occurred while borrowing the book.");
-            return false;
+            throw new SQLException("There is an error in borrowing process", e);
         }
     }
 
@@ -301,24 +302,39 @@ public class Member extends User {
      *
      * @param book the book to return
      * @return true if the book was returned successfully, false otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws Exception if an error occurs
      */
-    public boolean returnBook (Book book) throws SQLException {
+    public boolean returnBook(Book book) throws Exception {
+        if (!isBookLoanedByMember(book)) {
+            throw new DatabaseException("You are not borrowing this book.");
+        }
+
         try {
-            boolean success = loanService.updateLoanAfterReturned(this.getId(), book.getId()); // Đánh dấu hoàn thành trong LoanService
-            System.out.println (this.getId() + " " + book.getId() + " " + book.getISBN() + " ");
+            boolean success = loanService.updateLoanAfterReturned(this.getId(), book.getId());
+
             if (success) {
-                borrowingBooks.remove(book); // Xóa sách khỏi danh sách đang mượn
-                returnedBooks.add(book); // Thêm sách vào danh sách đã trả
-                loanService.updateBookQuantityAfterReturn(book); //cập nhật quantity của sách được trả
+                borrowingBooks.remove(book);
+                returnedBooks.add(book);
+                loanService.updateBookQuantityAfterReturn(book);
+
+                System.out.println("Return book successfully!");
                 return true;
             } else {
-                return false;
+                throw new SQLException("Can't complete the process.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println ("An error occurred while returning the book.");
-            return false;
+            throw new Exception("An error occurs in book returning process.", e);
         }
+    }
+
+
+    public boolean isBookLoanedByMember(Book book) {
+        boolean isBookInBorrowingBooks = borrowingBooks.stream()
+                .anyMatch(b -> b.getId() == book.getId());
+
+        boolean isBookInMemberBorrowingLoans = memberBorrowingLoans.stream()
+                .anyMatch(loan -> loan.getBook().getId() == book.getId());
+
+        return isBookInBorrowingBooks || isBookInMemberBorrowingLoans;
     }
 }

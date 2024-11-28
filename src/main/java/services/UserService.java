@@ -1,5 +1,6 @@
 package services;
 
+import exceptions.*;
 import javafx.event.ActionEvent;
 import models.Admin;
 import models.Member;
@@ -17,65 +18,66 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public int countUserRecords() throws SQLException {
+    public int countUserRecords() throws DatabaseException {
         return userRepository.countUserRecords();
     }
 
-    public static boolean addUser(Member user) throws SQLException {
+    public static boolean addUser(Member user) throws DuplicateDataException, DatabaseException {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
         try {
             if (UserRepository.doesUserExist(user.getUsername(), user.getEmail())) {
-                throw new SQLException("User already exists with the given username or email.");
+                throw new DuplicateDataException("User already exists with the given username or email.");
             }
             return UserRepository.addUser(user);
         } catch (SQLException e) {
             System.err.println("Error occurred while adding user: " + e.getMessage());
-            throw new SQLException("Error occurred while adding user.", e);
+            throw new DatabaseException("Error occurred while adding user.", e);
         }
     }
 
-    public static boolean deleteUser(int userId) throws SQLException {
-        try {
-            UserRepository.deleteUser(userId);
-        } catch (SQLException e) {
-            System.err.println("Error occurred while deleting user: " + e.getMessage());
-            throw new SQLException("Error occurred while deleting user.", e);
+    public static boolean deleteUser(int userId) throws DatabaseException, InvalidDataException {
+        if (!UserRepository.doesUserExistById(userId)) {
+            throw new InvalidDataException("User with ID " + userId + " does not exist.");
         }
-        return false;
+        UserRepository.deleteUser(userId);
+        return true;
     }
 
-    public static boolean updateUser(Member user) throws SQLException {
-        try {
-            UserRepository.updateUser(user);
-        } catch (SQLException e) {
-            System.err.println("Error occurred while updating user: " + e.getMessage());
-            throw new SQLException("Error occurred while updating user.", e);
+    public static boolean updateUser(Member user) throws InvalidDataException, DatabaseException {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
         }
-        return false;
+        if (!UserRepository.doesUserExistById(user.getId())) {
+            throw new InvalidDataException("User with ID " + user.getId() + " does not exist.");
+        }
+        UserRepository.updateUser(user);
+        return true;
     }
 
-    public void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatarPath) {
+    public void signUpUser(ActionEvent event, String username, String password, String firstName, String lastName, String role, String avatarPath) throws BusinessLogicException {
         try {
             if (userRepository.isUsernameTaken(username)) {
-                System.out.println("Username already taken.");
-                throw new IllegalArgumentException("Username already taken");
+                throw new BusinessLogicException("Username already taken.");
             } else {
                 User newUser = new Member(username, password, firstName, lastName);
                 userRepository.addUser(newUser);
                 navigateToDashboard(event, role, username, firstName, lastName, avatarPath);
             }
-        } catch (SQLException | IOException e) {
-            System.out.println("Error during user signup: " + e.getMessage());
+        } catch (DatabaseException | IOException | SQLException e) {
+            System.out.println("Error during user sign-up process: " + e.getMessage());
         }
     }
 
-    public void logInUser(ActionEvent event, String username, String password) {
+    public void logInUser(ActionEvent event, String username, String password) throws AuthenticationException {
         try {
             User user = userRepository.getUserByUsername(username);
 
             if (user == null) {
-                System.out.println("User not found in the database!");
+                throw new AuthenticationException("User not found in the database!");
             } else if (!user.getPassword().equals(password)) {
-                System.out.println("Incorrect password!");
+                throw new AuthenticationException("Incorrect password!");
             } else {
                 navigateToDashboard(
                         event,
@@ -86,8 +88,8 @@ public class UserService {
                         user.getImagePath()
                 );
             }
-        } catch (SQLException | IOException e) {
-            System.out.println("Error during user login: " + e.getMessage());
+        } catch (DatabaseException | IOException e) {
+            System.out.println("Error during user log-in process: " + e.getMessage());
         }
     }
 
@@ -105,48 +107,27 @@ public class UserService {
         userRepository.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
     }
 
-    public void changeToSignUp(ActionEvent event) throws  IOException {
+    public void changeToSignUp(ActionEvent event) throws IOException {
         userRepository.changeScene(event, "/view/SignUp.fxml", "Library Management System", null, null, null, null, null);
     }
 
-    public void changeToLogIn(ActionEvent event) throws  IOException {
+    public void changeToLogIn(ActionEvent event) throws IOException {
         userRepository.changeScene(event, "/view/login.fxml", "Library Management System", null, null, null, null, null);
     }
 
-    public static boolean isUsernameTaken(String username) throws SQLException {
-        try {
-            return UserRepository.isUsernameTaken(username);
-        } catch (SQLException e) {
-            System.err.println("Error occurred while checking username: " + e.getMessage());
-            throw new SQLException("Error occurred while checking username.", e);
-        }
+    public static boolean isUsernameTaken(String username) throws DatabaseException {
+        return UserRepository.isUsernameTaken(username);
     }
 
-    public static ResultSet getUserData(String username) throws SQLException {
-        try {
-            return UserRepository.getUserData(username);
-        } catch (SQLException e) {
-            System.err.println("Error occurred while getting user data: " + e.getMessage());
-            throw new SQLException("Error occurred while getting user data.", e);
-        }
+    public static ResultSet getUserData(String username) throws DatabaseException {
+        return UserRepository.getUserData(username);
     }
 
-    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws SQLException {
-        try {
-            UserRepository.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
-        } catch (SQLException e) {
-            System.err.println("Error occurred while updating user data: " + e.getMessage());
-            throw new SQLException("Error occurred while updating user data.", e);
-        }
+    public static void updateUserData(String username, String firstName, String lastName, String dateOfBirth, String avatarPath, String email, String id) throws DatabaseException {
+        UserRepository.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
     }
 
-    public static ResultSet getAllUsers() throws SQLException {
-        try {
-            return UserRepository.getAllUsers();
-        } catch (SQLException e) {
-            System.err.println("Error occurred while getting all users: " + e.getMessage());
-            throw new SQLException("Error occurred while getting all users.", e);
-        }
+    public static ResultSet getAllUsers() throws DatabaseException {
+        return UserRepository.getAllUsers();
     }
-
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidDataException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,7 +126,7 @@ public class EditUserDialogController implements Initializable {
         try {
             admin.editMember(user);
             System.out.println("User updated successfully!");
-        } catch (SQLException e) {
+        } catch (InvalidDataException e) {
             e.printStackTrace();
         }
 

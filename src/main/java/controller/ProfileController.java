@@ -143,10 +143,6 @@ public class ProfileController implements Initializable {
                 userPanelController.updateInfo(firstName, lastName, username, avatarPath);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Failed to update profile.");
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

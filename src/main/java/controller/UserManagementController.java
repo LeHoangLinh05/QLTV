@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidDataException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -190,7 +191,7 @@ public class UserManagementController implements Initializable {
         System.out.println("Attempting to delete user with ID: " + userId);
         try {
             admin.removeMember(userId);
-        } catch (SQLException e) {
+        } catch (InvalidDataException e) {
             throw new RuntimeException(e);
         }
         System.out.println("Successfully deleted user with ID: " + userId);
@@ -249,12 +250,8 @@ public class UserManagementController implements Initializable {
                     boolean isEdited = EditUserDialogController.openEditDialog(selectedUser,admin);
 
                     if (isEdited) {
-                        try {
-                            UserRepository.updateUser(selectedUser);
-                            tableView.refresh();
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
-                        }
+                        UserRepository.updateUser(selectedUser);
+                        tableView.refresh();
                     }
                     tableView.refresh();
                 });

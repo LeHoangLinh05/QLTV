@@ -316,7 +316,7 @@ public class BookManagementController implements Initializable {
                         AlertHelper.showError( "Add Process Error","Failed to add the book. Please try again.");
                     }
                 }
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
@@ -397,7 +397,7 @@ public class BookManagementController implements Initializable {
             boolean isDeleted = false;
             try {
                 isDeleted = admin.removeBook(book);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
 
