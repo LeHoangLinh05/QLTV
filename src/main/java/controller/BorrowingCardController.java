@@ -26,7 +26,7 @@ public class BorrowingCardController implements Initializable {
     private Label issueDate_text;
 
     @FXML
-    private Label loanID_text;
+    Label loanID_text;
 
     @FXML
     private Label status_text;

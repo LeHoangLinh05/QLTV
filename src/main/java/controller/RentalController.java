@@ -244,102 +244,38 @@ public class RentalController implements Initializable {
         Label loadingLabel = new Label("Loading...");
         loadingLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: gray;");
         borrowingVBox.getChildren().add(loadingLabel);
-
         Task<List<HBox>> task = new Task<>() {
             @Override
             protected List<HBox> call() throws Exception {
-                List<HBox> borrowingCards = new ArrayList<>();
-                /*List<Loan> loans = member.getMemberBorrowingLoans();
-
-                for (Loan loan : loans) {
-                    try {
-                        String loanId = loan.getLoanId();
-                        LocalDate issueDate = loan.getIssueDate();
-                        LocalDate dueDate = loan.getDueDate();
-                        Book book = loan.getBook();
-                        System.out.println(book.getId());
-
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
-                        HBox borrowingCardBox = fxmlLoader.load();
-
-                        BorrowingCardController cardController = fxmlLoader.getController();
-                        cardController.setData(Integer.parseInt(loanId), book, member, issueDate, dueDate);
-
-                        cardController.handleReturn(book, getMember(), () -> {
-                            AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
-
-                            setForReturnBook();
-                            displayReturnedBooks();
-                        });
-
-                        borrowingCards.add(borrowingCardBox);
-
-                    } catch (Exception e) {
-                        System.err.println("Error creating HBox for book: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }*/
-                try (Connection connection = getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date " +
-                                     "FROM loans l " +
-                                     "JOIN books b ON l.book_id = b.id " +
-                                     "WHERE l.return_date IS NULL AND l.member_id = ?")) {
-
-                    preparedStatement.setInt(1, getMember().getId());
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    while (resultSet.next()) {
-                        try {
-                            int loanId = resultSet.getInt("loan_id");
-                            LocalDate issueDate = resultSet.getDate("issue_date").toLocalDate();
-                            LocalDate dueDate = resultSet.getDate("due_date").toLocalDate();
-
-                            Book book = new Book();
-                            book.setId(resultSet.getInt("book_id"));
-                            book.setTitle(resultSet.getString("title"));
-
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/BorrowingCard.fxml"));
-                            HBox borrowingCard_box = fxmlLoader.load();
-                            BorrowingCardController cardController = fxmlLoader.getController();
-                            cardController.setData(loanId, book, member, issueDate, dueDate);
-
-                            borrowingCards.add(borrowingCard_box);
-
-                            cardController.handleReturn(book, getMember(), () -> {
-                                AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
-
-                                //refresh
-                                setForReturnBook();
-                                displayReturnedBooks();
-                            });
-
-                        } catch (Exception e) {
-                            System.out.println("Error creating HBox for book: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                return borrowingCards;
+                return LoanRepository.getBorrowingCards(getMember());
             }
         };
-
         task.setOnSucceeded(workerStateEvent -> {
             borrowingVBox.getChildren().clear();
-            borrowingVBox.getChildren().addAll(task.getValue());
+            List<HBox> borrowingCards = task.getValue();
+            for (HBox borrowingCardBox : borrowingCards) {
+                BorrowingCardController cardController = (BorrowingCardController) borrowingCardBox.getUserData();
+                if (cardController != null) {
+                    int loanId = Integer.parseInt(cardController.loanID_text.getText());
+                    Member member = getMember();
+                    Book book = null;
+                    try {
+                        book = LoanRepository.getBookByLoanId(loanId);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    cardController.handleReturn(book, member,() -> {
+                        AlertHelper.showInformation("Book Returned", "You have returned this book successfully.");
+                        setForReturnBook();
+                        displayReturnedBooks();
+                    });
+                }
+            }
+            borrowingVBox.getChildren().addAll(borrowingCards);
         });
-
-        task.setOnFailed(workerStateEvent -> {
-            borrowingVBox.getChildren().clear();
-            Label errorLabel = new Label("Error loading borrowing books.");
-            errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
-            borrowingVBox.getChildren().add(errorLabel);
-        });
-
         startBackgroundTask(task);
     }
+
 
     private void displayReturnedBooks() {
         Label loadingLabel = new Label("Loading...");
@@ -349,89 +285,22 @@ public class RentalController implements Initializable {
         Task<List<HBox>> task = new Task<>() {
             @Override
             protected List<HBox> call() throws Exception {
-                List<HBox> returnedCards = new ArrayList<>();
-                /*List<Loan> loans = member.getMemberReturnedLoans();
-
-                for (Loan loan : loans) {
-                    try {
-                        String loanId = loan.getLoanId();
-                        LocalDate issueDate = loan.getIssueDate();
-                        LocalDate dueDate = loan.getDueDate();
-                        LocalDate returnDate = loan.getReturnDate();
-
-                        Book book = loan.getBook();
-
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-                        HBox returnedCardBox = fxmlLoader.load();
-
-                        ReturnedCardController cardController = fxmlLoader.getController();
-                        cardController.setCurrentMember(member);
-                        cardController.setData(Integer.parseInt(loanId), book, member, issueDate, dueDate, returnDate);
-
-                        returnedCards.add(returnedCardBox);
-
-                    } catch (Exception e) {
-                        System.err.println("Error creating HBox for returned book: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }*/
-                try (Connection connection = getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(
-                             "SELECT l.id AS loan_id, b.id AS book_id, b.title, b.author, b.ISBN, l.issue_date, l.due_date, l.return_date " +
-                                     "FROM loans l " +
-                                     "JOIN books b ON l.book_id = b.id " +
-                                     "WHERE l.return_date IS NOT NULL AND l.member_id = ?")) {
-
-                    preparedStatement.setInt(1, getMember().getId());
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    while (resultSet.next()) {
-                        try {
-                            int loanId = resultSet.getInt("loan_id");
-                            LocalDate issueDate = resultSet.getDate("issue_date") != null ? resultSet.getDate("issue_date").toLocalDate() : null;
-                            LocalDate dueDate = resultSet.getDate("due_date") != null ? resultSet.getDate("due_date").toLocalDate() : null;
-                            LocalDate returnDate = resultSet.getDate("return_date") != null ? resultSet.getDate("return_date").toLocalDate() : null;
-
-                            Book book = new Book();
-                            book.setId(resultSet.getInt("book_id"));
-                            book.setTitle(resultSet.getString("title"));
-
-                            FXMLLoader fxmlLoader = new FXMLLoader();
-                            fxmlLoader.setLocation(getClass().getResource("/view/ReturnedCard.fxml"));
-                            HBox returnedCard_box = fxmlLoader.load();
-                            ReturnedCardController cardController = fxmlLoader.getController();
-
-                            cardController.setCurrentMember(member);
-                            cardController.setData(loanId, book, member, issueDate, dueDate, returnDate);
-
-                            returnedCards.add(returnedCard_box);
-
-                        } catch (Exception e) {
-                            System.out.println("Error creating HBox for returned book: " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                return returnedCards;
+                return LoanRepository.getReturnedCards(getMember());
             }
         };
-
         task.setOnSucceeded(workerStateEvent -> {
             returnedVBox.getChildren().clear();
             returnedVBox.getChildren().addAll(task.getValue());
         });
-
         task.setOnFailed(workerStateEvent -> {
             returnedVBox.getChildren().clear();
             Label errorLabel = new Label("Error loading returned books.");
             errorLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
             returnedVBox.getChildren().add(errorLabel);
         });
-
         startBackgroundTask(task);
     }
+
 
     private void showTemporaryMessage(GridPane gridPane, String message, String color) {
         Label label = new Label(message);
