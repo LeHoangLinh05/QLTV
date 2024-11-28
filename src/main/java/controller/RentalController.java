@@ -266,7 +266,8 @@ public class RentalController implements Initializable {
 
             if (!loanService.isBookAvailable(book)) {
                 AlertHelper.showError("Borrow Failed", "This book is currently unavailable for borrowing.");
-
+            } else if (member.isBookLoanedByMember(book)) {
+                AlertHelper.showError("Borrow Failed", "You are currently borrowing this book. Please return it before borrowing again.");
             } else {
                 rental_anchorpane.getChildren().add(borrowPane);
                 borrowPane.toFront();

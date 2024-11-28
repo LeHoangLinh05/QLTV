@@ -112,9 +112,14 @@ public class Admin extends User {
      * @throws Exception if there is a general error
      */
     public boolean addBook(Book book) throws Exception {
+        if (book == null) {
+            throw new IllegalArgumentException("Book cannot be null.");
+        }
         try {
-            bookService.addBook(book);
-            return true;
+            if (bookService.doesBookExist(book.getISBN())) {
+                throw new DuplicateDataException("Book already exists with ISBN: " + book.getISBN());
+            }
+            return bookService.addBook(book);
         } catch (Exception e) {
             throw e;
         }
@@ -128,6 +133,9 @@ public class Admin extends User {
      * @throws Exception if a database access error occurs
      */
     public boolean removeBook(Book book) throws Exception {
+        if (book == null) {
+            throw new IllegalArgumentException("Book cannot be null.");
+        }
         try {
             bookService.removeBook(book);
             return true;
@@ -144,6 +152,9 @@ public class Admin extends User {
      * @throws Exception if an error occurs
      */
     public boolean updateBook(Book book) throws Exception {
+        if (book == null) {
+            throw new IllegalArgumentException("Book cannot be null.");
+        }
         try {
             bookService.updateBook(book);
             return true;
