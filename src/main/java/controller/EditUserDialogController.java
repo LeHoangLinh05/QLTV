@@ -22,6 +22,8 @@ import javafx. scene. image. ImageView;
 import models.*;
 import repository.UserRepository;
 import services.LoanService;
+import services.UserService;
+import ui_helper.AlertHelper;
 
 import java.io.File;
 import java.net.URL;
@@ -153,10 +155,17 @@ public class EditUserDialogController implements Initializable {
         user.setEmail(emailField.getText());
         user.setImagePath(user.getImagePath());
         try {
+            UserService.hasTheRightFormat(user.getDateOfBirth());
             admin.editMember((Member) user);
             System.out.println("User updated successfully!");
+            AlertHelper.showInformation("Update Successful", "User updated successfully!");
+
+            ((Stage) nameField.getScene().getWindow()).close();
         } catch (InvalidDataException e) {
-            throw new RuntimeException(e);
+            AlertHelper.showError("Invalid Data", "Date of Birth must be in the format yyyy-MM-dd.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertHelper.showError("Error", "An unexpected error occurred.");
         }
 
         ((Stage) nameField.getScene().getWindow()).close();

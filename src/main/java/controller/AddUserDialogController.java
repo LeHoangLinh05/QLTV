@@ -1,5 +1,8 @@
 package controller;
 
+import exceptions.DatabaseException;
+import exceptions.DuplicateDataException;
+import exceptions.InvalidDataException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +15,7 @@ import javafx.stage.Stage;
 import models.Member;
 import models.User;
 import repository.UserRepository;
+import services.UserService;
 import ui_helper.AlertHelper;
 
 import java.net.URL;
@@ -84,20 +88,22 @@ public class AddUserDialogController implements Initializable {
         }
 
         try {
-            if (UserRepository.doesUserExist(username, email)) {
-                AlertHelper.showWarning("Duplicate User", "A user with the same username or email already exists.");
-                return;
-            }
+            UserRepository.doesUserExist(username, email);
+            UserService.hasTheRightFormat(dob);
             User newUser = new Member(0, fname, lname, dob, email, username, password);
 
-            int generatedId = UserRepository.addUserWithGeneratedId(newUser);
+            int generatedId = UserService.createNewUserAndGetGeneratedId((Member) newUser);
 
             newUser.setId(generatedId);
             user = newUser;
+            AlertHelper.showInformation("Update Successful", "User added successfully!");
 
             closeDialog();
+        } catch (InvalidDataException e) {
+            AlertHelper.showError("Invalid Data", "Date of Birth must be in the format yyyy-MM-dd.");
+        } catch (DuplicateDataException e) {
+            AlertHelper.showError("Duplicate User", "This username has been taken.");
         } catch (Exception e) {
-            e.printStackTrace();
             AlertHelper.showError("Database Error", "Failed to save user. Please try again.");
         }
     }

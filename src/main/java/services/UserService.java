@@ -10,6 +10,9 @@ import repository.UserRepository;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class UserService {
     private final UserRepository userRepository;
@@ -22,7 +25,7 @@ public class UserService {
         return userRepository.countUserRecords();
     }
 
-    public static boolean addUser(Member user) throws DuplicateDataException, DatabaseException {
+    public static boolean createNewUser(Member user) throws DuplicateDataException, DatabaseException {
         if (user == null) {
             throw new IllegalArgumentException("User cannot be null.");
         }
@@ -30,7 +33,22 @@ public class UserService {
             if (UserRepository.doesUserExist(user.getUsername(), user.getEmail())) {
                 throw new DuplicateDataException("User already exists with the given username or email.");
             }
-            return UserRepository.addUser(user);
+            return UserRepository.createNewUser(user);
+        } catch (SQLException e) {
+            System.err.println("Error occurred while adding user: " + e.getMessage());
+            throw new DatabaseException("Error occurred while adding user.", e);
+        }
+    }
+
+    public static int createNewUserAndGetGeneratedId(Member user) throws DuplicateDataException, DatabaseException {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
+        try {
+            if (UserRepository.doesUserExist(user.getUsername(), user.getEmail())) {
+                throw new DuplicateDataException("User already exists with the given username or email.");
+            }
+            return UserRepository.createNewUserWithGeneratedId(user);
         } catch (SQLException e) {
             System.err.println("Error occurred while adding user: " + e.getMessage());
             throw new DatabaseException("Error occurred while adding user.", e);
@@ -62,7 +80,7 @@ public class UserService {
                 throw new BusinessLogicException("Username already taken.");
             } else {
                 User newUser = new Member(username, password, firstName, lastName);
-                userRepository.addUser(newUser);
+                userRepository.createNewUser(newUser);
                 navigateToDashboard(event, role, username, firstName, lastName, avatarPath);
             }
         } catch (DatabaseException | IOException | SQLException e) {
@@ -129,5 +147,17 @@ public class UserService {
 
     public static ResultSet getAllUsers() throws DatabaseException {
         return UserRepository.getAllUsers();
+    }
+
+    public static boolean hasTheRightFormat(String dateOfBirth) throws InvalidDataException {
+        if (dateOfBirth == null || dateOfBirth.isEmpty()) {
+            throw new IllegalArgumentException("Date of Birth cannot be null or empty.");
+        }
+        try {
+            LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return true;
+        } catch (DateTimeParseException e) {
+            throw new InvalidDataException("Date of Birth must be in the format yyyy-MM-dd.");
+        }
     }
 }

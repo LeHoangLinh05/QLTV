@@ -170,17 +170,38 @@ public class Admin extends User {
      * @return true if the member was added successfully, false otherwise
      * @throws DatabaseException if a database error occurs
      * @throws DuplicateDataException if the user data is duplicated
+     * @throws InvalidDataException if the user data is invalid
      */
-    public boolean addMember(User user) throws DatabaseException, DuplicateDataException {
+    public boolean addMember(User user) throws Exception {
         try {
-            boolean success = userService.addUser((Member) user);
+            userService.hasTheRightFormat(user.getDateOfBirth());
+            boolean success = userService.createNewUser((Member) user);
             if (success) {
                 System.out.println("Member added successfully!");
             } else {
                 System.out.println("Failed to add the member.");
             }
             return success;
-        } catch (DatabaseException | DuplicateDataException e) {
+        } catch (DatabaseException | DuplicateDataException | InvalidDataException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Adds a member with generated ID to the repository.
+     *
+     * @param user the user to add
+     * @return true if the member was added successfully, false otherwise
+     * @throws DatabaseException if a database error occurs
+     * @throws DuplicateDataException if the user data is duplicated
+     */
+    public int addMemberAndGetId(Member user) throws Exception {
+        try {
+            userService.hasTheRightFormat(user.getDateOfBirth());
+            int generatedId = userService.createNewUserAndGetGeneratedId(user);
+            System.out.println("Member added successfully with ID: " + generatedId);
+            return generatedId;
+        } catch (DatabaseException | DuplicateDataException | InvalidDataException e) {
             throw e;
         }
     }
@@ -216,8 +237,9 @@ public class Admin extends User {
      * @throws DatabaseException if a database access error occurs
      * @throws InvalidDataException if the user data is invalid
      */
-    public boolean editMember(Member user) throws DatabaseException, InvalidDataException {
+    public boolean editMember(Member user) throws Exception {
         try {
+            userService.hasTheRightFormat(user.getDateOfBirth());
             boolean success = userService.updateUser(user);
             if (success) {
                 System.out.println("Member updated successfully!");

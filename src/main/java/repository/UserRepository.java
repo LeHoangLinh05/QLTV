@@ -64,7 +64,7 @@ public class UserRepository {
         }
     }
 
-    public static boolean addUser(User user) throws DatabaseException, SQLException {
+    public static boolean createNewUser(User user) throws DatabaseException, SQLException {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
             throw new DatabaseException("User already exists with the given username or email.");
         }
@@ -98,7 +98,7 @@ public class UserRepository {
         return false;
     }
 
-    public static int addUserWithGeneratedId(User user) throws DatabaseException, SQLException {
+    public static int createNewUserWithGeneratedId(User user) throws DatabaseException, SQLException {
         if (doesUserExist(user.getUsername(), user.getEmail())) {
             throw new DatabaseException("User already exists with the given username or email.");
         }

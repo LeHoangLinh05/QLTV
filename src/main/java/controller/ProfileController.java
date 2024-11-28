@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidDataException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import java.util.ResourceBundle;
 import javafx.stage.FileChooser;
 import repository.UserRepository;
 import services.UserService;
+import ui_helper.AlertHelper;
 
 /**
  * Controller class for managing the profile view.
@@ -171,8 +173,10 @@ public class ProfileController implements Initializable {
         String id = id_text.getText();
 
         try {
+            userService.hasTheRightFormat(dateOfBirth);
             userService.updateUserData(username, firstName, lastName, dateOfBirth, avatarPath, email, id);
             System.out.println("Profile updated successfully.");
+            AlertHelper.showInformation("Update Successful", "Profile updated successfully!");
             if (adminPanelController != null) {
                 adminPanelController.updateInfo(firstName, lastName, username, avatarPath);
             }
@@ -182,6 +186,8 @@ public class ProfileController implements Initializable {
 
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (InvalidDataException e) {
+            AlertHelper.showError("Invalid Data", "Date of Birth must be in the format yyyy-MM-dd.");
         }
     }
 }
