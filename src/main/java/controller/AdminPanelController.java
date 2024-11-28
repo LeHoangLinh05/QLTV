@@ -335,6 +335,8 @@ public class AdminPanelController implements Initializable {
         this.avatar_path = avatar_path;
         if (this.admin != null) {
             this.admin.setImagePath(avatar_path);
+            this.admin.setFName(firstName);
+            this.admin.setLname(lastName);
         }
         if (dashboard_anchorpane.isVisible()) {
             showDashboard(this.admin);
