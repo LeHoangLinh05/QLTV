@@ -1,6 +1,7 @@
 package repository;
 
 import exceptions.DatabaseException;
+import exceptions.InvalidDataException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import models.Book;
@@ -127,6 +128,8 @@ public class BookRepository {
                 publishedDate += "-01-01";
             } else if (publishedDate.length() == 7) {
                 publishedDate += "-01";
+            } else if (publishedDate.isEmpty()) {
+                publishedDate += "2000-01-01";
             }
             preparedStatement.setString(4, publishedDate);
 
