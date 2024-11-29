@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Admin;
 import models.Member;
 import models.User;
 import repository.UserRepository;
@@ -40,6 +41,7 @@ public class AddUserDialogController implements Initializable {
     private AnchorPane rootPane;
 
     private User user;
+    private Admin admin;
 
     /**
      * Initializes the controller class.
@@ -92,7 +94,7 @@ public class AddUserDialogController implements Initializable {
             UserService.hasTheRightFormat(dob);
             User newUser = new Member(0, fname, lname, dob, email, username, password);
 
-            int generatedId = UserService.createNewUserAndGetGeneratedId((Member) newUser);
+            int generatedId = admin.addMemberAndGetId((Member) newUser);
 
             newUser.setId(generatedId);
             user = newUser;
@@ -109,6 +111,15 @@ public class AddUserDialogController implements Initializable {
     }
 
     /**
+     * Sets the admin data in the dialog.
+     *
+     * @param admin the admin whose data is to be set.
+     */
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+
+    /**
      * Handles the cancel action.
      */
     @FXML
@@ -120,14 +131,16 @@ public class AddUserDialogController implements Initializable {
     /**
      * Opens the Add User dialog.
      *
+     * @param admin the admin performing the edit.
      * @return the newly added user, or null if the operation was cancelled.
      */
-    public static User openAddDialog() {
+    public static User openAddDialog(Admin admin) {
         try {
             FXMLLoader loader = new FXMLLoader(AddUserDialogController.class.getResource("/view/AddUserDialog.fxml"));
             Parent root = loader.load();
 
             AddUserDialogController controller = loader.getController();
+            controller.setAdmin(admin);
 
             Stage stage = new Stage();
             stage.setTitle("Add User");
