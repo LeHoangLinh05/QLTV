@@ -226,10 +226,12 @@ public class BookManagementController implements Initializable {
                 Task<List<HBox>> searchTask = new Task<>() {
                     @Override
                     protected List<HBox> call() throws Exception {
-                        List<HBox> searchResults = new ArrayList<>();
+                        SearchBookAPI.searchResult.clear();
+
                         SearchBookAPI query = new SearchBookAPI();
                         query.getBookInfos(queryText);
 
+                        List<HBox> searchResults = new ArrayList<>();
                         int column = 0;
                         int row = 1;
 
