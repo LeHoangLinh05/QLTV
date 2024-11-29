@@ -3,23 +3,37 @@ package models;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+/**
+ * Represents a loan of a book to a member.
+ */
 public class Loan {
     private final StringProperty loanId;
     private Member member;
     private Book book;
-    private Date issueDate;
-    private Date dueDate;
-    private Date returnDate;
+    private LocalDate issueDate;
+    private LocalDate dueDate;
+    private LocalDate returnDate;
 
+    /**
+     * Default constructor for Loan.
+     */
     public Loan() {
         this.loanId = (new SimpleStringProperty());
     }
 
-
-    public Loan(String loanId, Member member, Book book, Date issueDate, Date dueDate) {
-        this.loanId = new SimpleStringProperty(loanId);
+    /**
+     * Constructor for Loan with specified member, book, issue date, and due date.
+     *
+     * @param member the member who borrowed the book
+     * @param book the book that was borrowed
+     * @param issueDate the date the book was issued
+     * @param dueDate the date the book is due
+     */
+    public Loan(Member member, Book book, LocalDate issueDate, LocalDate dueDate) {
+        this.loanId = new SimpleStringProperty();
         this.member = member;
         this.book = book;
         this.issueDate = issueDate;
@@ -27,69 +41,159 @@ public class Loan {
         this.returnDate = null;
     }
 
+    /**
+     * Constructor for Loan with specified member, book, and due date.
+     * The issue date is set to the current date.
+     *
+     * @param member the member who borrowed the book
+     * @param book the book that was borrowed
+     * @param dueDate the date the book is due
+     */
+    public Loan(Member member, Book book, LocalDate dueDate) {
+        this.loanId = new SimpleStringProperty();
+        this.member = member;
+        this.book = book;
+        this.issueDate = LocalDate.now();
+        this.dueDate = dueDate;
+        this.returnDate = null;
+    }
+
+    /**
+     * Gets the loan ID.
+     *
+     * @return the loan ID
+     */
     public String getLoanId() {
         return loanId.get();
     }
 
-    // Setter for loanId
+    /**
+     * Sets the loan ID.
+     *
+     * @param loanId the loan ID to set
+     */
     public void setLoanId(String loanId) {
-        this.loanId.set(loanId); // Use set() to assign the value
+        this.loanId.set(loanId);
     }
 
+    /**
+     * Gets the loan ID property.
+     *
+     * @return the loan ID property
+     */
     public StringProperty loanIdProperty() {
         return this.loanId;
     }
 
-
+    /**
+     * Gets the member who borrowed the book.
+     *
+     * @return the member
+     */
     public Member getMember() {
         return member;
     }
 
+    /**
+     * Sets the member who borrowed the book.
+     *
+     * @param member the member to set
+     */
     public void setMember(Member member) {
         this.member = member;
     }
 
-    public Book getBook() {
-        return book;
-    }
-
+    /**
+     * Sets the book that was borrowed.
+     *
+     * @param book the book to set
+     */
     public void setBook(Book book) {
         this.book = book;
     }
 
-    public Date getIssueDate() {
+    /**
+     * Gets the book that was borrowed.
+     *
+     * @return the book
+     */
+    public Book getBook () {
+        return book;
+    }
+
+    /**
+     * Gets the issue date of the loan.
+     *
+     * @return the issue date
+     */
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Date issueDate) {
+    /**
+     * Sets the issue date of the loan.
+     *
+     * @param issueDate the issue date to set
+     */
+    public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
 
-    public Date getDueDate() {
+    /**
+     * Gets the due date of the loan.
+     *
+     * @return the due date
+     */
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    /**
+     * Sets the due date of the loan.
+     *
+     * @param dueDate the due date to set
+     */
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getReturnDate() {
+    /**
+     * Gets the return date of the loan.
+     *
+     * @return the return date
+     */
+    public LocalDate getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    /**
+     * Sets the return date of the loan.
+     *
+     * @param returnDate the return date to set
+     */
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 
+    /**
+     * Checks if the book has been returned.
+     *
+     * @return true if the book has been returned, false otherwise
+     */
     public boolean isReturned() {
         return this.returnDate != null;
     }
 
+    /**
+     * Checks if the loan is overdue.
+     *
+     * @return true if the loan is overdue, false otherwise
+     */
     public boolean isOverdue() {
         if (this.returnDate == null) {
-            return new Date().after(this.dueDate);
+            return LocalDate.now().isAfter(this.dueDate);
         } else {
-            return this.returnDate.after(this.dueDate);
+            return this.returnDate.isAfter(this.dueDate);
         }
     }
 }

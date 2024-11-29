@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rental_anchorpane" prefHeight="700.0" prefWidth="910.4" styleClass="library_anchorpane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RentalController">
+    <children>
+        <Label layoutX="44.0" layoutY="37.0" styleClass="label_1" stylesheets="@../css/style.css" text="Rental" textFill="#32364d">
+            <font>
+                <Font name="EuclidCircularA-SemiBold" size="30.0" />
+            </font>
+        </Label>
+        <AnchorPane fx:id="rental_section_choices_pane" prefHeight="50.0" prefWidth="100.0" styleClass="book_management_section_choice_pane" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="550.0" AnchorPane.leftAnchor="44.0" AnchorPane.topAnchor="100.0">
+            <children>
+                <Button fx:id="borrowbook_button" alignment="CENTER" contentDisplay="CENTER" layoutX="5.6" layoutY="4.8" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu_button" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <graphic>
+                        <ImageView fx:id="borrowbook_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/borrowbook_button.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+                <Button fx:id="returnbook_button" alignment="CENTER" contentDisplay="CENTER" layoutX="15.6" layoutY="14.8" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="menu_button" stylesheets="@../css/style.css" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                    <graphic>
+                        <ImageView fx:id="returnbook_icon" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/returnbook_button.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="search_pane" layoutX="340.0" layoutY="37.0" styleClass="search_pane" stylesheets="@../css/style.css" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="84.0" AnchorPane.topAnchor="37.0">
+            <children>
+                <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="14.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/search_icon.png" />
+                    </image>
+                </ImageView>
+                <TextField fx:id="search_text" layoutX="40.0" layoutY="6.0" prefHeight="30.0" prefWidth="390.0" promptText="Search" styleClass="search_text" stylesheets="@../css/style.css">
+                    <font>
+                        <Font name="EuclidCircularA-Medium" size="14.0" />
+                    </font>
+                </TextField>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="returnbook_anchorpane" layoutX="10.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
+         <children>
+            <AnchorPane fx:id="borrowingTable_anchorpane" prefHeight="230.0" prefWidth="830.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="20.0">
+               <children>
+                  <VBox prefHeight="230.0" prefWidth="830.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <HBox fx:id="borrowingHeader" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="830.0">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="80.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Loan ID">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="15.0" prefWidth="290.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Book Name" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="15.0" prefWidth="140.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Issue Date" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="15.0" prefWidth="140.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Due Date" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="15.0" prefWidth="80.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Status" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" prefHeight="15.0" prefWidth="80.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Return" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                        </HBox>
+                        <ScrollPane fx:id="borrowingBooks" prefHeight="200.0" prefWidth="830.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="borrowingVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="830.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+             <AnchorPane fx:id="returnedTable_anchorpane" prefHeight="230.0" prefWidth="830.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0">
+                 <children>
+                     <VBox prefHeight="230.0" prefWidth="830.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                         <children>
+                             <HBox fx:id="returnedHeader" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="830.0">
+                                 <children>
+                                     <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="80.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Loan ID">
+                                         <font>
+                                             <Font size="14.0" />
+                                         </font>
+                                     </Label>
+                                     <Label alignment="CENTER" prefHeight="15.0" prefWidth="290.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Book Name" textAlignment="CENTER">
+                                         <font>
+                                             <Font size="14.0" />
+                                         </font>
+                                     </Label>
+                                     <Label alignment="CENTER" prefHeight="15.0" prefWidth="170.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Issue Date" textAlignment="CENTER">
+                                         <font>
+                                             <Font size="14.0" />
+                                         </font>
+                                     </Label>
+                                     <Label alignment="CENTER" prefHeight="15.0" prefWidth="170.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Return Date" textAlignment="CENTER">
+                                         <font>
+                                             <Font size="14.0" />
+                                         </font>
+                                     </Label>
+                                     <Label alignment="CENTER" prefHeight="15.0" prefWidth="100.0" styleClass="regular_text" stylesheets="@../css/style.css" text="Status" textAlignment="CENTER">
+                                         <font>
+                                             <Font size="14.0" />
+                                         </font>
+                                     </Label>
+                                 </children>
+                                 <padding>
+                                     <Insets left="10.0" right="10.0" />
+                                 </padding>
+                             </HBox>
+                             <ScrollPane fx:id="returnedBooks" prefHeight="200.0" prefWidth="830.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS">
+                                 <content>
+                                     <VBox fx:id="returnedVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="830.0" stylesheets="@../css/style.css" />
+                                 </content>
+                             </ScrollPane>
+                         </children>
+                     </VBox>
+                 </children>
+             </AnchorPane>
+         </children>
+        </AnchorPane>
+
+        <AnchorPane fx:id="borrowbook_anchorpane" layoutX="10.0" layoutY="160.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
+            <children>
+                <ScrollPane fx:id="library_scrollpane" hbarPolicy="NEVER" prefHeight="559.0" prefWidth="800.0" styleClass="api_scrollpane" stylesheets="@../css/style.css" vbarPolicy="NEVER" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="44.0" AnchorPane.topAnchor="30.0">
+                    <content>
+                        <GridPane fx:id="result_gridpane1" prefHeight="6.0" prefWidth="0.0">
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                        </GridPane>
+                    </content>
+                </ScrollPane>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>
