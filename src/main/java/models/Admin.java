@@ -151,9 +151,11 @@ public class Admin extends User {
      * @return true if the book was updated successfully, false otherwise
      * @throws Exception if an error occurs
      */
-    public boolean updateBook(Book book) throws Exception {
+    public boolean updateBook(Book book) throws InvalidDataException, Exception {
         if (book == null) {
             throw new IllegalArgumentException("Book cannot be null.");
+        } else if (book.getQuantity() < 0) {
+            throw new InvalidDataException("Book quantity cannot be less than 0");
         }
         try {
             bookService.updateBook(book);
