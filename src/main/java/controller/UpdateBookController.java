@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidDataException;
 import models.Admin;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -117,8 +118,12 @@ public class UpdateBookController implements Initializable {
             boolean isSaved = false;
             try {
                 isSaved = admin.updateBook(book);
+            } catch (InvalidDataException e) {
+                AlertHelper.showError("Invalid Quantity", "Book quantity cannot be less than 0.");
+                return;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                AlertHelper.showError("Update Failed", "An error occurred while updating the book.");
+                return;
             }
 
             if (isSaved) {
